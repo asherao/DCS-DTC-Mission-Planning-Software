@@ -1,0 +1,24 @@
+﻿<Window x:Class="DCS_DTC_Mission_Planning_Software.Crosshair"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DCS_DTC_Mission_Planning_Software"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        mc:Ignorable="d"
+         AllowsTransparency="True" WindowStyle="None" Background="Transparent" WindowState="Maximized"
+        Topmost="True"
+        Title="Crosshair">
+    <!--http://www.blackwasp.co.uk/WPFWindowStartupLocation.aspx#:~:text=To%20open%20a%20new%20window,before%20the%20window%20is%20displayed.&text=Run%20the%20program%20and%20click%20the%20button%20to%20see%20the%20result.-->
+    <!--https://stackoverflow.com/questions/4019831/how-do-you-center-your-main-window-in-wpf-->
+    <!--TODO: find out how to use this when dcs isnt full screen-->
+    <!--https://docs.microsoft.com/en-us/dotnet/desktop/wpf/windows/?view=netdesktop-6.0-->
+    <!--https://docs.microsoft.com/en-us/dotnet/desktop/wpf/graphics-multimedia/how-to-draw-an-ellipse-or-a-circle?view=netframeworkdesktop-4.8-->
+        <Canvas Height="10" Width="10">
+            <!-- Draws a circle with a blue interior. -->
+        <Ellipse Width="10" Height="10" Fill="blue" />
+       
+    </Canvas>
+  
+</Window>

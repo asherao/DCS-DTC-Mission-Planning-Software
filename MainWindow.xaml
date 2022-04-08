@@ -1,0 +1,425 @@
+﻿<Window x:Class="DCS_DTC_Mission_Planning_Software.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DCS_DTC_Mission_Planning_Software"
+        mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="AliceBlue"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        Closing="DataWindow_Closing"
+        Topmost="True"
+        Title="DCS DTC Mission planning Software (DMPS) v0.1 by Bailey" Height="450" Width="800">
+    <!--Background="{DynamicResource MaterialDesignPaper}"-->
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="AUTO" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="5" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="5"/>
+        </Grid.RowDefinitions>
+
+        <Label Content="Aircraft" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="1"/>
+        <Label Content="Terrain" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="2" />
+        <Label Content="Date" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="3"/>
+        <Label Content="DTC Name" VerticalAlignment="Center" HorizontalAlignment="Left"  Grid.Column="1" Grid.Row="4"/>
+
+        <ComboBox x:Name="combobox_aircraft" Grid.Column="2" Grid.Row="1" Margin="5">
+            <ComboBoxItem IsSelected="True">M-2000C</ComboBoxItem>
+            <!--<ComboBoxItem>AH-64D</ComboBoxItem>-->
+        </ComboBox>
+
+        <ComboBox x:Name="combobox_terrain" Grid.Column="2" Grid.Row="2"  Margin="5">
+            <ComboBoxItem IsSelected="True">Caucasus</ComboBoxItem>
+            <!--<ComboBoxItem>Mariana Islands</ComboBoxItem>
+            <ComboBoxItem>Persian Gulf</ComboBoxItem>
+            <ComboBoxItem>Syria</ComboBoxItem>-->
+        </ComboBox>
+
+        <DatePicker x:Name="datepicker_date" Grid.Column="2" Grid.Row="3" Margin="5" SelectedDateFormat="Short"
+                    DisplayDateStart="1/01/1900" DisplayDateEnd="12/31/2100" SelectedDate="7/21/2016">
+
+        </DatePicker>
+        <TextBox x:Name="textbox_dtcName" Grid.Column="2" Grid.Row="4" Margin="5,10"
+                 materialDesign:HintAssist.Hint="Type Name"  PreviewKeyDown="OnPreviewKeyDownLimitSpecial"/>
+
+        <Button x:Name="button_clearAllFormData"    Content="Clear All Data" Grid.Column="5" Grid.Row="1" Margin="5" Click="button_clearAllFormData_Click"/>
+        <Button x:Name="button_import"              Content="Import" IsEnabled="True" Grid.Column="3" Grid.Row="1" Margin="5" Click="button_import_Click"/>
+        <Button x:Name="button_export"              Content="Export" Grid.Column="3" Grid.Row="2" Margin="5" Click="button_export_Click"/>
+        <Button x:Name="button_copyToClipboard"     Content="Copy To Clipboard" Grid.Column="3" Grid.Row="3" Margin="5" Click="button_copyToClipboard_Click"/>
+        <Button x:Name="button_GetCoordsFromDcs"    Content="Get DCS Coords" Grid.Column="3" Grid.Row="4" Margin="5" Click="button_GetCoordsFromDcs_Click"/>
+        <Button x:Name="button_ShowCrosshair"       Content="Show Crosshair" Grid.Column="5" Grid.Row="4" Margin="5" Click="button_ShowCrosshair_Click"/>
+        
+        <Label x:Name="label_readout_aircraft"      Content="Aircraft" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="4" Grid.Row="1"/>
+        <Label x:Name="label_readout_lat"           Content="Coordinates" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="4" Grid.Row="2" Grid.ColumnSpan="2"/>
+        <Label x:Name="label_readout_elevation"     Content="Elevation" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="4" Grid.Row="3"/>
+        <Label x:Name="label_dcs_connection"        Content="Connection Status" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="4" Grid.Row="4"/>
+        
+        <Button x:Name="button_detailedInstructions" Content="Detailed Instructions" Grid.Column="5" Grid.Row="2" Margin="5" Click="button_detailedInstructions_Click"/>
+        <Button x:Name="button_definitions"         Content="Definitions" Grid.Column="5" Grid.Row="3" Margin="5" Click="button_definitions_Click"/>
+
+
+        <ScrollViewer Name="scrollviewer_data" ScrollChanged="scrollviewer_data_ScrollChanged" Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="5" Grid.RowSpan="2" Margin="5"
+                      HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
+            <StackPanel>
+                <Grid Name="containerCanvas" Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="36.983"/>
+                        <ColumnDefinition Width="73.017"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+
+
+                    <RadioButton   x:Name="wp01_RadioButton" Click="clicked_radiobutton"  Grid.Column="1"   Grid.Row="2" >Waypoint 01 |</RadioButton>
+                    <RadioButton   x:Name="wp02_RadioButton" Click="clicked_radiobutton"  Grid.Column="1"   Grid.Row="3" >Waypoint 02 |</RadioButton>
+                    <RadioButton   x:Name="wp03_RadioButton" Click="clicked_radiobutton"  Grid.Column="1"   Grid.Row="4" >Waypoint 03 |</RadioButton>
+                    <RadioButton   x:Name="wp04_RadioButton" Click="clicked_radiobutton"  Grid.Column="1"   Grid.Row="5" >Waypoint 04 |</RadioButton>
+                    <RadioButton   x:Name="wp05_RadioButton" Click="clicked_radiobutton"  Grid.Column="1"   Grid.Row="6" >Waypoint 05 |</RadioButton>
+                    <RadioButton   x:Name="wp06_RadioButton" Click="clicked_radiobutton"  Grid.Column="1"   Grid.Row="7" >Waypoint 06 |</RadioButton>
+                    <RadioButton   x:Name="wp07_RadioButton" Click="clicked_radiobutton"  Grid.Column="1"   Grid.Row="8" >Waypoint 07 |</RadioButton>
+                    <RadioButton   x:Name="wp08_RadioButton" Click="clicked_radiobutton"  Grid.Column="1"   Grid.Row="9" >Waypoint 08 |</RadioButton>
+                    <RadioButton   x:Name="wp09_RadioButton" Click="clicked_radiobutton"  Grid.Column="1"   Grid.Row="10">Waypoint 09 |</RadioButton>
+                    <RadioButton   x:Name="wp10_RadioButton" Click="clicked_radiobutton"  Grid.Column="1"   Grid.Row="11">Waypoint 10 |</RadioButton>
+                    <RadioButton   x:Name="wp11_RadioButton" Click="clicked_radiobutton"  Grid.Column="1"   Grid.Row="12">Waypoint 11 |</RadioButton>
+                    <RadioButton   x:Name="wp12_RadioButton" Click="clicked_radiobutton"  Grid.Column="1"   Grid.Row="13">Waypoint 12 |</RadioButton>
+                    <RadioButton   x:Name="wp13_RadioButton" Click="clicked_radiobutton"  Grid.Column="1"   Grid.Row="14">Waypoint 13 |</RadioButton>
+                    <RadioButton   x:Name="wp14_RadioButton" Click="clicked_radiobutton"  Grid.Column="1"   Grid.Row="15">Waypoint 14 |</RadioButton>
+                    <RadioButton   x:Name="wp15_RadioButton" Click="clicked_radiobutton"  Grid.Column="1"   Grid.Row="16">Waypoint 15 |</RadioButton>
+                    <RadioButton   x:Name="wp16_RadioButton" Click="clicked_radiobutton"  Grid.Column="1"   Grid.Row="17">Waypoint 16 |</RadioButton>
+                    <RadioButton   x:Name="wp17_RadioButton" Click="clicked_radiobutton"  Grid.Column="1"   Grid.Row="18">Waypoint 17 |</RadioButton>
+                    <RadioButton   x:Name="wp18_RadioButton" Click="clicked_radiobutton"  Grid.Column="1"   Grid.Row="19">Waypoint 18 |</RadioButton>
+                    <RadioButton   x:Name="wp19_RadioButton" Click="clicked_radiobutton"  Grid.Column="1"   Grid.Row="20">Waypoint 19 |</RadioButton>
+                    <RadioButton   x:Name="wp20_RadioButton" Click="clicked_radiobutton"  Grid.Column="1"   Grid.Row="21">Waypoint 20 |</RadioButton>
+
+                    <TextBox x:Name="wp01_name"      Grid.Column="2"     Grid.Row="2" Width="100" Margin="5" materialDesign:HintAssist.Hint="WP01 Name" Grid.ColumnSpan="2" PreviewKeyDown="OnPreviewKeyDownLimitSpecial"/>
+                    <TextBox x:Name="wp01_lat"       Grid.Column="4"     Grid.Row="2" Width="100" Margin="5" PreviewTextInput="PreviewTextInputLat" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP01 Lat"/>
+                    <TextBox x:Name="wp01_long"      Grid.Column="5"     Grid.Row="2" Width="100" Margin="5" PreviewTextInput="PreviewTextInputLon" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP01 Long"/>
+                    <TextBox x:Name="wp01_alt"       Grid.Column="6"     Grid.Row="2" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP01 Altitude"/>
+                    <TextBox x:Name="wp01_cp"        Grid.Column="7"     Grid.Row="2" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP01 CP"/>
+                    <TextBox x:Name="wp01_pd"        Grid.Column="8"     Grid.Row="2" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP01 PD"/>
+                    <TextBox x:Name="wp01_rd"        Grid.Column="9"     Grid.Row="2" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP01 RD"/>
+                    <TextBox x:Name="wp01_rho"       Grid.Column="10"    Grid.Row="2" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP01 RHO"/>
+                    <TextBox x:Name="wp01_theta"     Grid.Column="11"    Grid.Row="2" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP01 THETA"/>
+                    <TextBox x:Name="wp01_dalt"      Grid.Column="12"    Grid.Row="2" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP01 dAlt"/>
+                    <TextBox x:Name="wp01_dnorth"    Grid.Column="13"    Grid.Row="2" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP01 dNorth"/>
+                    <TextBox x:Name="wp01_deast"     Grid.Column="14"    Grid.Row="2" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP01 dEast"/>
+
+                    <TextBox x:Name="wp02_name"      Grid.Column="2"     Grid.Row="3" Width="100"  Margin="5" materialDesign:HintAssist.Hint="WP02 Name" Grid.ColumnSpan="2" PreviewKeyDown="OnPreviewKeyDownLimitSpecial"/>
+                    <TextBox x:Name="wp02_lat"       Grid.Column="4"     Grid.Row="3" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLat" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP02 Lat"/>
+                    <TextBox x:Name="wp02_long"      Grid.Column="5"     Grid.Row="3" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLon" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP02 Long"/>
+                    <TextBox x:Name="wp02_alt"       Grid.Column="6"     Grid.Row="3" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP02 Altitude"/>
+                    <TextBox x:Name="wp02_cp"        Grid.Column="7"     Grid.Row="3" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP02 CP"/>
+                    <TextBox x:Name="wp02_pd"        Grid.Column="8"     Grid.Row="3" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP02 PD"/>
+                    <TextBox x:Name="wp02_rd"        Grid.Column="9"     Grid.Row="3" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP02 RD"/>
+                    <TextBox x:Name="wp02_rho"       Grid.Column="10"    Grid.Row="3" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP02 RHO"/>
+                    <TextBox x:Name="wp02_theta"     Grid.Column="11"    Grid.Row="3" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP02 THETA"/>
+                    <TextBox x:Name="wp02_dalt"      Grid.Column="12"    Grid.Row="3" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP02 dAlt"/>
+                    <TextBox x:Name="wp02_dnorth"    Grid.Column="13"    Grid.Row="3" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP02 dNorth"/>
+                    <TextBox x:Name="wp02_deast"     Grid.Column="14"    Grid.Row="3" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP02 dEast"/>
+
+                    <TextBox x:Name="wp03_name"      Grid.Column="2"     Grid.Row="4" Width="100" Margin="5" materialDesign:HintAssist.Hint="WP03 Name" Grid.ColumnSpan="2" PreviewKeyDown="OnPreviewKeyDownLimitSpecial"/>
+                    <TextBox x:Name="wp03_lat"       Grid.Column="4"     Grid.Row="4" Width="100" Margin="5" PreviewTextInput="PreviewTextInputLat" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP03 Lat"/>
+                    <TextBox x:Name="wp03_long"      Grid.Column="5"     Grid.Row="4" Width="100" Margin="5" PreviewTextInput="PreviewTextInputLon" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP03 Long"/>
+                    <TextBox x:Name="wp03_alt"       Grid.Column="6"     Grid.Row="4" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP03 Altitude"/>
+                    <TextBox x:Name="wp03_cp"        Grid.Column="7"     Grid.Row="4" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP03 CP"/>
+                    <TextBox x:Name="wp03_pd"        Grid.Column="8"     Grid.Row="4" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP03 PD"/>
+                    <TextBox x:Name="wp03_rd"        Grid.Column="9"     Grid.Row="4" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP03 RD"/>
+                    <TextBox x:Name="wp03_rho"       Grid.Column="10"    Grid.Row="4" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP03 RHO"/>
+                    <TextBox x:Name="wp03_theta"     Grid.Column="11"    Grid.Row="4" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP03 THETA"/>
+                    <TextBox x:Name="wp03_dalt"      Grid.Column="12"    Grid.Row="4" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP03 dAlt"/>
+                    <TextBox x:Name="wp03_dnorth"    Grid.Column="13"    Grid.Row="4" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP03 dNorth"/>
+                    <TextBox x:Name="wp03_deast"     Grid.Column="14"    Grid.Row="4" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP03 dEast"/>
+
+                    <TextBox x:Name="wp04_name"      Grid.Column="2"     Grid.Row="5" Width="100"  Margin="5" materialDesign:HintAssist.Hint="WP04 Name" Grid.ColumnSpan="2" PreviewKeyDown="OnPreviewKeyDownLimitSpecial"/>
+                    <TextBox x:Name="wp04_lat"       Grid.Column="4"     Grid.Row="5" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLat" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP04 Lat"/>
+                    <TextBox x:Name="wp04_long"      Grid.Column="5"     Grid.Row="5" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLon" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP04 Long"/>
+                    <TextBox x:Name="wp04_alt"       Grid.Column="6"     Grid.Row="5" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP04 Altitude"/>
+                    <TextBox x:Name="wp04_cp"        Grid.Column="7"     Grid.Row="5" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP04 CP"/>
+                    <TextBox x:Name="wp04_pd"        Grid.Column="8"     Grid.Row="5" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP04 PD"/>
+                    <TextBox x:Name="wp04_rd"        Grid.Column="9"     Grid.Row="5" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP04 RD"/>
+                    <TextBox x:Name="wp04_rho"       Grid.Column="10"    Grid.Row="5" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP04 RHO"/>
+                    <TextBox x:Name="wp04_theta"     Grid.Column="11"    Grid.Row="5" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP04 THETA"/>
+                    <TextBox x:Name="wp04_dalt"      Grid.Column="12"    Grid.Row="5" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP04 dAlt"/>
+                    <TextBox x:Name="wp04_dnorth"    Grid.Column="13"    Grid.Row="5" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP04 dNorth"/>
+                    <TextBox x:Name="wp04_deast"     Grid.Column="14"    Grid.Row="5" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP04 dEast"/>
+
+                    <TextBox x:Name="wp05_name"      Grid.Column="2"     Grid.Row="6" Width="100" Margin="5" materialDesign:HintAssist.Hint="WP05 Name" Grid.ColumnSpan="2" PreviewKeyDown="OnPreviewKeyDownLimitSpecial"/>
+                    <TextBox x:Name="wp05_lat"       Grid.Column="4"     Grid.Row="6" Width="100" Margin="5" PreviewTextInput="PreviewTextInputLat" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP05 Lat"/>
+                    <TextBox x:Name="wp05_long"      Grid.Column="5"     Grid.Row="6" Width="100" Margin="5" PreviewTextInput="PreviewTextInputLon" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP05 Long"/>
+                    <TextBox x:Name="wp05_alt"       Grid.Column="6"     Grid.Row="6" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP05 Altitude"/>
+                    <TextBox x:Name="wp05_cp"        Grid.Column="7"     Grid.Row="6" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP05 CP"/>
+                    <TextBox x:Name="wp05_pd"        Grid.Column="8"     Grid.Row="6" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP05 PD"/>
+                    <TextBox x:Name="wp05_rd"        Grid.Column="9"     Grid.Row="6" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP05 RD"/>
+                    <TextBox x:Name="wp05_rho"       Grid.Column="10"    Grid.Row="6" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP05 RHO"/>
+                    <TextBox x:Name="wp05_theta"     Grid.Column="11"    Grid.Row="6" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP05 THETA"/>
+                    <TextBox x:Name="wp05_dalt"      Grid.Column="12"    Grid.Row="6" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP05 dAlt"/>
+                    <TextBox x:Name="wp05_dnorth"    Grid.Column="13"    Grid.Row="6" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP05 dNorth"/>
+                    <TextBox x:Name="wp05_deast"     Grid.Column="14"    Grid.Row="6" Width="100" Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP05 dEast"/>
+
+                    <TextBox x:Name="wp06_name"      Grid.Column="2"     Grid.Row="7" Width="100"  Margin="5" materialDesign:HintAssist.Hint="WP06 Name" Grid.ColumnSpan="2" PreviewKeyDown="OnPreviewKeyDownLimitSpecial"/>
+                    <TextBox x:Name="wp06_lat"       Grid.Column="4"     Grid.Row="7" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLat" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP06 Lat"/>
+                    <TextBox x:Name="wp06_long"      Grid.Column="5"     Grid.Row="7" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLon" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP06 Long"/>
+                    <TextBox x:Name="wp06_alt"       Grid.Column="6"     Grid.Row="7" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP06 Altitude"/>
+                    <TextBox x:Name="wp06_cp"        Grid.Column="7"     Grid.Row="7" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP06 CP"/>
+                    <TextBox x:Name="wp06_pd"        Grid.Column="8"     Grid.Row="7" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP06 PD"/>
+                    <TextBox x:Name="wp06_rd"        Grid.Column="9"     Grid.Row="7" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP06 RD"/>
+                    <TextBox x:Name="wp06_rho"       Grid.Column="10"    Grid.Row="7" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP06 RHO"/>
+                    <TextBox x:Name="wp06_theta"     Grid.Column="11"    Grid.Row="7" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP06 THETA"/>
+                    <TextBox x:Name="wp06_dalt"      Grid.Column="12"    Grid.Row="7" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP06 dAlt"/>
+                    <TextBox x:Name="wp06_dnorth"    Grid.Column="13"    Grid.Row="7" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP06 dNorth"/>
+                    <TextBox x:Name="wp06_deast"     Grid.Column="14"    Grid.Row="7" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP06 dEast"/>
+
+                    <TextBox x:Name="wp07_name"      Grid.Column="2"     Grid.Row="8" Width="100"  Margin="5" materialDesign:HintAssist.Hint="WP07 Name" Grid.ColumnSpan="2" PreviewKeyDown="OnPreviewKeyDownLimitSpecial"/>
+                    <TextBox x:Name="wp07_lat"       Grid.Column="4"     Grid.Row="8" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLat" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP07 Lat"/>
+                    <TextBox x:Name="wp07_long"      Grid.Column="5"     Grid.Row="8" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLon" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP07 Long"/>
+                    <TextBox x:Name="wp07_alt"       Grid.Column="6"     Grid.Row="8" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP07 Altitude"/>
+                    <TextBox x:Name="wp07_cp"        Grid.Column="7"     Grid.Row="8" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP07 CP"/>
+                    <TextBox x:Name="wp07_pd"        Grid.Column="8"     Grid.Row="8" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP07 PD"/>
+                    <TextBox x:Name="wp07_rd"        Grid.Column="9"     Grid.Row="8" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP07 RD"/>
+                    <TextBox x:Name="wp07_rho"       Grid.Column="10"    Grid.Row="8" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP07 RHO"/>
+                    <TextBox x:Name="wp07_theta"     Grid.Column="11"    Grid.Row="8" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP07 THETA"/>
+                    <TextBox x:Name="wp07_dalt"      Grid.Column="12"    Grid.Row="8" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP07 dAlt"/>
+                    <TextBox x:Name="wp07_dnorth"    Grid.Column="13"    Grid.Row="8" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP07 dNorth"/>
+                    <TextBox x:Name="wp07_deast"     Grid.Column="14"    Grid.Row="8" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP07 dEast"/>
+
+                    <TextBox x:Name="wp08_name"      Grid.Column="2"     Grid.Row="9" Width="100"  Margin="5" materialDesign:HintAssist.Hint="WP08 Name" Grid.ColumnSpan="2" PreviewKeyDown="OnPreviewKeyDownLimitSpecial"/>
+                    <TextBox x:Name="wp08_lat"       Grid.Column="4"     Grid.Row="9" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLat" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP08 Lat"/>
+                    <TextBox x:Name="wp08_long"      Grid.Column="5"     Grid.Row="9" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLon" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP08 Long"/>
+                    <TextBox x:Name="wp08_alt"       Grid.Column="6"     Grid.Row="9" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP08 Altitude"/>
+                    <TextBox x:Name="wp08_cp"        Grid.Column="7"     Grid.Row="9" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP08 CP"/>
+                    <TextBox x:Name="wp08_pd"        Grid.Column="8"     Grid.Row="9" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP08 PD"/>
+                    <TextBox x:Name="wp08_rd"        Grid.Column="9"     Grid.Row="9" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP08 RD"/>
+                    <TextBox x:Name="wp08_rho"       Grid.Column="10"    Grid.Row="9" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP08 RHO"/>
+                    <TextBox x:Name="wp08_theta"     Grid.Column="11"    Grid.Row="9" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP08 THETA"/>
+                    <TextBox x:Name="wp08_dalt"      Grid.Column="12"    Grid.Row="9" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP08 dAlt"/>
+                    <TextBox x:Name="wp08_dnorth"    Grid.Column="13"    Grid.Row="9" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP08 dNorth"/>
+                    <TextBox x:Name="wp08_deast"     Grid.Column="14"    Grid.Row="9" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP08 dEast"/>
+
+                    <TextBox x:Name="wp09_name"      Grid.Column="2"     Grid.Row="10" Width="100"  Margin="5" materialDesign:HintAssist.Hint="WP09 Name" Grid.ColumnSpan="2" PreviewKeyDown="OnPreviewKeyDownLimitSpecial"/>
+                    <TextBox x:Name="wp09_lat"       Grid.Column="4"     Grid.Row="10" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLat" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP09 Lat"/>
+                    <TextBox x:Name="wp09_long"      Grid.Column="5"     Grid.Row="10" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLon" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP09 Long"/>
+                    <TextBox x:Name="wp09_alt"       Grid.Column="6"     Grid.Row="10" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP09 Altitude"/>
+                    <TextBox x:Name="wp09_cp"        Grid.Column="7"     Grid.Row="10" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP09 CP"/>
+                    <TextBox x:Name="wp09_pd"        Grid.Column="8"     Grid.Row="10" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP09 PD"/>
+                    <TextBox x:Name="wp09_rd"        Grid.Column="9"     Grid.Row="10" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP09 RD"/>
+                    <TextBox x:Name="wp09_rho"       Grid.Column="10"    Grid.Row="10" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP09 RHO"/>
+                    <TextBox x:Name="wp09_theta"     Grid.Column="11"    Grid.Row="10" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP09 THETA"/>
+                    <TextBox x:Name="wp09_dalt"      Grid.Column="12"    Grid.Row="10" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP09 dAlt"/>
+                    <TextBox x:Name="wp09_dnorth"    Grid.Column="13"    Grid.Row="10" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP09 dNorth"/>
+                    <TextBox x:Name="wp09_deast"     Grid.Column="14"    Grid.Row="10" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP09 dEast"/>
+
+                    <TextBox x:Name="wp10_name"      Grid.Column="2"     Grid.Row="11" Width="100"  Margin="5" materialDesign:HintAssist.Hint="WP10 Name" Grid.ColumnSpan="2" PreviewKeyDown="OnPreviewKeyDownLimitSpecial"/>
+                    <TextBox x:Name="wp10_lat"       Grid.Column="4"     Grid.Row="11" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLat" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP10 Lat"/>
+                    <TextBox x:Name="wp10_long"      Grid.Column="5"     Grid.Row="11" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLon" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP10 Long"/>
+                    <TextBox x:Name="wp10_alt"       Grid.Column="6"     Grid.Row="11" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP10 Altitude"/>
+                    <TextBox x:Name="wp10_cp"        Grid.Column="7"     Grid.Row="11" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP10 CP"/>
+                    <TextBox x:Name="wp10_pd"        Grid.Column="8"     Grid.Row="11" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP10 PD"/>
+                    <TextBox x:Name="wp10_rd"        Grid.Column="9"     Grid.Row="11" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP10 RD"/>
+                    <TextBox x:Name="wp10_rho"       Grid.Column="10"    Grid.Row="11" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP10 RHO"/>
+                    <TextBox x:Name="wp10_theta"     Grid.Column="11"    Grid.Row="11" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP10 THETA"/>
+                    <TextBox x:Name="wp10_dalt"      Grid.Column="12"    Grid.Row="11" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP10 dAlt"/>
+                    <TextBox x:Name="wp10_dnorth"    Grid.Column="13"    Grid.Row="11" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP10 dNorth"/>
+                    <TextBox x:Name="wp10_deast"     Grid.Column="14"    Grid.Row="11" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP10 dEast"/>
+
+                    <TextBox x:Name="wp11_name"      Grid.Column="2"     Grid.Row="12" Width="100"  Margin="5" materialDesign:HintAssist.Hint="WP11 Name" Grid.ColumnSpan="2" PreviewKeyDown="OnPreviewKeyDownLimitSpecial"/>
+                    <TextBox x:Name="wp11_lat"       Grid.Column="4"     Grid.Row="12" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLat" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP11 Lat"/>
+                    <TextBox x:Name="wp11_long"      Grid.Column="5"     Grid.Row="12" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLon" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP11 Long"/>
+                    <TextBox x:Name="wp11_alt"       Grid.Column="6"     Grid.Row="12" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP11 Altitude"/>
+                    <TextBox x:Name="wp11_cp"        Grid.Column="7"     Grid.Row="12" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP11 CP"/>
+                    <TextBox x:Name="wp11_pd"        Grid.Column="8"     Grid.Row="12" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP11 PD"/>
+                    <TextBox x:Name="wp11_rd"        Grid.Column="9"     Grid.Row="12" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP11 RD"/>
+                    <TextBox x:Name="wp11_rho"       Grid.Column="10"    Grid.Row="12" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP11 RHO"/>
+                    <TextBox x:Name="wp11_theta"     Grid.Column="11"    Grid.Row="12" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP11 THETA"/>
+                    <TextBox x:Name="wp11_dalt"      Grid.Column="12"    Grid.Row="12" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP11 dAlt"/>
+                    <TextBox x:Name="wp11_dnorth"    Grid.Column="13"    Grid.Row="12" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP11 dNorth"/>
+                    <TextBox x:Name="wp11_deast"     Grid.Column="14"    Grid.Row="12" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP11 dEast"/>
+
+                    <TextBox x:Name="wp12_name"      Grid.Column="2"     Grid.Row="13" Width="100"  Margin="5" materialDesign:HintAssist.Hint="WP12 Name" Grid.ColumnSpan="2" PreviewKeyDown="OnPreviewKeyDownLimitSpecial"/>
+                    <TextBox x:Name="wp12_lat"       Grid.Column="4"     Grid.Row="13" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLat" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP12 Lat"/>
+                    <TextBox x:Name="wp12_long"      Grid.Column="5"     Grid.Row="13" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLon" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP12 Long"/>
+                    <TextBox x:Name="wp12_alt"       Grid.Column="6"     Grid.Row="13" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP12 Altitude"/>
+                    <TextBox x:Name="wp12_cp"        Grid.Column="7"     Grid.Row="13" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP12 CP"/>
+                    <TextBox x:Name="wp12_pd"        Grid.Column="8"     Grid.Row="13" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP12 PD"/>
+                    <TextBox x:Name="wp12_rd"        Grid.Column="9"     Grid.Row="13" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP12 RD"/>
+                    <TextBox x:Name="wp12_rho"       Grid.Column="10"    Grid.Row="13" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP12 RHO"/>
+                    <TextBox x:Name="wp12_theta"     Grid.Column="11"    Grid.Row="13" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP12 THETA"/>
+                    <TextBox x:Name="wp12_dalt"      Grid.Column="12"    Grid.Row="13" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP12 dAlt"/>
+                    <TextBox x:Name="wp12_dnorth"    Grid.Column="13"    Grid.Row="13" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP12 dNorth"/>
+                    <TextBox x:Name="wp12_deast"     Grid.Column="14"    Grid.Row="13" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP12 dEast"/>
+
+                    <TextBox x:Name="wp13_name"      Grid.Column="2"     Grid.Row="14" Width="100"  Margin="5" materialDesign:HintAssist.Hint="WP13 Name" Grid.ColumnSpan="2" PreviewKeyDown="OnPreviewKeyDownLimitSpecial"/>
+                    <TextBox x:Name="wp13_lat"       Grid.Column="4"     Grid.Row="14" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLat" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP13 Lat"/>
+                    <TextBox x:Name="wp13_long"      Grid.Column="5"     Grid.Row="14" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLon" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP13 Long"/>
+                    <TextBox x:Name="wp13_alt"       Grid.Column="6"     Grid.Row="14" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP13 Altitude"/>
+                    <TextBox x:Name="wp13_cp"        Grid.Column="7"     Grid.Row="14" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP13 CP"/>
+                    <TextBox x:Name="wp13_pd"        Grid.Column="8"     Grid.Row="14" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP13 PD"/>
+                    <TextBox x:Name="wp13_rd"        Grid.Column="9"     Grid.Row="14" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP13 RD"/>
+                    <TextBox x:Name="wp13_rho"       Grid.Column="10"    Grid.Row="14" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP13 RHO"/>
+                    <TextBox x:Name="wp13_theta"     Grid.Column="11"    Grid.Row="14" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP13 THETA"/>
+                    <TextBox x:Name="wp13_dalt"      Grid.Column="12"    Grid.Row="14" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP13 dAlt"/>
+                    <TextBox x:Name="wp13_dnorth"    Grid.Column="13"    Grid.Row="14" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP13 dNorth"/>
+                    <TextBox x:Name="wp13_deast"     Grid.Column="14"    Grid.Row="14" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP13 dEast"/>
+
+                    <TextBox x:Name="wp14_name"      Grid.Column="2"     Grid.Row="15" Width="100"  Margin="5" materialDesign:HintAssist.Hint="WP14 Name" Grid.ColumnSpan="2" PreviewKeyDown="OnPreviewKeyDownLimitSpecial"/>
+                    <TextBox x:Name="wp14_lat"       Grid.Column="4"     Grid.Row="15" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLat" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP14 Lat"/>
+                    <TextBox x:Name="wp14_long"      Grid.Column="5"     Grid.Row="15" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLon" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP14 Long"/>
+                    <TextBox x:Name="wp14_alt"       Grid.Column="6"     Grid.Row="15" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP14 Altitude"/>
+                    <TextBox x:Name="wp14_cp"        Grid.Column="7"     Grid.Row="15" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP14 CP"/>
+                    <TextBox x:Name="wp14_pd"        Grid.Column="8"     Grid.Row="15" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP14 PD"/>
+                    <TextBox x:Name="wp14_rd"        Grid.Column="9"     Grid.Row="15" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP14 RD"/>
+                    <TextBox x:Name="wp14_rho"       Grid.Column="10"    Grid.Row="15" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP14 RHO"/>
+                    <TextBox x:Name="wp14_theta"     Grid.Column="11"    Grid.Row="15" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP14 THETA"/>
+                    <TextBox x:Name="wp14_dalt"      Grid.Column="12"    Grid.Row="15" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP14 dAlt"/>
+                    <TextBox x:Name="wp14_dnorth"    Grid.Column="13"    Grid.Row="15" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP14 dNorth"/>
+                    <TextBox x:Name="wp14_deast"     Grid.Column="14"    Grid.Row="15" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP14 dEast"/>
+
+                    <TextBox x:Name="wp15_name"      Grid.Column="2"     Grid.Row="16" Width="100"  Margin="5" materialDesign:HintAssist.Hint="WP15 Name" Grid.ColumnSpan="2" PreviewKeyDown="OnPreviewKeyDownLimitSpecial"/>
+                    <TextBox x:Name="wp15_lat"       Grid.Column="4"     Grid.Row="16" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLat" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP15 Lat"/>
+                    <TextBox x:Name="wp15_long"      Grid.Column="5"     Grid.Row="16" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLon" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP15 Long"/>
+                    <TextBox x:Name="wp15_alt"       Grid.Column="6"     Grid.Row="16" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP15 Altitude"/>
+                    <TextBox x:Name="wp15_cp"        Grid.Column="7"     Grid.Row="16" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP15 CP"/>
+                    <TextBox x:Name="wp15_pd"        Grid.Column="8"     Grid.Row="16" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP15 PD"/>
+                    <TextBox x:Name="wp15_rd"        Grid.Column="9"     Grid.Row="16" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP15 RD"/>
+                    <TextBox x:Name="wp15_rho"       Grid.Column="10"    Grid.Row="16" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP15 RHO"/>
+                    <TextBox x:Name="wp15_theta"     Grid.Column="11"    Grid.Row="16" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP15 THETA"/>
+                    <TextBox x:Name="wp15_dalt"      Grid.Column="12"    Grid.Row="16" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP15 dAlt"/>
+                    <TextBox x:Name="wp15_dnorth"    Grid.Column="13"    Grid.Row="16" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP15 dNorth"/>
+                    <TextBox x:Name="wp15_deast"     Grid.Column="14"    Grid.Row="16" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP15 dEast"/>
+
+                    <TextBox x:Name="wp16_name"      Grid.Column="2"     Grid.Row="17" Width="100"  Margin="5" materialDesign:HintAssist.Hint="WP16 Name" Grid.ColumnSpan="2" PreviewKeyDown="OnPreviewKeyDownLimitSpecial"/>
+                    <TextBox x:Name="wp16_lat"       Grid.Column="4"     Grid.Row="17" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLat" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP16 Lat"/>
+                    <TextBox x:Name="wp16_long"      Grid.Column="5"     Grid.Row="17" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLon" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP16 Long"/>
+                    <TextBox x:Name="wp16_alt"       Grid.Column="6"     Grid.Row="17" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP16 Altitude"/>
+                    <TextBox x:Name="wp16_cp"        Grid.Column="7"     Grid.Row="17" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP16 CP"/>
+                    <TextBox x:Name="wp16_pd"        Grid.Column="8"     Grid.Row="17" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP16 PD"/>
+                    <TextBox x:Name="wp16_rd"        Grid.Column="9"     Grid.Row="17" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP16 RD"/>
+                    <TextBox x:Name="wp16_rho"       Grid.Column="10"    Grid.Row="17" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP16 RHO"/>
+                    <TextBox x:Name="wp16_theta"     Grid.Column="11"    Grid.Row="17" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP16 THETA"/>
+                    <TextBox x:Name="wp16_dalt"      Grid.Column="12"    Grid.Row="17" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP16 dAlt"/>
+                    <TextBox x:Name="wp16_dnorth"    Grid.Column="13"    Grid.Row="17" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP16 dNorth"/>
+                    <TextBox x:Name="wp16_deast"     Grid.Column="14"    Grid.Row="17" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP16 dEast"/>
+
+                    <TextBox x:Name="wp17_name"      Grid.Column="2"     Grid.Row="18" Width="100"  Margin="5" materialDesign:HintAssist.Hint="WP17 Name" Grid.ColumnSpan="2" PreviewKeyDown="OnPreviewKeyDownLimitSpecial"/>
+                    <TextBox x:Name="wp17_lat"       Grid.Column="4"     Grid.Row="18" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLat" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP17 Lat"/>
+                    <TextBox x:Name="wp17_long"      Grid.Column="5"     Grid.Row="18" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLon" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP17 Long"/>
+                    <TextBox x:Name="wp17_alt"       Grid.Column="6"     Grid.Row="18" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP17 Altitude"/>
+                    <TextBox x:Name="wp17_cp"        Grid.Column="7"     Grid.Row="18" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP17 CP"/>
+                    <TextBox x:Name="wp17_pd"        Grid.Column="8"     Grid.Row="18" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP17 PD"/>
+                    <TextBox x:Name="wp17_rd"        Grid.Column="9"     Grid.Row="18" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP17 RD"/>
+                    <TextBox x:Name="wp17_rho"       Grid.Column="10"    Grid.Row="18" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP17 RHO"/>
+                    <TextBox x:Name="wp17_theta"     Grid.Column="11"    Grid.Row="18" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP17 THETA"/>
+                    <TextBox x:Name="wp17_dalt"      Grid.Column="12"    Grid.Row="18" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP17 dAlt"/>
+                    <TextBox x:Name="wp17_dnorth"    Grid.Column="13"    Grid.Row="18" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP17 dNorth"/>
+                    <TextBox x:Name="wp17_deast"     Grid.Column="14"    Grid.Row="18" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP17 dEast"/>
+
+                    <TextBox x:Name="wp18_name"      Grid.Column="2"     Grid.Row="19" Width="100"  Margin="5" materialDesign:HintAssist.Hint="WP18 Name" Grid.ColumnSpan="2" PreviewKeyDown="OnPreviewKeyDownLimitSpecial"/>
+                    <TextBox x:Name="wp18_lat"       Grid.Column="4"     Grid.Row="19" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLat" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP18 Lat"/>
+                    <TextBox x:Name="wp18_long"      Grid.Column="5"     Grid.Row="19" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLon" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP18 Long"/>
+                    <TextBox x:Name="wp18_alt"       Grid.Column="6"     Grid.Row="19" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP18 Altitude"/>
+                    <TextBox x:Name="wp18_cp"        Grid.Column="7"     Grid.Row="19" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP18 CP"/>
+                    <TextBox x:Name="wp18_pd"        Grid.Column="8"     Grid.Row="19" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP18 PD"/>
+                    <TextBox x:Name="wp18_rd"        Grid.Column="9"     Grid.Row="19" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP18 RD"/>
+                    <TextBox x:Name="wp18_rho"       Grid.Column="10"    Grid.Row="19" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP18 RHO"/>
+                    <TextBox x:Name="wp18_theta"     Grid.Column="11"    Grid.Row="19" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP18 THETA"/>
+                    <TextBox x:Name="wp18_dalt"      Grid.Column="12"    Grid.Row="19" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP18 dAlt"/>
+                    <TextBox x:Name="wp18_dnorth"    Grid.Column="13"    Grid.Row="19" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP18 dNorth"/>
+                    <TextBox x:Name="wp18_deast"     Grid.Column="14"    Grid.Row="19" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP18 dEast"/>
+
+                    <TextBox x:Name="wp19_name"      Grid.Column="2"     Grid.Row="20" Width="100"  Margin="5" materialDesign:HintAssist.Hint="WP19 Name" Grid.ColumnSpan="2" PreviewKeyDown="OnPreviewKeyDownLimitSpecial"/>
+                    <TextBox x:Name="wp19_lat"       Grid.Column="4"     Grid.Row="20" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLat" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP19 Lat"/>
+                    <TextBox x:Name="wp19_long"      Grid.Column="5"     Grid.Row="20" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLon" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP19 Long"/>
+                    <TextBox x:Name="wp19_alt"       Grid.Column="6"     Grid.Row="20" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP19 Altitude"/>
+                    <TextBox x:Name="wp19_cp"        Grid.Column="7"     Grid.Row="20" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP19 CP"/>
+                    <TextBox x:Name="wp19_pd"        Grid.Column="8"     Grid.Row="20" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP19 PD"/>
+                    <TextBox x:Name="wp19_rd"        Grid.Column="9"     Grid.Row="20" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP19 RD"/>
+                    <TextBox x:Name="wp19_rho"       Grid.Column="10"    Grid.Row="20" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP19 RHO"/>
+                    <TextBox x:Name="wp19_theta"     Grid.Column="11"    Grid.Row="20" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP19 THETA"/>
+                    <TextBox x:Name="wp19_dalt"      Grid.Column="12"    Grid.Row="20" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP19 dAlt"/>
+                    <TextBox x:Name="wp19_dnorth"    Grid.Column="13"    Grid.Row="20" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP19 dNorth"/>
+                    <TextBox x:Name="wp19_deast"     Grid.Column="14"    Grid.Row="20" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP19 dEast"/>
+
+                    <TextBox x:Name="wp20_name"      Grid.Column="2"     Grid.Row="21" Width="100"  Margin="5" materialDesign:HintAssist.Hint="WP20 Name" Grid.ColumnSpan="2" PreviewKeyDown="OnPreviewKeyDownLimitSpecial"/>
+                    <TextBox x:Name="wp20_lat"       Grid.Column="4"     Grid.Row="21" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLat" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP20 Lat"/>
+                    <TextBox x:Name="wp20_long"      Grid.Column="5"     Grid.Row="21" Width="100"  Margin="5" PreviewTextInput="PreviewTextInputLon" PreviewKeyDown="OnPreviewKeyDown" CharacterCasing="Upper" materialDesign:HintAssist.Hint="WP20 Long"/>
+                    <TextBox x:Name="wp20_alt"       Grid.Column="6"     Grid.Row="21" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP20 Altitude"/>
+                    <TextBox x:Name="wp20_cp"        Grid.Column="7"     Grid.Row="21" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP20 CP"/>
+                    <TextBox x:Name="wp20_pd"        Grid.Column="8"     Grid.Row="21" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP20 PD"/>
+                    <TextBox x:Name="wp20_rd"        Grid.Column="9"     Grid.Row="21" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP20 RD"/>
+                    <TextBox x:Name="wp20_rho"       Grid.Column="10"    Grid.Row="21" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP20 RHO"/>
+                    <TextBox x:Name="wp20_theta"     Grid.Column="11"    Grid.Row="21" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP20 THETA"/>
+                    <TextBox x:Name="wp20_dalt"      Grid.Column="12"    Grid.Row="21" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP20 dAlt"/>
+                    <TextBox x:Name="wp20_dnorth"    Grid.Column="13"    Grid.Row="21" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP20 dNorth"/>
+                    <TextBox x:Name="wp20_deast"     Grid.Column="14"    Grid.Row="21" Width="100"  Margin="5" PreviewTextInput="PreviewTextInput" PreviewKeyDown="OnPreviewKeyDown" materialDesign:HintAssist.Hint="WP20 dEast"/>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

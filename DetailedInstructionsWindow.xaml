@@ -1,0 +1,57 @@
+﻿<Window x:Class="DCS_DTC_Mission_Planning_Software.DetailedInstructionsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DCS_DTC_Mission_Planning_Software"
+        mc:Ignorable="d"
+        Topmost="True"
+        Title="DMPS Detailed Instructions" Height="700" Width="600" Closing="Window_Closing">
+    <FlowDocumentReader ViewingMode="Scroll" Zoom="80" >
+        <FlowDocument  Background="AliceBlue" FontFamily="Cascadia Mono" >
+                <Paragraph TextAlignment="Left" >Welcome to DCS DTC Mission planning Software (DMPS)!</Paragraph>
+                <List MarkerStyle="None" Margin="0" Padding="0">
+                <ListItem>
+                    <Paragraph Padding="4">1. Download the zip folder containing DMPS.</Paragraph>
+                    <Paragraph Padding="4">2. Extract the zip folder using winrar, winzip, 7zip, or etc.</Paragraph>
+                    <Paragraph Padding="4">3. If you would like to use the "Get DCS Coords" feature:</Paragraph>
+                    <Paragraph Padding="20,1">3a. Click and drag the `DMPS.lua` file into your 'C:/Users/ProfileName/SavedGames/DCS/Scripts' folder.</Paragraph>
+
+                    <Paragraph Padding="20,1">3b. If you have a `C:/Users/ProfileName/SavedGames/DCS/Scripts/export/export.lua` file, add the following to the of the file:</Paragraph>
+                    <Paragraph Padding="40,1">3b1. local DMPSLfs=require('lfs'); dofile(DMPSLfs.writedir()..'Scripts/DMPS.lua')</Paragraph>
+                    <Paragraph Padding="20,1">3c. If you don't have a Scripts folder or an `export.lua` file, you can click and drag the Scripts folder from the zip into your 'C:/Users/ProfileName/Saved Games/DCS' folder.</Paragraph>
+                    <Paragraph Padding="4">4. Run DCS and DMPS.exe [see note 1].</Paragraph>
+                    <Paragraph Padding="4">5. In DCS start the M-2000C CAUCASUS Cold Start Instant Action Mission.</Paragraph>
+                    <Paragraph Padding="4">6. After the game is finished loading, go to the F10 Map.</Paragraph>
+                    <Paragraph Padding="4">7. You can now program your DTC information using DMPS.</Paragraph>
+                    <Paragraph Padding="4">8. Populate the mandatory fields at the top. Aircraft, Terrain, Date, and DTC Name.</Paragraph>
+                    <Paragraph Padding="4">9. You can enter waypoint values by hand [see note 2] or you can use the "Get DCS Coords" tool (thank you DCSTheWay!):</Paragraph>
+                    <Paragraph Padding="20,2">10a. In DMPS, click the radial button to the left of Waypoint 1.</Paragraph>
+                    <Paragraph Padding="20,2">10b. Give the waypoint a name, if you wish.</Paragraph>
+                    <Paragraph Padding="20,2">10c. Click show crosshair [see note 3].</Paragraph>
+                    <Paragraph Padding="20,2">10d. In DCS, click and drag the map to position the crosshair over your desired coordinate.</Paragraph>
+                    <Paragraph Padding="20,2">10e. In DMPS, click "Get DCS Coords". You sould see the coordinate information in DMPS populate with the information for your selected waypoint.</Paragraph>
+                    <Paragraph Padding="20,2">10f. The radial button will automatically move to the next waypoint. Follow steps 10x to 10y for more waypoints.</Paragraph>
+                    <Paragraph Padding="4">11. When you have all the waypoints (up to 20) and waypoint information you desire, click Export.</Paragraph>
+                    <Paragraph Padding="4">12. Give the file a name</Paragraph>
+                    <Paragraph Padding="4" FontWeight="SemiBold" >13. Save the file in Saved Games/DCS/Datacartridges. If the folder does not exist, create it.</Paragraph>
+                    <Paragraph Padding="4">14. While in the Datacartridges folder, click "ok" to save the dtc file. The M-2000C will only detect a max of 10 DTC files.</Paragraph>
+                    <Paragraph Padding="4">15. Refresh your available DTCs in DCS by doing one of the following:</Paragraph>
+                    <Paragraph Padding="20,2">15a. Pressing LShift+R to restart the mission (Single Player)</Paragraph>
+                    <Paragraph Padding="20,2">15b. Reload the mission by exiting the mission (Single Player or Multiplayer)</Paragraph>
+                    <Paragraph Padding="20,2">15c. Switching into a new aircraft of the same type (Single Player or Multiplayer)</Paragraph>
+                    <Paragraph Padding="20,2">15d. Restart DCS(Single Player or Multiplayer)</Paragraph>
+                    <Paragraph Padding="4">16. When you are back in a Cold and Dark M-200C, use the DTC commands to show your DTCs, pick, load, and unload your DTCs. Keybinds are in the menu.</Paragraph>
+                    <Paragraph Padding="4">17. Viola! DTC complete! Enjoy!</Paragraph>
+                </ListItem>
+                  </List>
+            <Paragraph>Note 1: DMPS does not require DCS to Run.</Paragraph>
+            <Paragraph>Note 2: Garbage in, garbage out... Enter information accurately. See Definitions for assistance on formatting.</Paragraph>
+            <Paragraph>Note 3: The "Get DCS Coords" feature will work for flatscreen, VR, and windowed. DMPS Crosshair feature is only a visual overlay, designed to work accurately only when DCS occupies the entire primary screen. "Get DCS Coords" will get the coordinates at the center of your current F10 view. If you zoom in enough, your coordinates will be accurate, even without the Crosshair. Remember this for VR and when DCS is windowed and many not be centered on your monitor.</Paragraph>
+            <Paragraph>Note 4: The DCS: M2000-C DTC is stil WIP. Use with care.</Paragraph>
+            <Paragraph>Note 5: When the PP BUTs are 10 or less, only BUTS 11-20 will be filled. With PP BUTs more than 10 the DTC fill starting on BUT 1.
+            </Paragraph>
+        </FlowDocument>
+        </FlowDocumentReader>
+    
+</Window>
