@@ -1,6 +1,6 @@
 # DCS-DTC-Mission-Planning-System
 Welcome to DCS DTC Mission planning System (DMPS)!
-1. Download the zip folder containing DMPS.
+1. Download the zip folder containing DMPS. (Link Soon :TM:)
 2. Extract the zip folder using winrar, winzip, 7zip, or etc.
 3. If you would like to use the "Get DCS Coords" feature:
     1. Click and drag the `DMPS.lua` file into your 'C:/Users/ProfileName/SavedGames/DCS/Scripts' folder.
