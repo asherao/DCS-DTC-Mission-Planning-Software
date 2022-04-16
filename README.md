@@ -1,38 +1,104 @@
-# DCS-DTC-Mission-Planning-System
-Welcome to DCS DTC Mission planning System (DMPS)!
-1. Download the zip folder containing DMPS. (Link Soon :TM:)
-2. Extract the zip folder using winrar, winzip, 7zip, or etc.
-3. If you would like to use the "Get DCS Coords" feature:
-    1. Click and drag the `DMPS.lua` file into your 'C:/Users/ProfileName/SavedGames/DCS/Scripts' folder.
-    2. If you have a `C:/Users/ProfileName/SavedGames/DCS/Scripts/export/export.lua` file, add the following to the of the file:
-        1. local DMPSLfs=require('lfs'); dofile(DMPSLfs.writedir()..'Scripts/DMPS.lua')
-    3. If you don't have a Scripts folder or an `export.lua` file, you can click and drag the Scripts folder from the zip into your 'C:/Users/ProfileName/Saved Games/DCS' folder.
-4. Run DCS and DMPS.exe [see note 1].
-5. In DCS start the M-2000C CAUCASUS Cold Start Instant Action Mission.
-6. After the game is finished loading, go to the F10 Map.
-7. You can now program your DTC information using DMPS.
-8. Populate the mandatory fields at the top. Aircraft, Terrain, Date, and DTC Name.
-9. You can enter waypoint values by hand [see note 2] or you can use the "Get DCS Coords" tool (thank you DCSTheWay!):
-    1. In DMPS, click the radial button to the left of Waypoint 1.
-    2. Give the waypoint a name, if you wish.
-    3. Click show crosshair [see note 3].
-    4. In DCS, click and drag the map to position the crosshair over your desired coordinate.
-    5. In DMPS, click "Get DCS Coords". You sould see the coordinate information in DMPS populate with the information for your selected waypoint.
-    6. The radial button will automatically move to the next waypoint. Follow steps 10x to 10y for more waypoints.
-11. When you have all the waypoints (up to 20) and waypoint information you desire, click Export.
-12. Give the file a name
-13. Save the file in Saved Games/DCS/Datacartridges. If the folder does not exist, create it.
-14. While in the Datacartridges folder, click "ok" to save the dtc file. The M-2000C will only detect a max of 10 DTC files.
-15. Refresh your available DTCs in DCS by doing one of the following:
-    1. Pressing LShift+R to restart the mission (Single Player)
-    2. Reload the mission by exiting the mission (Single Player or Multiplayer)
-    3. Switching into a new aircraft of the same type (Single Player or Multiplayer)
-    4. Restart DCS(Single Player or Multiplayer)
-16. When you are back in a Cold and Dark M-200C, use the DTC commands to show your DTCs, pick, load, and unload your DTCs. Keybinds are in the menu.
-17. Viola! DTC complete! Enjoy!
+# DMPS (DCS DTC Mission Planning Software)
+"It is pronounced 'dimps'"
+DMPS provides a GUI (Graphical User Interface) for DTC creation, for modules that support text-based DTC editing. At the time of this readme, the only module to support such a feature is the M-2000C by Razbam. Hopefully more can be added in the future. DMPS can be used in VR or Flatscreen, in Single Player or Multiplayer, and passes MP Integrity check. This is a proof of concept with the hope that it grows into something buck bigger for DCS.
 
-- Note 1: DMPS does not require DCS to Run.
-- Note 2: Garbage in, garbage out... Enter information accurately. See Definitions for assistance on formatting.
-- Note 3: The "Get DCS Coords" feature will work for flatscreen, VR, and windowed. DMPS Crosshair feature is only a visual overlay, designed to work accurately only when DCS occupies the entire primary screen. "Get DCS Coords" will get the coordinates at the center of your current F10 view. If you zoom in enough, your coordinates will be accurate, even without the Crosshair. Remember this for VR and when DCS is windowed and many not be centered on your monitor.
-- Note 4: The DCS: M2000-C DTC is stil WIP. Use with care.
-- Note 5: When the PP BUTs are 10 or less, only BUTS 11-20 will be filled. With PP BUTs more than 10 the DTC fill starting on BUT 1.
+DMPS can be used in two ways. Either standalone or in-game via the integrated app. You can use one, either, or both methods whenever you like. Both support DTC export and import (work in progress). There are pros and cons for each. DMPS Standalone can be used at any time, with or without a DCS Install. It has the ability to allow you to create waypoints by grabbing then from your current centered view of the F10 map. DMPS Integrated App is only available while in-game, which may be optimal for VR users, for example.
+
+### DMPS Standalone
+DMPS Standalone is launched via `DMPS.exe`. It uses a DCS hook to retrieve coordinate data from the sim.
+### DMPS Integrated App
+DMPS Integrated App launces when DCS starts. It can be toggled with the hotkey `Ctrl+Shift+F1`. 
+
+|*Pros and cons*|Standalone|In-game App|
+|--|--|--|
+|Use|Any Time|Within DCS|
+|Coordinate Entry|By hand or via "Get DCS Coord"|By hand or via "Get DCS Coord"|
+|Lauch|via exe|with DCS|
+|Share DTC Data|via file or clipboard|via file or copy/paste|
+|DTC Import|via `.dtc` files|via `.dtc` file information|
+|DTC Storage (M-2000C)|20 Waypoints|10 Waypoints|
+
+# Installing DMPS
+1. Download DMPS which can be found at the ED User Files https://www.digitalcombatsimulator.com/en/files/3321705/.
+2. Once downloaded, extract the files via your preferred zip software.
+3. Click and Drag the `Scripts` folder into your `Saved Games/DCS` folder. If you are updating, remove all DMPS related files and then drag the new ones over.
+4. If you want to use the "Get DCS Coords" feature in DMPS Standalone, add the following to the bottom of your `Scripts/Export.lua` file: `local DMPSLfs=require('lfs'); dofile(DMPSLfs.writedir()..'Scripts/DMPS.lua')`
+5. (After reading the rest of this readme) You are now ready to use DMPS! You can move DMPS.exe to any location on your computer or you can create a shortcut, your choice.
+
+
+## How to use DMPS
+**New DTCs are available after aircraft respawn**
+1. Start DMPS by either double clicking DMPS.exe (DMPS Standalone) or by starting DCS (DMPS Integrated App).
+2. Select your aircraft. If your aircraft is not in the list, it is not supported by DMPS.
+3. Select the map for the DTC. If your map is not on the list, it is not supported by DMPS.
+4. Enter the date for the DTC. The format is DD/MM/YYYY. Two number day, two number month, four number year. E.g. 25/04/2006.  Acceptable days are 01-31 (keep in mind that different months have different number of days, and leap years). Acceptable months are 01 - 12. Acceptable years are between 1900 and 2099.
+5. Enter the name of the DTC. In DMPS Integrated App this will also be the name of the `.dtc` file.
+6. Enter your waypoint data. Waypoints with a `Lat` and `Long` entry will be exported. You can use the "Get DCS Coords" button to grab `Lat`, `Long`, and `Alt` from DCS while on the F10 Map with your preferred location centered on the screen (works in VR too).
+7. After entering all desired data, press the Export button. In DMPS Standalone you will be prompted to save the DTC to `Saved Games/DCS/Datacartridges`. In DMPS Integrated App the DTC will automatically be exported to the correct location.
+8. If you would like to share your DTC you can:  
+    a. Navigate to `Saved Games/DCS/Datacartridges` and locate the correct `.dtc` file, or  
+    b. In DMPS Standalone click the Copy to Clipboard button to copy the export to your clipboard. You can then paste it in your messaging platform such as Discord, or  
+    c. In DMPS Integrated App copy the Export output from the Output box. You can then paste it in your messaging platform such as Discord.  
+9. Be aware that some messaging platforms may attempt to format your DTC text. It may be best to share the `.dtc` file itself.
+
+### DTC Import using DMPS Standalone
+1. Click the Import button.
+2. Locate and pick a `.dtc` file.
+3. If it was formatted correctly, the `.dtc` file will be loaded into DMPS.
+
+### DTC Import using DMPS Integrated App  
+(currently unavailable)
+1. Click the Clear All Data button.
+2. Paste the contents of a `.dtc` file into the Output Box.
+3. Click the Import button.
+4. If it was formatted correctly, the DTC information will be loaded into DMPS.
+
+**New DTCs are available after aircraft respawn**  
+This can be achieved by one of these methods:
+- In single player use the `RShift+R` keybind to restart the mission.
+- In Multiplayer go to a Spectator slot and then getting back into the aircraft.
+- Restart DCS
+    
+## Tips and Tricks
+- When using DMPS Integrated app with the F10 Map, the in-game coordinate location is "frozen" when the mouse is over the DMPS App. Use this to your advantage and position the App and your F10 Map view in a location where the coordinates will "freeze" where you want them to, allowing you to reference them while typing them in. [example pic]
+- In DMPS Standalone you can combine DTCs by first populating the desired fields and then importing another. The imported fields will take precedence per field. This is useful for situations in which you have a DTC with a few often used waypoints.
+- Garbage in, garbage out... Enter information accurately.
+- The "Get DCS Coords" feature will work for flatscreen, VR, and windowed. DMPS Crosshair feature is only a visual overlay, designed to work accurately only when DCS occupies the entire primary screen. "Get DCS Coords" will get the coordinates at the center of your current F10 view. If you zoom in enough, your coordinates will be accurate, even without the Crosshair. Remember this for VR and when DCS is windowed and many not be centered on your monitor.
+- The DCS: M2000-C DTC is stil WIP. Use with care.
+- When the PP BUTs are 10 or less, only BUTS 11-20 will be filled. With PP BUTs more than 10 the DTC fill starting on BUT 1.
+## Definitions
+Different aircraft have different properties for their waypoints. You can learn about what they are and what they mean below or via the wiki [wiki link]. 
+### M-2000C Waypoint Definitions
+|Item|Description|
+|--|--|
+|Waypoint Name|The name of the waypoint|
+|Latitude|The latitude segment of the waypoint. There are three acceptable formats. XDD:MM:SS(.ssss), XDD:MM(.mmmm), and XDD(.dddd). Parentheses are optional extra precision digits of arbitrary length|
+|Longitude|The longitude segment of the waypoint. Same rules as Latitude.|
+|Altitude|The altitude/elevation of the waypoint. Numbers only.|
+|CP|Unknown. Numbers only.|
+|PD|Unknown. Numbers only.|
+|RD|Unknown. Numbers only.|
+|RHO|Unknown. Numbers only.|
+|THETA|Unknown. Numbers only.|
+|dAlt|Unknown. Numbers only.|
+|dNorth|Unknown. Numbers only.|
+|dEast|Unknown. Numbers only.|
+
+# Credits
+- Thank you rkusa for DCS-Scratchpad https://github.com/rkusa/dcs-scratchpad/blob/main/Scripts/Hooks/scratchpad-hook.lua  
+- Thank you Noisy for DCS-Stopwatch https://forum.dcs.world/topic/256390-stopwatch-overlay-for-vr-like-srs-or-scratchpad/#comment-4521467  
+- Thank you to the Razbam team who implemented the unique and accessible aircraft DTC method. Hopefully it can be used by the devs of many more modules.  
+- If you are feeling charitable, please feel free to donate. All donations go to supporting the creation of even more free apps and mods for DCS, just like this one! https://www.paypal.com/paypalme/asherao  
+- Join Bailey's VoiceAttack Discord Here https://discord.gg/PbYgC5e  
+- See more of my mods here https://www.digitalcombatsimulator.com/en/files/filter/user-is-baileywa/apply/?PER_PAGE=100  
+- Talk about DMPS here https://forum.dcs.world/topic/298257-dcs-dmps-dtc-mission-planning-system-by-bailey/  
+- Thank you for reading the readme
+
+## Future Project Goals
+- [ ] More Maps
+- [ ] More Aircraft
+- [x] DMPS Integrated App "Get DCS Coords"
+- [ ] DMPS Integrated App Import
+- [ ] Investigate F10 Map Marker detection
+- [ ] Export format checks (to catch user mistakes)
+- [ ] Keybind for capturing coordinates
