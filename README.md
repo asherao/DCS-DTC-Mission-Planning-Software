@@ -1,4 +1,4 @@
-# DMPS (DCS DTC Mission Planning Software)
+# DMPS (DCS DTC Mission Planning System)
 "It is pronounced 'dimps'"
 DMPS provides a GUI (Graphical User Interface) for DTC creation, for modules that support text-based DTC editing. At the time of this readme, the only module to support such a feature is the M-2000C by Razbam. Hopefully more can be added in the future. DMPS can be used in VR or Flatscreen, in Single Player or Multiplayer, and passes MP Integrity check. This is a proof of concept with the hope that it grows into something buck bigger for DCS.
 
