@@ -47,11 +47,9 @@ DMPS Integrated App launces when DCS starts. It can be toggled with the hotkey `
 3. If it was formatted correctly, the `.dtc` file will be loaded into DMPS.
 
 ### DTC Import using DMPS Integrated App  
-(currently unavailable)
 1. Click the Clear All Data button.
-2. Paste the contents of a `.dtc` file into the Output Box.
-3. Click the Import button.
-4. If it was formatted correctly, the DTC information will be loaded into DMPS.
+2. In the DTC Name box, type the filename of a DTC. If the name you typed does not exist, options may be shown to you. If necessary, retype a valid name.
+3. Click the Import button. The DTC information will be loaded into DMPS.
 
 **New DTCs are available after aircraft respawn**  
 This can be achieved by one of these methods:
@@ -99,7 +97,6 @@ Different aircraft have different properties for their waypoints. You can learn 
 - [ ] More Maps
 - [ ] More Aircraft
 - [x] DMPS Integrated App "Get DCS Coords"
-- [ ] DMPS Integrated App Import
-- [ ] Investigate F10 Map Marker detection
+- [x] DMPS Integrated App Import (v0.3.0)
 - [ ] Export format checks (to catch user mistakes)
 - [ ] Keybind for capturing coordinates
