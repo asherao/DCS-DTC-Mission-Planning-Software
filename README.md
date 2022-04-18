@@ -1,5 +1,5 @@
 # DMPS (DCS DTC Mission Planning System)
-"It is pronounced 'dimps'"
+"It is pronounced 'dimps'".  
 DMPS provides a GUI (Graphical User Interface) for DTC creation, for modules that support text-based DTC editing. At the time of this readme, the only module to support such a feature is the M-2000C by Razbam. Hopefully more can be added in the future. DMPS can be used in VR or Flatscreen, in Single Player or Multiplayer, and passes MP Integrity check. This is a proof of concept with the hope that it grows into something buck bigger for DCS.
 
 DMPS can be used in two ways. Either standalone or in-game via the integrated app. You can use one, either, or both methods whenever you like. Both support DTC export and import (work in progress). There are pros and cons for each. DMPS Standalone can be used at any time, with or without a DCS Install. It has the ability to allow you to create waypoints by grabbing then from your current centered view of the F10 map. DMPS Integrated App is only available while in-game, which may be optimal for VR users, for example.
@@ -58,6 +58,7 @@ This can be achieved by one of these methods:
 - Restart DCS
     
 ## Tips and Tricks
+- **If you are having some issues upgrading from v0.3.0 to v0.4.0, delete your `C:\Users\...\Saved Games\DCS\Config\DMPS.config` file and restart DCS.**
 - You can change the keybinds via the config folder located at `C:\Users\...\Saved Games\DCS\Config\DMPS.config`. You can bind the keybind hotkey to your controller or HOTAS using a 3rd party program like Voice Attack (https://voiceattack.com/).
 - When using DMPS Integrated app with the F10 Map, the in-game coordinate location is "frozen" when the mouse is over the DMPS App. Use this to your advantage and position the App and your F10 Map view in a location where the coordinates will "freeze" where you want them to, allowing you to reference them while typing them in.
 - In DMPS Standalone you can combine DTCs by first populating the desired fields and then importing another. The imported fields will take precedence per field. This is useful for situations in which you have a DTC with a few often used waypoints.
