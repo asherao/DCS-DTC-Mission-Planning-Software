@@ -1,11 +1,14 @@
 --[[Summary:
 TODO:
-None (yay!)
+fix the lables like label_telemetry_coordinatesLong
 
 Ideas:
 Consider making a legend of acceptable coord formats
 Gui Update
 Make date select boxes like what is seen in the mission editor with automatic error checking
+
+Change Log:
+Updated variables to be less module specific
 --]]
 
 local topMargin = 5
@@ -37,18 +40,18 @@ local buttonHeight = 32
 local buttonWidth = 120
 
 local radioButtonHeight = 20
-local radioButtonWidth = 70 -- original is aobut 100.
+local radioButtonWidth = 70 -- original is about 100.
 
 local area2_column1_anchor = leftMargin
-local area2_column2_anchor = area2_column1_anchor + radioButtonWidth + 10
-local area2_column3_anchor = area2_column2_anchor + editBoxWidthArea2 + 10
-local area2_column4_anchor = area2_column3_anchor + editBoxWidthArea2 + 10
-local area2_column5_anchor = area2_column4_anchor + editBoxWidthArea2 + 10
-local area2_column6_anchor = area2_column5_anchor + editBoxWidthArea2mini + 10
-local area2_column7_anchor = area2_column6_anchor + editBoxWidthArea2mini + 10
-local area2_column8_anchor = area2_column7_anchor + editBoxWidthArea2mini + 10
-local area2_column9_anchor = area2_column8_anchor + editBoxWidthArea2mini + 10
-local area2_column10_anchor = area2_column9_anchor + editBoxWidthArea2mini + 10
+local area2_column02_anchor = area2_column1_anchor + radioButtonWidth + 10
+local area2_column03_anchor = area2_column02_anchor + editBoxWidthArea2 + 10
+local area2_column04_anchor = area2_column03_anchor + editBoxWidthArea2 + 10
+local area2_column05_anchor = area2_column04_anchor + editBoxWidthArea2 + 10
+local area2_column06_anchor = area2_column05_anchor + editBoxWidthArea2mini + 10
+local area2_column07_anchor = area2_column06_anchor + editBoxWidthArea2mini + 10
+local area2_column08_anchor = area2_column07_anchor + editBoxWidthArea2mini + 10
+local area2_column09_anchor = area2_column08_anchor + editBoxWidthArea2mini + 10
+local area2_column10_anchor = area2_column09_anchor + editBoxWidthArea2mini + 10
 local area2_column11_anchor = area2_column10_anchor + editBoxWidthArea2mini + 10
 local area2_column12_anchor = area2_column11_anchor + editBoxWidthArea2mini + 10
 local area2_column13_anchor = area2_column12_anchor + editBoxWidthArea2mini + 10
@@ -57,15 +60,15 @@ local area2_column15_anchor = area2_column14_anchor + editBoxWidthArea2mini + 10
 
 
 
-local area1_column2_anchor = labelWidth + 10
-local area1_column3_anchor = area1_column2_anchor + (comboListWidth + 10)
-local area1_column4_anchor = area1_column3_anchor + (buttonWidth + 10)
-local area1_column5_anchor = area1_column4_anchor + (buttonWidth + 20)
+local area1_column02_anchor = labelWidth + 10
+local area1_column03_anchor = area1_column02_anchor + (comboListWidth + 10)
+local area1_column04_anchor = area1_column03_anchor + (buttonWidth + 10)
+local area1_column05_anchor = area1_column04_anchor + (buttonWidth + 20)
 
 local area1_anchorDistance = lineToLinePadding + 30 -- the last number, the larger, the bigger the gap between rows
 local area2_rowDistance = lineToLinePadding + 20
 
-local area2_row_offset = (topMargin + area1_anchorDistance * 3) + buttonCenteringOffset + 60 -- i made up the last number
+local area2_row_offset = (topMargin + area1_anchorDistance * 3) + buttonCenteringOffset + 60 -- made up the last number
 
 local area2_row_gap = area2_row_offset
 local area2_row
@@ -157,7 +160,7 @@ dialog = {
 						},
 						["enabled"] = true,
 						["text"] = "Aircraft",
-						["tooltip"] = "Pick your aircraft.",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -178,7 +181,7 @@ dialog = {
 						},
 						["enabled"] = true,
 						["text"] = "Terrain",
-						["tooltip"] = "Pick your map.",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -199,7 +202,7 @@ dialog = {
 						},
 						["enabled"] = true,
 						["text"] = "Date",
-						["tooltip"] = "Type your date.",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -220,7 +223,7 @@ dialog = {
 						},
 						["enabled"] = true,
 						["text"] = "DTC Name",
-						["tooltip"] = "Type your DTC Name.",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -239,7 +242,7 @@ dialog = {
 						["bounds"] = {
 							["h"] = comboListHeight,
 							["w"] = comboListWidth,
-							["x"] = area1_column2_anchor,
+							["x"] = area1_column02_anchor,
 							["y"] = topMargin,
 						},
 						["enabled"] = true,
@@ -261,7 +264,7 @@ dialog = {
 						["bounds"] = {
 							["h"] = comboListHeight,
 							["w"] = comboListWidth,
-							["x"] = area1_column2_anchor,
+							["x"] = area1_column02_anchor,
 							["y"] = topMargin + area1_anchorDistance * 1,
 						},
 						["enabled"] = true,
@@ -286,7 +289,7 @@ dialog = {
 						["bounds"] = {
 							["h"] = editBoxHeight,
 							["w"] = comboListWidth,
-							["x"] = area1_column2_anchor,
+							["x"] = area1_column02_anchor,
 							["y"] = topMargin + area1_anchorDistance * 2,
 						},
 						["enabled"] = true,
@@ -297,7 +300,7 @@ dialog = {
 						["tabOrder"] = 0,
 						["text"] = "DD/MM/YYYY", -- default "DD/MM/YYYY" optional 25/11/2000
 						["textWrapping"] = false,
-						["tooltip"] = "Format: DD/MM/YYYY",
+						["tooltip"] = "DD/MM/YYYY",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -344,7 +347,7 @@ dialog = {
 						["bounds"] = {
 							["h"] = 20,
 							["w"] = 127,
-							["x"] = area1_column2_anchor +  27 + 5,
+							["x"] = area1_column02_anchor +  27 + 5,
 							["y"] = topMargin + area1_anchorDistance * 2,
 						},
 						["enabled"] = true,
@@ -367,7 +370,7 @@ dialog = {
 						["bounds"] = {
 							["h"] = 20,
 							["w"] = 39,
-							["x"] = area1_column2_anchor + 27 + 5 + 127 + 5,
+							["x"] = area1_column02_anchor + 27 + 5 + 127 + 5,
 							["y"] = topMargin + area1_anchorDistance * 2,
 						},
 						["enabled"] = true,
@@ -411,7 +414,7 @@ dialog = {
 						["bounds"] = {
 							["h"] = 20,
 							["w"] = 27,
-							["x"] = area1_column2_anchor,
+							["x"] = area1_column02_anchor,
 							["y"] = topMargin + area1_anchorDistance * 2,
 						},
 						["enabled"] = true,
@@ -458,7 +461,7 @@ dialog = {
 						["bounds"] = {
 							["h"] = editBoxHeight,
 							["w"] = comboListWidth,
-							["x"] = area1_column2_anchor,
+							["x"] = area1_column02_anchor,
 							["y"] = topMargin + area1_anchorDistance * 3,
 						},
 						["enabled"] = true,
@@ -469,7 +472,7 @@ dialog = {
 						["tabOrder"] = 0,
 						["text"] = "DTC Name",
 						["textWrapping"] = false,
-						["tooltip"] = "Name the DTC",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -514,7 +517,7 @@ dialog = {
 						["bounds"] = {
 							["h"] = buttonHeight,
 							["w"] = buttonWidth,
-							["x"] = area1_column3_anchor,
+							["x"] = area1_column03_anchor,
 							["y"] = topMargin + buttonCenteringOffset,
 						},
 						["enabled"] = true,
@@ -536,12 +539,12 @@ dialog = {
 						["bounds"] = {
 							["h"] = buttonHeight,
 							["w"] = buttonWidth,
-							["x"] = area1_column3_anchor,
+							["x"] = area1_column03_anchor,
 							["y"] = (topMargin + area1_anchorDistance * 1) + buttonCenteringOffset,
 						},
 						["enabled"] = true,
 						["tabOrder"] = 0,
-						["text"] = "Export",
+						["text"] = "Save DTC",
 						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
@@ -559,7 +562,7 @@ dialog = {
 						["bounds"] = {
 							["h"] = buttonHeight,
 							["w"] = buttonWidth,
-							["x"] = area1_column3_anchor,
+							["x"] = area1_column03_anchor,
 							["y"] = (topMargin + area1_anchorDistance * 2) + buttonCenteringOffset,
 						},
 						["enabled"] = true,
@@ -582,7 +585,7 @@ dialog = {
 						["bounds"] = {
 							["h"] = buttonHeight,
 							["w"] = buttonWidth,
-							["x"] = area1_column3_anchor,
+							["x"] = area1_column03_anchor,
 							["y"] = (topMargin + area1_anchorDistance * 3) + buttonCenteringOffset,
 						},
 						["enabled"] = true,
@@ -607,12 +610,12 @@ dialog = {
 						["bounds"] = {
 							["h"] = labelHeight,
 							["w"] = labelTelemetryWidth,
-							["x"] = area1_column4_anchor,
+							["x"] = area1_column04_anchor,
 							["y"] = topMargin,
 						},
 						["enabled"] = true,
 						["text"] = "Aircraft Telemetry",
-						["tooltip"] = "Aircraft Telemetry",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -629,12 +632,12 @@ dialog = {
 						["bounds"] = {
 							["h"] = labelHeight,
 							["w"] = labelTelemetryWidth,
-							["x"] = area1_column4_anchor,
+							["x"] = area1_column04_anchor,
 							["y"] = topMargin + area1_anchorDistance * 1,
 						},
 						["enabled"] = true,
 						["text"] = "Coordinate Telemetry",
-						["tooltip"] = "Coordinate Telemetry",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -646,17 +649,17 @@ dialog = {
 					["type"] = "Static",
 				},
 				--]]
-				["label_telemetry_coordinates_lat"] = {
+				["label_telemetry_coordinatesLat"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = labelHeight,
 							["w"] = labelTelemetryWidth,
-							["x"] = area1_column4_anchor,
+							["x"] = area1_column04_anchor,
 							["y"] = topMargin + area1_anchorDistance * 0.70,
 						},
 						["enabled"] = true,
 						["text"] = "Lat Coord Telemetry",
-						["tooltip"] = "Lat Coord Telemetry",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -667,17 +670,17 @@ dialog = {
 					},
 					["type"] = "Static",
 				},
-				["label_telemetry_coordinates_long"] = {
+				["label_telemetry_coordinatesLong"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = labelHeight,
 							["w"] = labelTelemetryWidth,
-							["x"] = area1_column4_anchor,
+							["x"] = area1_column04_anchor,
 							["y"] = topMargin + area1_anchorDistance * 1.35,
 						},
 						["enabled"] = true,
 						["text"] = "Long Coord Telemetry",
-						["tooltip"] = "Long Coord Telemetry",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -693,12 +696,12 @@ dialog = {
 						["bounds"] = {
 							["h"] = labelHeight,
 							["w"] = labelTelemetryWidth,
-							["x"] = area1_column4_anchor,
+							["x"] = area1_column04_anchor,
 							["y"] = topMargin + area1_anchorDistance * 2,
 						},
 						["enabled"] = true,
 						["text"] = "Elevation Telemetry",
-						["tooltip"] = "Elevation Telemetry",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -714,7 +717,7 @@ dialog = {
 						["bounds"] = {
 							["h"] = buttonHeight,
 							["w"] = buttonWidth,
-							["x"] = area1_column4_anchor,
+							["x"] = area1_column04_anchor,
 							["y"] = (topMargin + area1_anchorDistance * 3) + buttonCenteringOffset,
 						},
 						["enabled"] = true,
@@ -736,14 +739,14 @@ dialog = {
 						["bounds"] = {
 							["h"] = 20,
 							["w"] = 20,
-							["x"] = area1_column4_anchor + buttonWidth + 1,
+							["x"] = area1_column04_anchor + buttonWidth + 1,
 							["y"] = (topMargin + area1_anchorDistance * 3) + buttonCenteringOffset + buttonHeight/2 - 8, -- the minus 10 is half the checkbox height
 						},
 						["enabled"] = true,
 						["state"] = false,
 						["tabOrder"] = 140,
 						["text"] = "",
-						["tooltip"] = "Clear All Data Safety",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -761,8 +764,8 @@ dialog = {
 						["acceptDecimalPoint"] = false,
 						["bounds"] = {
 							["h"] = (topMargin + area1_anchorDistance * 3) + (buttonCenteringOffset*3) + buttonHeight,
-							["w"] = totalWidth - (leftMargin * 2) - area1_column5_anchor, -- original totalWidth - (leftMargin * 2) - area1_column4_anchor, 
-							["x"] = area1_column5_anchor, -- original area1_column4_anchor
+							["w"] = totalWidth - (leftMargin * 2) - area1_column05_anchor, -- original totalWidth - (leftMargin * 2) - area1_column04_anchor, 
+							["x"] = area1_column05_anchor, -- original area1_column04_anchor
 							["y"] = topMargin,
 						},
 						["enabled"] = true,
@@ -771,9 +774,9 @@ dialog = {
 						["password"] = false,
 						["readOnly"] = false,
 						["tabOrder"] = 0,
-						["text"] = "There are three coordinates formats :\n" .. "(parentheses are optional extra precision digits of arbitrary length)\n" .. "XDD:MM:SS(.ssss)\n" .. "XDD:MM(.mmmm)\n" .. "XDD(.dddd)\n" .. "Only lat and long are mandatory\n" .. "If no alt is set, terrain ground height will be used",
+						["text"] = "NOTE: There are three coordinates formats :\n" .. "(parentheses are optional extra precision digits of arbitrary length)\n" .. "XDD:MM:SS(.ssss)\n" .. "XDD:MM(.mmmm)\n" .. "XDD(.dddd)\n" .. "Only lat and long are mandatory\n" .. "If no alt is set, terrain ground height will be used",
 						["textWrapping"] = true,
-						["tooltip"] = "Log and DTC output",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -1056,17 +1059,17 @@ dialog = {
 				-----------------------------
 				-- Start of area 2 Headers --
 				-----------------------------
-				["label_area2_name"] = {
+				["label_area2_column02_title"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = labelHeight,
 							["w"] = labelWidth,
-							["x"] = area2_column2_anchor,
+							["x"] = area2_column02_anchor,
 							["y"] = area2_row_offset - 30, -- put the last number in there as a place holder for now
 						},
 						["enabled"] = true,
 						["text"] = "Name",
-						["tooltip"] = "Waypoint Name Column",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -1077,17 +1080,17 @@ dialog = {
 					},
 					["type"] = "Static",
 				},
-				["label_area2_lat"] = {
+				["label_area2_column03_title"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = labelHeight,
 							["w"] = labelWidth,
-							["x"] = area2_column3_anchor,
+							["x"] = area2_column03_anchor,
 							["y"] = area2_row_offset - 30, -- put the last number in there as a place holder for now
 						},
 						["enabled"] = true,
 						["text"] = "Lat",
-						["tooltip"] = "Waypoint Latitude Column",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -1098,17 +1101,17 @@ dialog = {
 					},
 					["type"] = "Static",
 				},
-				["label_area2_long"] = {
+				["label_area2_column04_title"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = labelHeight,
 							["w"] = labelWidth,
-							["x"] = area2_column4_anchor,
+							["x"] = area2_column04_anchor,
 							["y"] = area2_row_offset - 30, -- put the last number in there as a place holder for now
 						},
 						["enabled"] = true,
 						["text"] = "Long",
-						["tooltip"] = "Waypoint Longitude Column",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -1119,17 +1122,17 @@ dialog = {
 					},
 					["type"] = "Static",
 				},
-				["label_area2_alt"] = {
+				["label_area2_column05_title"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = labelHeight,
 							["w"] = labelWidth,
-							["x"] = area2_column5_anchor,
+							["x"] = area2_column05_anchor,
 							["y"] = area2_row_offset - 30, -- put the last number in there as a place holder for now
 						},
 						["enabled"] = true,
 						["text"] = "Alt",
-						["tooltip"] = "Waypoint Altitude Column",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -1140,17 +1143,17 @@ dialog = {
 					},
 					["type"] = "Static",
 				},
-				["label_area2_cp"] = {
+				["label_area2_column06_title"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = labelHeight,
 							["w"] = labelWidth,
-							["x"] = area2_column6_anchor,
+							["x"] = area2_column06_anchor,
 							["y"] = area2_row_offset - 30, -- put the last number in there as a place holder for now
 						},
 						["enabled"] = true,
 						["text"] = "Cp",
-						["tooltip"] = "Waypoint Cp Column",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -1161,17 +1164,17 @@ dialog = {
 					},
 					["type"] = "Static",
 				},
-				["label_area2_pd"] = {
+				["label_area2_column07_title"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = labelHeight,
 							["w"] = labelWidth,
-							["x"] = area2_column7_anchor,
+							["x"] = area2_column07_anchor,
 							["y"] = area2_row_offset - 30, -- put the last number in there as a place holder for now
 						},
 						["enabled"] = true,
 						["text"] = "Pd",
-						["tooltip"] = "Waypoint Pd Column",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -1182,17 +1185,17 @@ dialog = {
 					},
 					["type"] = "Static",
 				},
-				["label_area2_rd"] = {
+				["label_area2_column08_title"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = labelHeight,
 							["w"] = labelWidth,
-							["x"] = area2_column8_anchor,
+							["x"] = area2_column08_anchor,
 							["y"] = area2_row_offset - 30, -- put the last number in there as a place holder for now
 						},
 						["enabled"] = true,
 						["text"] = "Rd",
-						["tooltip"] = "Waypoint Rd Column",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -1203,17 +1206,17 @@ dialog = {
 					},
 					["type"] = "Static",
 				},
-				["label_area2_rho"] = {
+				["label_area2_column09_title"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = labelHeight,
 							["w"] = labelWidth,
-							["x"] = area2_column9_anchor,
+							["x"] = area2_column09_anchor,
 							["y"] = area2_row_offset - 30, -- put the last number in there as a place holder for now
 						},
 						["enabled"] = true,
 						["text"] = "Rho",
-						["tooltip"] = "Waypoint Rho Column",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -1224,7 +1227,7 @@ dialog = {
 					},
 					["type"] = "Static",
 				},
-				["label_area2_theta"] = {
+				["label_area2_column10_title"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = labelHeight,
@@ -1234,7 +1237,7 @@ dialog = {
 						},
 						["enabled"] = true,
 						["text"] = "Theta",
-						["tooltip"] = "Waypoint Theta Column",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -1245,7 +1248,7 @@ dialog = {
 					},
 					["type"] = "Static",
 				},
-				["label_area2_dalt"] = {
+				["label_area2_column11_title"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = labelHeight,
@@ -1255,7 +1258,7 @@ dialog = {
 						},
 						["enabled"] = true,
 						["text"] = "dAlt",
-						["tooltip"] = "Waypoint dAlt Column",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -1266,7 +1269,7 @@ dialog = {
 					},
 					["type"] = "Static",
 				},
-				["label_area2_dnorth"] = {
+				["label_area2_column12_title"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = labelHeight,
@@ -1276,7 +1279,7 @@ dialog = {
 						},
 						["enabled"] = true,
 						["text"] = "dNorth",
-						["tooltip"] = "Waypoint dNorth Column",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -1287,7 +1290,7 @@ dialog = {
 					},
 					["type"] = "Static",
 				},
-				["label_area2_deast"] = {
+				["label_area2_column13_title"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = labelHeight,
@@ -1297,7 +1300,7 @@ dialog = {
 						},
 						["enabled"] = true,
 						["text"] = "dEast",
-						["tooltip"] = "Waypoint dEast Column",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -1317,13 +1320,13 @@ dialog = {
 				-- Start Area 2 Waypoint Name EditBox --
 				----------------------------------------
 				
-				["editBox_wp01_name"] = {
+				["editBox_wp01_column02"] = {
 					["params"] = {
 						["acceptDecimalPoint"] = true,
 						["bounds"] = {
 							["h"] = editBoxHeight,
 							["w"] = editBoxWidthArea2,
-							["x"] = area2_column2_anchor,
+							["x"] = area2_column02_anchor,
 							["y"] = area2_row_offset,
 						},
 						["enabled"] = true,
@@ -1334,7 +1337,7 @@ dialog = {
 						["tabOrder"] = 0,
 						["text"] = "",
 						["textWrapping"] = false,
-						["tooltip"] = "Waypoint 01 Name",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -1371,13 +1374,13 @@ dialog = {
 					},
 					["type"] = "EditBox",
 				},
-				["editBox_wp02_name"] = {
+				["editBox_wp02_column02"] = {
 					["params"] = {
 						["acceptDecimalPoint"] = true,
 						["bounds"] = {
 							["h"] = editBoxHeight,
 							["w"] = editBoxWidthArea2,
-							["x"] = area2_column2_anchor,
+							["x"] = area2_column02_anchor,
 							["y"] = area2_row_offset + (area2_rowDistance * 1),
 						},
 						["enabled"] = true,
@@ -1388,7 +1391,7 @@ dialog = {
 						["tabOrder"] = 0,
 						["text"] = "",
 						["textWrapping"] = false,
-						["tooltip"] = "Waypoint 02 Name",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -1425,13 +1428,13 @@ dialog = {
 					},
 					["type"] = "EditBox",
 				},
-				["editBox_wp03_name"] = {
+				["editBox_wp03_column02"] = {
 					["params"] = {
 						["acceptDecimalPoint"] = true,
 						["bounds"] = {
 							["h"] = editBoxHeight,
 							["w"] = editBoxWidthArea2,
-							["x"] = area2_column2_anchor,
+							["x"] = area2_column02_anchor,
 							["y"] = area2_row_offset + (area2_rowDistance * 2),
 						},
 						["enabled"] = true,
@@ -1442,7 +1445,7 @@ dialog = {
 						["tabOrder"] = 0,
 						["text"] = "",
 						["textWrapping"] = false,
-						["tooltip"] = "Waypoint 03 Name",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -1479,13 +1482,13 @@ dialog = {
 					},
 					["type"] = "EditBox",
 				},
-				["editBox_wp04_name"] = {
+				["editBox_wp04_column02"] = {
 					["params"] = {
 						["acceptDecimalPoint"] = true,
 						["bounds"] = {
 							["h"] = editBoxHeight,
 							["w"] = editBoxWidthArea2,
-							["x"] = area2_column2_anchor,
+							["x"] = area2_column02_anchor,
 							["y"] = area2_row_offset + (area2_rowDistance * 3),
 						},
 						["enabled"] = true,
@@ -1496,7 +1499,7 @@ dialog = {
 						["tabOrder"] = 0,
 						["text"] = "",
 						["textWrapping"] = false,
-						["tooltip"] = "Waypoint 04 Name",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -1533,13 +1536,13 @@ dialog = {
 					},
 					["type"] = "EditBox",
 				},
-				["editBox_wp05_name"] = {
+				["editBox_wp05_column02"] = {
 					["params"] = {
 						["acceptDecimalPoint"] = true,
 						["bounds"] = {
 							["h"] = editBoxHeight,
 							["w"] = editBoxWidthArea2,
-							["x"] = area2_column2_anchor,
+							["x"] = area2_column02_anchor,
 							["y"] = area2_row_offset + (area2_rowDistance * 4),
 						},
 						["enabled"] = true,
@@ -1550,7 +1553,7 @@ dialog = {
 						["tabOrder"] = 0,
 						["text"] = "",
 						["textWrapping"] = false,
-						["tooltip"] = "Waypoint 05 Name",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -1587,13 +1590,13 @@ dialog = {
 					},
 					["type"] = "EditBox",
 				},
-				["editBox_wp06_name"] = {
+				["editBox_wp06_column02"] = {
 					["params"] = {
 						["acceptDecimalPoint"] = true,
 						["bounds"] = {
 							["h"] = editBoxHeight,
 							["w"] = editBoxWidthArea2,
-							["x"] = area2_column2_anchor,
+							["x"] = area2_column02_anchor,
 							["y"] = area2_row_offset + (area2_rowDistance * 5),
 						},
 						["enabled"] = true,
@@ -1604,7 +1607,7 @@ dialog = {
 						["tabOrder"] = 0,
 						["text"] = "",
 						["textWrapping"] = false,
-						["tooltip"] = "Waypoint 06 Name",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -1641,13 +1644,13 @@ dialog = {
 					},
 					["type"] = "EditBox",
 				},
-				["editBox_wp07_name"] = {
+				["editBox_wp07_column02"] = {
 					["params"] = {
 						["acceptDecimalPoint"] = true,
 						["bounds"] = {
 							["h"] = editBoxHeight,
 							["w"] = editBoxWidthArea2,
-							["x"] = area2_column2_anchor,
+							["x"] = area2_column02_anchor,
 							["y"] = area2_row_offset + (area2_rowDistance * 6),
 						},
 						["enabled"] = true,
@@ -1658,7 +1661,7 @@ dialog = {
 						["tabOrder"] = 0,
 						["text"] = "",
 						["textWrapping"] = false,
-						["tooltip"] = "Waypoint 07 Name",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -1695,13 +1698,13 @@ dialog = {
 					},
 					["type"] = "EditBox",
 				},
-				["editBox_wp08_name"] = {
+				["editBox_wp08_column02"] = {
 					["params"] = {
 						["acceptDecimalPoint"] = true,
 						["bounds"] = {
 							["h"] = editBoxHeight,
 							["w"] = editBoxWidthArea2,
-							["x"] = area2_column2_anchor,
+							["x"] = area2_column02_anchor,
 							["y"] = area2_row_offset + (area2_rowDistance * 7),
 						},
 						["enabled"] = true,
@@ -1712,7 +1715,7 @@ dialog = {
 						["tabOrder"] = 0,
 						["text"] = "",
 						["textWrapping"] = false,
-						["tooltip"] = "Waypoint 08 Name",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -1749,13 +1752,13 @@ dialog = {
 					},
 					["type"] = "EditBox",
 				},
-				["editBox_wp09_name"] = {
+				["editBox_wp09_column02"] = {
 					["params"] = {
 						["acceptDecimalPoint"] = true,
 						["bounds"] = {
 							["h"] = editBoxHeight,
 							["w"] = editBoxWidthArea2,
-							["x"] = area2_column2_anchor,
+							["x"] = area2_column02_anchor,
 							["y"] = area2_row_offset + (area2_rowDistance * 8),
 						},
 						["enabled"] = true,
@@ -1766,7 +1769,7 @@ dialog = {
 						["tabOrder"] = 0,
 						["text"] = "",
 						["textWrapping"] = false,
-						["tooltip"] = "Waypoint 09 Name",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -1803,13 +1806,13 @@ dialog = {
 					},
 					["type"] = "EditBox",
 				},
-				["editBox_wp10_name"] = {
+				["editBox_wp10_column02"] = {
 					["params"] = {
 						["acceptDecimalPoint"] = true,
 						["bounds"] = {
 							["h"] = editBoxHeight,
 							["w"] = editBoxWidthArea2,
-							["x"] = area2_column2_anchor,
+							["x"] = area2_column02_anchor,
 							["y"] = area2_row_offset + (area2_rowDistance * 9),
 						},
 						["enabled"] = true,
@@ -1820,7 +1823,7 @@ dialog = {
 						["tabOrder"] = 0,
 						["text"] = "",
 						["textWrapping"] = false,
-						["tooltip"] = "Waypoint 10 Name",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -1857,13 +1860,13 @@ dialog = {
 					},
 					["type"] = "EditBox",
 				},
-				["editBox_wp01_lat"] = {
+				["editBox_wp01_column03"] = {
 					["params"] = {
 						["acceptDecimalPoint"] = true,
 						["bounds"] = {
 							["h"] = editBoxHeight,
 							["w"] = editBoxWidthArea2,
-							["x"] = area2_column3_anchor,
+							["x"] = area2_column03_anchor,
 							["y"] = area2_row_offset,
 						},
 						["enabled"] = true,
@@ -1874,7 +1877,7 @@ dialog = {
 						["tabOrder"] = 0,
 						["text"] = "",
 						["textWrapping"] = false,
-						["tooltip"] = "Waypoint 01 Lat",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -1911,13 +1914,13 @@ dialog = {
 					},
 					["type"] = "EditBox",
 				},
-				["editBox_wp02_lat"] = {
+				["editBox_wp02_column03"] = {
 					["params"] = {
 						["acceptDecimalPoint"] = true,
 						["bounds"] = {
 							["h"] = editBoxHeight,
 							["w"] = editBoxWidthArea2,
-							["x"] = area2_column3_anchor,
+							["x"] = area2_column03_anchor,
 							["y"] = area2_row_offset + (area2_rowDistance * 1),
 						},
 						["enabled"] = true,
@@ -1928,7 +1931,7 @@ dialog = {
 						["tabOrder"] = 0,
 						["text"] = "",
 						["textWrapping"] = false,
-						["tooltip"] = "Waypoint 02 Lat",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -1965,13 +1968,13 @@ dialog = {
 					},
 					["type"] = "EditBox",
 				},
-				["editBox_wp03_lat"] = {
+				["editBox_wp03_column03"] = {
 					["params"] = {
 						["acceptDecimalPoint"] = true,
 						["bounds"] = {
 							["h"] = editBoxHeight,
 							["w"] = editBoxWidthArea2,
-							["x"] = area2_column3_anchor,
+							["x"] = area2_column03_anchor,
 							["y"] = area2_row_offset + (area2_rowDistance * 2),
 						},
 						["enabled"] = true,
@@ -1982,7 +1985,7 @@ dialog = {
 						["tabOrder"] = 0,
 						["text"] = "",
 						["textWrapping"] = false,
-						["tooltip"] = "Waypoint 03 Lat",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -2019,13 +2022,13 @@ dialog = {
 					},
 					["type"] = "EditBox",
 				},
-				["editBox_wp04_lat"] = {
+				["editBox_wp04_column03"] = {
 					["params"] = {
 						["acceptDecimalPoint"] = true,
 						["bounds"] = {
 							["h"] = editBoxHeight,
 							["w"] = editBoxWidthArea2,
-							["x"] = area2_column3_anchor,
+							["x"] = area2_column03_anchor,
 							["y"] = area2_row_offset + (area2_rowDistance * 3),
 						},
 						["enabled"] = true,
@@ -2036,7 +2039,7 @@ dialog = {
 						["tabOrder"] = 0,
 						["text"] = "",
 						["textWrapping"] = false,
-						["tooltip"] = "Waypoint 04 Lat",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -2073,13 +2076,13 @@ dialog = {
 					},
 					["type"] = "EditBox",
 				},
-				["editBox_wp05_lat"] = {
+				["editBox_wp05_column03"] = {
 					["params"] = {
 						["acceptDecimalPoint"] = true,
 						["bounds"] = {
 							["h"] = editBoxHeight,
 							["w"] = editBoxWidthArea2,
-							["x"] = area2_column3_anchor,
+							["x"] = area2_column03_anchor,
 							["y"] = area2_row_offset + (area2_rowDistance * 4),
 						},
 						["enabled"] = true,
@@ -2090,7 +2093,7 @@ dialog = {
 						["tabOrder"] = 0,
 						["text"] = "",
 						["textWrapping"] = false,
-						["tooltip"] = "Waypoint 05 Lat",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -2127,13 +2130,13 @@ dialog = {
 					},
 					["type"] = "EditBox",
 				},
-				["editBox_wp06_lat"] = {
+				["editBox_wp06_column03"] = {
 					["params"] = {
 						["acceptDecimalPoint"] = true,
 						["bounds"] = {
 							["h"] = editBoxHeight,
 							["w"] = editBoxWidthArea2,
-							["x"] = area2_column3_anchor,
+							["x"] = area2_column03_anchor,
 							["y"] = area2_row_offset + (area2_rowDistance * 5),
 						},
 						["enabled"] = true,
@@ -2144,7 +2147,7 @@ dialog = {
 						["tabOrder"] = 0,
 						["text"] = "",
 						["textWrapping"] = false,
-						["tooltip"] = "Waypoint 06 Lat",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -2181,13 +2184,13 @@ dialog = {
 					},
 					["type"] = "EditBox",
 				},
-				["editBox_wp07_lat"] = {
+				["editBox_wp07_column03"] = {
 					["params"] = {
 						["acceptDecimalPoint"] = true,
 						["bounds"] = {
 							["h"] = editBoxHeight,
 							["w"] = editBoxWidthArea2,
-							["x"] = area2_column3_anchor,
+							["x"] = area2_column03_anchor,
 							["y"] = area2_row_offset + (area2_rowDistance * 6),
 						},
 						["enabled"] = true,
@@ -2198,7 +2201,7 @@ dialog = {
 						["tabOrder"] = 0,
 						["text"] = "",
 						["textWrapping"] = false,
-						["tooltip"] = "Waypoint 07 Lat",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -2235,13 +2238,13 @@ dialog = {
 					},
 					["type"] = "EditBox",
 				},
-				["editBox_wp08_lat"] = {
+				["editBox_wp08_column03"] = {
 					["params"] = {
 						["acceptDecimalPoint"] = true,
 						["bounds"] = {
 							["h"] = editBoxHeight,
 							["w"] = editBoxWidthArea2,
-							["x"] = area2_column3_anchor,
+							["x"] = area2_column03_anchor,
 							["y"] = area2_row_offset + (area2_rowDistance * 7),
 						},
 						["enabled"] = true,
@@ -2252,7 +2255,7 @@ dialog = {
 						["tabOrder"] = 0,
 						["text"] = "",
 						["textWrapping"] = false,
-						["tooltip"] = "Waypoint 08 Lat",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -2289,13 +2292,13 @@ dialog = {
 					},
 					["type"] = "EditBox",
 				},
-				["editBox_wp09_lat"] = {
+				["editBox_wp09_column03"] = {
 					["params"] = {
 						["acceptDecimalPoint"] = true,
 						["bounds"] = {
 							["h"] = editBoxHeight,
 							["w"] = editBoxWidthArea2,
-							["x"] = area2_column3_anchor,
+							["x"] = area2_column03_anchor,
 							["y"] = area2_row_offset + (area2_rowDistance * 8),
 						},
 						["enabled"] = true,
@@ -2306,7 +2309,7 @@ dialog = {
 						["tabOrder"] = 0,
 						["text"] = "",
 						["textWrapping"] = false,
-						["tooltip"] = "Waypoint 09 Lat",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -2343,13 +2346,13 @@ dialog = {
 					},
 					["type"] = "EditBox",
 				},
-				["editBox_wp10_lat"] = {
+				["editBox_wp10_column03"] = {
 					["params"] = {
 						["acceptDecimalPoint"] = true,
 						["bounds"] = {
 							["h"] = editBoxHeight,
 							["w"] = editBoxWidthArea2,
-							["x"] = area2_column3_anchor,
+							["x"] = area2_column03_anchor,
 							["y"] = area2_row_offset + (area2_rowDistance * 9),
 						},
 						["enabled"] = true,
@@ -2360,7 +2363,7 @@ dialog = {
 						["tabOrder"] = 0,
 						["text"] = "",
 						["textWrapping"] = false,
-						["tooltip"] = "Waypoint 10 Lat",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -2397,13 +2400,13 @@ dialog = {
 					},
 					["type"] = "EditBox",
 				},
-                ["editBox_wp01_long"] = {
+                ["editBox_wp01_column04"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2,
-                            ["x"] = area2_column4_anchor,
+                            ["x"] = area2_column04_anchor,
                             ["y"] = area2_row_offset,
                         },
                         ["enabled"] = true,
@@ -2414,7 +2417,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 01 Long",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -2451,13 +2454,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp02_long"] = {
+                ["editBox_wp02_column04"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2,
-                            ["x"] = area2_column4_anchor,
+                            ["x"] = area2_column04_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 1),
                         },
                         ["enabled"] = true,
@@ -2468,7 +2471,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 02 Long",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -2505,13 +2508,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp03_long"] = {
+                ["editBox_wp03_column04"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2,
-                            ["x"] = area2_column4_anchor,
+                            ["x"] = area2_column04_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 2),
                         },
                         ["enabled"] = true,
@@ -2522,7 +2525,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 03 Long",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -2559,13 +2562,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp04_long"] = {
+                ["editBox_wp04_column04"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2,
-                            ["x"] = area2_column4_anchor,
+                            ["x"] = area2_column04_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 3),
                         },
                         ["enabled"] = true,
@@ -2576,7 +2579,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 04 Long",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -2613,13 +2616,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp05_long"] = {
+                ["editBox_wp05_column04"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2,
-                            ["x"] = area2_column4_anchor,
+                            ["x"] = area2_column04_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 4),
                         },
                         ["enabled"] = true,
@@ -2630,7 +2633,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 05 Long",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -2667,13 +2670,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp06_long"] = {
+                ["editBox_wp06_column04"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2,
-                            ["x"] = area2_column4_anchor,
+                            ["x"] = area2_column04_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 5),
                         },
                         ["enabled"] = true,
@@ -2684,7 +2687,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 06 Long",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -2721,13 +2724,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp07_long"] = {
+                ["editBox_wp07_column04"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2,
-                            ["x"] = area2_column4_anchor,
+                            ["x"] = area2_column04_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 6),
                         },
                         ["enabled"] = true,
@@ -2738,7 +2741,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 07 Long",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -2775,13 +2778,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp08_long"] = {
+                ["editBox_wp08_column04"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2,
-                            ["x"] = area2_column4_anchor,
+                            ["x"] = area2_column04_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 7),
                         },
                         ["enabled"] = true,
@@ -2792,7 +2795,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 08 Long",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -2829,13 +2832,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp09_long"] = {
+                ["editBox_wp09_column04"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2,
-                            ["x"] = area2_column4_anchor,
+                            ["x"] = area2_column04_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 8),
                         },
                         ["enabled"] = true,
@@ -2846,7 +2849,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 09 Long",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -2883,13 +2886,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp10_long"] = {
+                ["editBox_wp10_column04"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2,
-                            ["x"] = area2_column4_anchor,
+                            ["x"] = area2_column04_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 9),
                         },
                         ["enabled"] = true,
@@ -2900,7 +2903,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 10 Long",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -2937,13 +2940,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },				
-                ["editBox_wp01_alt"] = {
+                ["editBox_wp01_column05"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column5_anchor,
+                            ["x"] = area2_column05_anchor,
                             ["y"] = area2_row_offset,
                         },
                         ["enabled"] = true,
@@ -2954,7 +2957,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 01 Alt",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -2991,13 +2994,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp02_alt"] = {
+                ["editBox_wp02_column05"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column5_anchor,
+                            ["x"] = area2_column05_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 1),
                         },
                         ["enabled"] = true,
@@ -3008,7 +3011,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 02 Alt",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -3045,13 +3048,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp03_alt"] = {
+                ["editBox_wp03_column05"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column5_anchor,
+                            ["x"] = area2_column05_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 2),
                         },
                         ["enabled"] = true,
@@ -3062,7 +3065,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 03 Alt",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -3099,13 +3102,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp04_alt"] = {
+                ["editBox_wp04_column05"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column5_anchor,
+                            ["x"] = area2_column05_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 3),
                         },
                         ["enabled"] = true,
@@ -3116,7 +3119,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 04 Alt",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -3153,13 +3156,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp05_alt"] = {
+                ["editBox_wp05_column05"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column5_anchor,
+                            ["x"] = area2_column05_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 4),
                         },
                         ["enabled"] = true,
@@ -3170,7 +3173,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 05 Alt",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -3207,13 +3210,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp06_alt"] = {
+                ["editBox_wp06_column05"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column5_anchor,
+                            ["x"] = area2_column05_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 5),
                         },
                         ["enabled"] = true,
@@ -3224,7 +3227,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 06 Alt",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -3261,13 +3264,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp07_alt"] = {
+                ["editBox_wp07_column05"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column5_anchor,
+                            ["x"] = area2_column05_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 6),
                         },
                         ["enabled"] = true,
@@ -3278,7 +3281,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 07 Alt",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -3315,13 +3318,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp08_alt"] = {
+                ["editBox_wp08_column05"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column5_anchor,
+                            ["x"] = area2_column05_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 7),
                         },
                         ["enabled"] = true,
@@ -3332,7 +3335,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 08 Alt",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -3369,13 +3372,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp09_alt"] = {
+                ["editBox_wp09_column05"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column5_anchor,
+                            ["x"] = area2_column05_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 8),
                         },
                         ["enabled"] = true,
@@ -3386,7 +3389,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 09 Alt",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -3423,13 +3426,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp10_alt"] = {
+                ["editBox_wp10_column05"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column5_anchor,
+                            ["x"] = area2_column05_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 9),
                         },
                         ["enabled"] = true,
@@ -3440,7 +3443,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 10 Alt",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -3477,13 +3480,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },				
-                ["editBox_wp01_cp"] = {
+                ["editBox_wp01_column06"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column6_anchor,
+                            ["x"] = area2_column06_anchor,
                             ["y"] = area2_row_offset,
                         },
                         ["enabled"] = true,
@@ -3494,7 +3497,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 01 CP",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -3531,13 +3534,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp02_cp"] = {
+                ["editBox_wp02_column06"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column6_anchor,
+                            ["x"] = area2_column06_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 1),
                         },
                         ["enabled"] = true,
@@ -3548,7 +3551,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 02 CP",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -3585,13 +3588,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp03_cp"] = {
+                ["editBox_wp03_column06"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column6_anchor,
+                            ["x"] = area2_column06_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 2),
                         },
                         ["enabled"] = true,
@@ -3602,7 +3605,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 03 CP",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -3639,13 +3642,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp04_cp"] = {
+                ["editBox_wp04_column06"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column6_anchor,
+                            ["x"] = area2_column06_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 3),
                         },
                         ["enabled"] = true,
@@ -3656,7 +3659,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 04 CP",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -3693,13 +3696,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp05_cp"] = {
+                ["editBox_wp05_column06"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column6_anchor,
+                            ["x"] = area2_column06_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 4),
                         },
                         ["enabled"] = true,
@@ -3710,7 +3713,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 05 CP",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -3747,13 +3750,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp06_cp"] = {
+                ["editBox_wp06_column06"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column6_anchor,
+                            ["x"] = area2_column06_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 5),
                         },
                         ["enabled"] = true,
@@ -3764,7 +3767,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 06 CP",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -3801,13 +3804,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp07_cp"] = {
+                ["editBox_wp07_column06"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column6_anchor,
+                            ["x"] = area2_column06_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 6),
                         },
                         ["enabled"] = true,
@@ -3818,7 +3821,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 07 CP",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -3855,13 +3858,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp08_cp"] = {
+                ["editBox_wp08_column06"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column6_anchor,
+                            ["x"] = area2_column06_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 7),
                         },
                         ["enabled"] = true,
@@ -3872,7 +3875,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 08 CP",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -3909,13 +3912,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp09_cp"] = {
+                ["editBox_wp09_column06"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column6_anchor,
+                            ["x"] = area2_column06_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 8),
                         },
                         ["enabled"] = true,
@@ -3926,7 +3929,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 09 CP",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -3963,13 +3966,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp10_cp"] = {
+                ["editBox_wp10_column06"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column6_anchor,
+                            ["x"] = area2_column06_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 9),
                         },
                         ["enabled"] = true,
@@ -3980,7 +3983,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 10 CP",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -4017,13 +4020,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },				
-                ["editBox_wp01_pd"] = {
+                ["editBox_wp01_column07"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column7_anchor,
+                            ["x"] = area2_column07_anchor,
                             ["y"] = area2_row_offset,
                         },
                         ["enabled"] = true,
@@ -4034,7 +4037,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 01 PD",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -4071,13 +4074,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp02_pd"] = {
+                ["editBox_wp02_column07"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column7_anchor,
+                            ["x"] = area2_column07_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 1),
                         },
                         ["enabled"] = true,
@@ -4088,7 +4091,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 02 PD",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -4125,13 +4128,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp03_pd"] = {
+                ["editBox_wp03_column07"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column7_anchor,
+                            ["x"] = area2_column07_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 2),
                         },
                         ["enabled"] = true,
@@ -4142,7 +4145,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 03 PD",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -4179,13 +4182,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp04_pd"] = {
+                ["editBox_wp04_column07"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column7_anchor,
+                            ["x"] = area2_column07_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 3),
                         },
                         ["enabled"] = true,
@@ -4196,7 +4199,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 04 PD",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -4233,13 +4236,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp05_pd"] = {
+                ["editBox_wp05_column07"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column7_anchor,
+                            ["x"] = area2_column07_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 4),
                         },
                         ["enabled"] = true,
@@ -4250,7 +4253,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 05 PD",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -4287,13 +4290,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp06_pd"] = {
+                ["editBox_wp06_column07"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column7_anchor,
+                            ["x"] = area2_column07_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 5),
                         },
                         ["enabled"] = true,
@@ -4304,7 +4307,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 06 PD",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -4341,13 +4344,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp07_pd"] = {
+                ["editBox_wp07_column07"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column7_anchor,
+                            ["x"] = area2_column07_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 6),
                         },
                         ["enabled"] = true,
@@ -4358,7 +4361,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 07 PD",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -4395,13 +4398,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp08_pd"] = {
+                ["editBox_wp08_column07"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column7_anchor,
+                            ["x"] = area2_column07_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 7),
                         },
                         ["enabled"] = true,
@@ -4412,7 +4415,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 08 PD",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -4449,13 +4452,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp09_pd"] = {
+                ["editBox_wp09_column07"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column7_anchor,
+                            ["x"] = area2_column07_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 8),
                         },
                         ["enabled"] = true,
@@ -4466,7 +4469,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 09 PD",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -4503,13 +4506,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp10_pd"] = {
+                ["editBox_wp10_column07"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column7_anchor,
+                            ["x"] = area2_column07_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 9),
                         },
                         ["enabled"] = true,
@@ -4520,7 +4523,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 10 PD",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -4557,13 +4560,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },				
-                ["editBox_wp01_rd"] = {
+                ["editBox_wp01_column08"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column8_anchor,
+                            ["x"] = area2_column08_anchor,
                             ["y"] = area2_row_offset,
                         },
                         ["enabled"] = true,
@@ -4574,7 +4577,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 01 RD",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -4611,13 +4614,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp02_rd"] = {
+                ["editBox_wp02_column08"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column8_anchor,
+                            ["x"] = area2_column08_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 1),
                         },
                         ["enabled"] = true,
@@ -4628,7 +4631,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 02 RD",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -4665,13 +4668,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp03_rd"] = {
+                ["editBox_wp03_column08"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column8_anchor,
+                            ["x"] = area2_column08_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 2),
                         },
                         ["enabled"] = true,
@@ -4682,7 +4685,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 03 RD",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -4719,13 +4722,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp04_rd"] = {
+                ["editBox_wp04_column08"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column8_anchor,
+                            ["x"] = area2_column08_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 3),
                         },
                         ["enabled"] = true,
@@ -4736,7 +4739,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 04 RD",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -4773,13 +4776,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp05_rd"] = {
+                ["editBox_wp05_column08"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column8_anchor,
+                            ["x"] = area2_column08_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 4),
                         },
                         ["enabled"] = true,
@@ -4790,7 +4793,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 05 RD",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -4827,13 +4830,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp06_rd"] = {
+                ["editBox_wp06_column08"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column8_anchor,
+                            ["x"] = area2_column08_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 5),
                         },
                         ["enabled"] = true,
@@ -4844,7 +4847,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 06 RD",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -4881,13 +4884,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp07_rd"] = {
+                ["editBox_wp07_column08"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column8_anchor,
+                            ["x"] = area2_column08_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 6),
                         },
                         ["enabled"] = true,
@@ -4898,7 +4901,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 07 RD",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -4935,13 +4938,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp08_rd"] = {
+                ["editBox_wp08_column08"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column8_anchor,
+                            ["x"] = area2_column08_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 7),
                         },
                         ["enabled"] = true,
@@ -4952,7 +4955,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 08 RD",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -4989,13 +4992,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp09_rd"] = {
+                ["editBox_wp09_column08"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column8_anchor,
+                            ["x"] = area2_column08_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 8),
                         },
                         ["enabled"] = true,
@@ -5006,7 +5009,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 09 RD",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -5043,13 +5046,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp10_rd"] = {
+                ["editBox_wp10_column08"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column8_anchor,
+                            ["x"] = area2_column08_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 9),
                         },
                         ["enabled"] = true,
@@ -5060,7 +5063,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 10 RD",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -5097,13 +5100,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },				
-                ["editBox_wp01_rho"] = {
+                ["editBox_wp01_column09"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column9_anchor,
+                            ["x"] = area2_column09_anchor,
                             ["y"] = area2_row_offset,
                         },
                         ["enabled"] = true,
@@ -5114,7 +5117,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 01 RHO",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -5151,13 +5154,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp02_rho"] = {
+                ["editBox_wp02_column09"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column9_anchor,
+                            ["x"] = area2_column09_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 1),
                         },
                         ["enabled"] = true,
@@ -5168,7 +5171,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 02 RHO",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -5205,13 +5208,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp03_rho"] = {
+                ["editBox_wp03_column09"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column9_anchor,
+                            ["x"] = area2_column09_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 2),
                         },
                         ["enabled"] = true,
@@ -5222,7 +5225,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 03 RHO",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -5259,13 +5262,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp04_rho"] = {
+                ["editBox_wp04_column09"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column9_anchor,
+                            ["x"] = area2_column09_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 3),
                         },
                         ["enabled"] = true,
@@ -5276,7 +5279,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 04 RHO",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -5313,13 +5316,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp05_rho"] = {
+                ["editBox_wp05_column09"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column9_anchor,
+                            ["x"] = area2_column09_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 4),
                         },
                         ["enabled"] = true,
@@ -5330,7 +5333,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 05 RHO",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -5367,13 +5370,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp06_rho"] = {
+                ["editBox_wp06_column09"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column9_anchor,
+                            ["x"] = area2_column09_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 5),
                         },
                         ["enabled"] = true,
@@ -5384,7 +5387,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 06 RHO",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -5421,13 +5424,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp07_rho"] = {
+                ["editBox_wp07_column09"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column9_anchor,
+                            ["x"] = area2_column09_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 6),
                         },
                         ["enabled"] = true,
@@ -5438,7 +5441,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 07 RHO",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -5475,13 +5478,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp08_rho"] = {
+                ["editBox_wp08_column09"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column9_anchor,
+                            ["x"] = area2_column09_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 7),
                         },
                         ["enabled"] = true,
@@ -5492,7 +5495,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 08 RHO",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -5529,13 +5532,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp09_rho"] = {
+                ["editBox_wp09_column09"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column9_anchor,
+                            ["x"] = area2_column09_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 8),
                         },
                         ["enabled"] = true,
@@ -5546,7 +5549,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 09 RHO",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -5583,13 +5586,13 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp10_rho"] = {
+                ["editBox_wp10_column09"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
                             ["h"] = editBoxHeight,
                             ["w"] = editBoxWidthArea2mini,
-                            ["x"] = area2_column9_anchor,
+                            ["x"] = area2_column09_anchor,
                             ["y"] = area2_row_offset + (area2_rowDistance * 9),
                         },
                         ["enabled"] = true,
@@ -5600,7 +5603,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 10 RHO",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -5637,7 +5640,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },				
-                ["editBox_wp01_theta"] = {
+                ["editBox_wp01_column10"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -5654,7 +5657,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 01 THETA",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -5691,7 +5694,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp02_theta"] = {
+                ["editBox_wp02_column10"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -5708,7 +5711,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 02 THETA",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -5745,7 +5748,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp03_theta"] = {
+                ["editBox_wp03_column10"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -5762,7 +5765,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 03 THETA",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -5799,7 +5802,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp04_theta"] = {
+                ["editBox_wp04_column10"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -5816,7 +5819,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 04 THETA",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -5853,7 +5856,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp05_theta"] = {
+                ["editBox_wp05_column10"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -5870,7 +5873,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 05 THETA",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -5907,7 +5910,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp06_theta"] = {
+                ["editBox_wp06_column10"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -5924,7 +5927,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 06 THETA",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -5961,7 +5964,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp07_theta"] = {
+                ["editBox_wp07_column10"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -5978,7 +5981,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 07 THETA",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -6015,7 +6018,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp08_theta"] = {
+                ["editBox_wp08_column10"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -6032,7 +6035,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 08 THETA",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -6069,7 +6072,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp09_theta"] = {
+                ["editBox_wp09_column10"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -6086,7 +6089,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 09 THETA",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -6123,7 +6126,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp10_theta"] = {
+                ["editBox_wp10_column10"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -6140,7 +6143,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 10 THETA",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -6177,7 +6180,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },				
-                ["editBox_wp01_dalt"] = {
+                ["editBox_wp01_column11"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -6194,7 +6197,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 01 dAlt",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -6231,7 +6234,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp02_dalt"] = {
+                ["editBox_wp02_column11"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -6248,7 +6251,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 02 dAlt",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -6285,7 +6288,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp03_dalt"] = {
+                ["editBox_wp03_column11"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -6302,7 +6305,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 03 dAlt",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -6339,7 +6342,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp04_dalt"] = {
+                ["editBox_wp04_column11"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -6356,7 +6359,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 04 dAlt",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -6393,7 +6396,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp05_dalt"] = {
+                ["editBox_wp05_column11"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -6410,7 +6413,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 05 dAlt",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -6447,7 +6450,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp06_dalt"] = {
+                ["editBox_wp06_column11"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -6464,7 +6467,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 06 dAlt",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -6501,7 +6504,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp07_dalt"] = {
+                ["editBox_wp07_column11"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -6518,7 +6521,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 07 dAlt",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -6555,7 +6558,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp08_dalt"] = {
+                ["editBox_wp08_column11"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -6572,7 +6575,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 08 dAlt",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -6609,7 +6612,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp09_dalt"] = {
+                ["editBox_wp09_column11"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -6626,7 +6629,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 09 dAlt",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -6663,7 +6666,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp10_dalt"] = {
+                ["editBox_wp10_column11"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -6680,7 +6683,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 10 dAlt",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -6717,7 +6720,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },				
-                ["editBox_wp01_dnorth"] = {
+                ["editBox_wp01_column12"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -6734,7 +6737,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 01 dNorth",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -6771,7 +6774,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp02_dnorth"] = {
+                ["editBox_wp02_column12"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -6788,7 +6791,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 02 dNorth",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -6825,7 +6828,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp03_dnorth"] = {
+                ["editBox_wp03_column12"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -6842,7 +6845,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 03 dNorth",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -6879,7 +6882,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp04_dnorth"] = {
+                ["editBox_wp04_column12"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -6896,7 +6899,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 04 dNorth",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -6933,7 +6936,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp05_dnorth"] = {
+                ["editBox_wp05_column12"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -6950,7 +6953,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 05 dNorth",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -6987,7 +6990,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp06_dnorth"] = {
+                ["editBox_wp06_column12"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -7004,7 +7007,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 06 dNorth",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -7041,7 +7044,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp07_dnorth"] = {
+                ["editBox_wp07_column12"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -7058,7 +7061,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 07 dNorth",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -7095,7 +7098,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp08_dnorth"] = {
+                ["editBox_wp08_column12"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -7112,7 +7115,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 08 dNorth",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -7149,7 +7152,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp09_dnorth"] = {
+                ["editBox_wp09_column12"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -7166,7 +7169,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 09 dNorth",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -7203,7 +7206,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp10_dnorth"] = {
+                ["editBox_wp10_column12"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -7220,7 +7223,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 10 dNorth",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -7257,7 +7260,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },				
-                ["editBox_wp01_deast"] = {
+                ["editBox_wp01_column13"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -7274,7 +7277,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 01 dEast",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -7311,7 +7314,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp02_deast"] = {
+                ["editBox_wp02_column13"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -7328,7 +7331,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 02 dEast",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -7365,7 +7368,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp03_deast"] = {
+                ["editBox_wp03_column13"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -7382,7 +7385,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 03 dEast",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -7419,7 +7422,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp04_deast"] = {
+                ["editBox_wp04_column13"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -7436,7 +7439,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 04 dEast",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -7473,7 +7476,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp05_deast"] = {
+                ["editBox_wp05_column13"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -7490,7 +7493,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 05 dEast",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -7527,7 +7530,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp06_deast"] = {
+                ["editBox_wp06_column13"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -7544,7 +7547,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 06 dEast",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -7581,7 +7584,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp07_deast"] = {
+                ["editBox_wp07_column13"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -7598,7 +7601,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 07 dEast",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -7635,7 +7638,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp08_deast"] = {
+                ["editBox_wp08_column13"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -7652,7 +7655,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 08 dEast",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -7689,7 +7692,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp09_deast"] = {
+                ["editBox_wp09_column13"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -7706,7 +7709,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 09 dEast",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -7743,7 +7746,7 @@ dialog = {
                     },
                     ["type"] = "EditBox",
                 },
-                ["editBox_wp10_deast"] = {
+                ["editBox_wp10_column13"] = {
                     ["params"] = {
                         ["acceptDecimalPoint"] = true,
                         ["bounds"] = {
@@ -7760,7 +7763,7 @@ dialog = {
                         ["tabOrder"] = 0,
                         ["text"] = "",
                         ["textWrapping"] = false,
-                        ["tooltip"] = "Waypoint 10 dEast",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 0,
                     },
@@ -7811,7 +7814,7 @@ dialog = {
                         ["enabled"] = true,
                         ["tabOrder"] = 0,
                         ["text"] = "←",
-                        ["tooltip"] = "Previous Page",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 1
                     },
@@ -7833,7 +7836,7 @@ dialog = {
                         ["enabled"] = true,
                         ["tabOrder"] = 0,
                         ["text"] = "→",
-                        ["tooltip"] = "Next Page",
+                        ["tooltip"] = "",
                         ["visible"] = true,
                         ["zindex"] = 1
                     },
@@ -7849,7 +7852,7 @@ dialog = {
 						["bounds"] = {
 							["h"] = 20,
 							["w"] = 20,
-							["x"] = area1_column3_anchor,
+							["x"] = area1_column03_anchor,
 							["y"] = (topMargin + area1_anchorDistance * 2) + buttonCenteringOffset + 8, -- made up the last number to fit
 							--[[ Original values
 							["h"] = 20,
@@ -7862,7 +7865,7 @@ dialog = {
 						["state"] = false,
 						["tabOrder"] = 140,
 						["text"] = "Crosshair",
-						["tooltip"] = "Show or Hide the Crosshair",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -7878,12 +7881,12 @@ dialog = {
 						["bounds"] = {
 							["h"] = labelHeight,
 							["w"] = labelTelemetryWidth,
-							["x"] = area1_column3_anchor + 25, -- I made up the number to fit
+							["x"] = area1_column03_anchor + 25, -- I made up the number to fit
 							["y"] = topMargin + area1_anchorDistance * 2,
 						},
 						["enabled"] = true,
 						["text"] = "Crosshair",
-						["tooltip"] = "Crosshair",
+						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
 					},
@@ -7905,7 +7908,7 @@ dialog = {
                         ["enabled"] = true,
                         ["tabOrder"] = 0,
                         ["text"] = "+L/L",
-                        ["tooltip"] = "Insert Coords",
+                        ["tooltip"] = "",
                         ["visible"] = false,
                         ["zindex"] = 1
                     },
