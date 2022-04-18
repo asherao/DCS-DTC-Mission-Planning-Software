@@ -33,7 +33,7 @@ DMPS Integrated App launces when DCS starts. It can be toggled with the hotkey `
 3. Select the map for the DTC. If your map is not on the list, it is not supported by DMPS.
 4. Enter the date for the DTC. The format is DD/MM/YYYY. Two number day, two number month, four number year. E.g. 25/04/2006.  Acceptable days are 01-31 (keep in mind that different months have different number of days, and leap years). Acceptable months are 01 - 12. Acceptable years are between 1900 and 2099.
 5. Enter the name of the DTC. In DMPS Integrated App this will also be the name of the `.dtc` file.
-6. Enter your waypoint data. Waypoints with a `Lat` and `Long` entry will be exported. You can use the "Get DCS Coords" button to grab `Lat`, `Long`, and `Alt` from DCS while on the F10 Map with your preferred location centered on the screen (works in VR too).
+6. Enter your waypoint data. Waypoints with a `Lat` and `Long` entry will be exported. You can use the "Get DCS Coords" button to grab `Lat`, `Long`, and `Alt` from DCS while on the F10 Map with your preferred location centered on the screen (works in VR too). You can also use the `Ctrl+Shift+F2` keybind to capture coordinates.
 7. After entering all desired data, press the Export button. In DMPS Standalone you will be prompted to save the DTC to `Saved Games/DCS/Datacartridges`. In DMPS Integrated App the DTC will automatically be exported to the correct location.
 8. If you would like to share your DTC you can:  
     a. Navigate to `Saved Games/DCS/Datacartridges` and locate the correct `.dtc` file, or  
@@ -58,14 +58,16 @@ This can be achieved by one of these methods:
 - Restart DCS
     
 ## Tips and Tricks
-- When using DMPS Integrated app with the F10 Map, the in-game coordinate location is "frozen" when the mouse is over the DMPS App. Use this to your advantage and position the App and your F10 Map view in a location where the coordinates will "freeze" where you want them to, allowing you to reference them while typing them in. [example pic]
+- You can change the keybinds via the config folder located at `C:\Users\...\Saved Games\DCS\Config\DMPS.config`. You can bind the keybind hotkey to your controller or HOTAS using a 3rd party probram like Voice Attack (https://voiceattack.com/).
+- When using DMPS Integrated app with the F10 Map, the in-game coordinate location is "frozen" when the mouse is over the DMPS App. Use this to your advantage and position the App and your F10 Map view in a location where the coordinates will "freeze" where you want them to, allowing you to reference them while typing them in.
 - In DMPS Standalone you can combine DTCs by first populating the desired fields and then importing another. The imported fields will take precedence per field. This is useful for situations in which you have a DTC with a few often used waypoints.
 - Garbage in, garbage out... Enter information accurately.
 - The "Get DCS Coords" feature will work for flatscreen, VR, and windowed. DMPS Crosshair feature is only a visual overlay, designed to work accurately only when DCS occupies the entire primary screen. "Get DCS Coords" will get the coordinates at the center of your current F10 view. If you zoom in enough, your coordinates will be accurate, even without the Crosshair. Remember this for VR and when DCS is windowed and many not be centered on your monitor.
-- The DCS: M2000-C DTC is stil WIP. Use with care.
-- When the PP BUTs are 10 or less, only BUTS 11-20 will be filled. With PP BUTs more than 10 the DTC fill starting on BUT 1.
+- The DCS: M-2000C DTC is stil WIP. Use with care.
+- M-2000C: When the PP BUTs are 10 or less, only BUTS 11-20 will be filled. With PP BUTs more than 10 the DTC fill starting on BUT 1.
 ## Definitions
-Different aircraft have different properties for their waypoints. You can learn about what they are and what they mean below or via the wiki [wiki link]. 
+Different aircraft have different properties for their waypoints. You can learn about what they are and what they mean below.
+
 ### M-2000C Waypoint Definitions
 |Item|Description|
 |--|--|
@@ -94,9 +96,9 @@ Different aircraft have different properties for their waypoints. You can learn 
 - Thank you for reading the readme
 
 ## Future Project Goals
-- [ ] More Maps
+- [x] More Maps
 - [ ] More Aircraft
 - [x] DMPS Integrated App "Get DCS Coords"
 - [x] DMPS Integrated App Import (v0.3.0)
 - [ ] Export format checks (to catch user mistakes)
-- [ ] Keybind for capturing coordinates
+- [x] Keybind for capturing coordinates
