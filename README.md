@@ -94,6 +94,7 @@ Different aircraft have different properties for their waypoints. You can learn 
 - Thank you rkusa for DCS-Scratchpad https://github.com/rkusa/dcs-scratchpad/blob/main/Scripts/Hooks/scratchpad-hook.lua  
 - Thank you Noisy for DCS-Stopwatch https://forum.dcs.world/topic/256390-stopwatch-overlay-for-vr-like-srs-or-scratchpad/#comment-4521467  
 - Thank you aronCiucu for DCSTheWay https://github.com/aronCiucu/DCSTheWay  
+- Thank you Lazyboot for finding out and sharing that **re-arming will refresh M-2000C DTCs.**  
 - Thank you to the Razbam team who implemented the unique and accessible aircraft DTC method. Hopefully it can be used by the devs of many more modules.  
 - If you are feeling charitable, please feel free to donate. All donations go to supporting the creation of even more free apps and mods for DCS, just like this one! https://www.paypal.com/paypalme/asherao  
 - Join Bailey's VoiceAttack Discord Here https://discord.gg/PbYgC5e  
