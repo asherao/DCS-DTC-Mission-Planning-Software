@@ -13,6 +13,13 @@ Regex and validate DTC inputs
 make log entries for aircraft selected
 make log entries for terrain selected
 add crosshair label click detection
+
+Change Log:
+Added second Hotkey
+added module and aircraft change detection
+added comumn header changing ability
+added aircraftSelectedChanged
+Updated variables to be less module specific
 --]]
 
 local function loadDMPS()
@@ -72,6 +79,29 @@ local function loadDMPS()
             logFile:flush()
         end
     end
+	
+	function aircraftSelectedChanged()
+		-- when the user changes the selected aircraft, read the aircraft that they had selected
+		local selectedAircraft = comboList_aircraft:getText()
+		log('Aircraft selected: ' .. selectedAircraft)
+		
+		-- clear all of the editBoxes
+		clearAllData()
+		--[[
+		-- change the labels to fit the categories for that aircraft
+		if selectedAircraft == 'M-2000C' then
+		-- do this
+		la
+		elseif selectedAircraft == 'AV8B' then
+		-- do that
+		end
+		--]]
+		-- change the number of boxes available for that aircraft
+		
+		-- in the outbox tell the user that they selected a different aircraft
+		
+		
+	end
 	
     local function loadPage(page)
         log("loading page " .. page.path)
@@ -181,6 +211,7 @@ local function loadDMPS()
             log("Configuration not found, creating defaults...")
             config = {
                 hotkey = "Ctrl+Shift+F1",
+				getCoordHotkey = "Ctrl+Shift+F2",
                 windowPosition = {x = 200, y = 200},
                 windowSize = {w = 895, h = 440}, -- default windowSize = {w = 350, h = 150}
                 --fontSize = 14
@@ -189,6 +220,7 @@ local function loadDMPS()
         end
 
         -- scan DMPS dir for pages
+		
         for name in lfs.dir(dirPath) do
             local path = dirPath .. name
             log(path)
@@ -225,6 +257,7 @@ local function loadDMPS()
             )
             pagesCount = pagesCount + 1
         end
+		
     end
 
     local function saveConfiguration()
@@ -299,6 +332,8 @@ local function loadDMPS()
     end
 
     local function insertCoordinates()
+	
+		
         local pos = Export.LoGetCameraPosition().p
         local alt = Terrain.GetSurfaceHeightWithSeabed(pos.x, pos.z)
         local lat, lon = Terrain.convertMetersToLatLon(pos.x, pos.z)
@@ -347,74 +382,74 @@ local function loadDMPS()
 		
 		-- populate the information for the labels
 		label_telemetry_aircraft:setText('Aircraft: ' .. model)
-		label_telemetry_coordinates_lat:setText('Lat: ' .. lat_formated)
-		label_telemetry_coordinates_long:setText('Long: ' .. lon_formated)
+		label_telemetry_coordinatesLat:setText('Lat: ' .. lat_formated)
+		label_telemetry_coordinatesLong:setText('Long: ' .. lon_formated)
 		label_telemetry_elevation:setText('Altitude: ' .. alt_formated)
 		
 		
 		-- Logic for the radio button part of the coordinate entry
 		if radiobutton_waypoint01:getState(true) then
-			editBox_wp01_lat:setText(lat_formated)
-			editBox_wp01_long:setText(lon_formated)
-			editBox_wp01_alt:setText(alt_formated)
+			editBox_wp01_column03:setText(lat_formated)
+			editBox_wp01_column04:setText(lon_formated)
+			editBox_wp01_column05:setText(alt_formated)
 			log("Waypoint 01 info populated")
 			radiobutton_waypoint02:setState(true)
 		elseif radiobutton_waypoint02:getState(true) then
-            editBox_wp02_lat:setText(lat_formated)
-			editBox_wp02_long:setText(lon_formated)
-			editBox_wp02_alt:setText(alt_formated)
+            editBox_wp02_column03:setText(lat_formated)
+			editBox_wp02_column04:setText(lon_formated)
+			editBox_wp02_column05:setText(alt_formated)
 			log("Waypoint 02 info populated")
 			radiobutton_waypoint03:setState(true)
         elseif radiobutton_waypoint03:getState(true) then
-            editBox_wp03_lat:setText(lat_formated)
-			editBox_wp03_long:setText(lon_formated)
-			editBox_wp03_alt:setText(alt_formated)
+            editBox_wp03_column03:setText(lat_formated)
+			editBox_wp03_column04:setText(lon_formated)
+			editBox_wp03_column05:setText(alt_formated)
 			log("Waypoint 03 info populated")
 			radiobutton_waypoint04:setState(true)
         elseif radiobutton_waypoint04:getState(true) then
-            editBox_wp04_lat:setText(lat_formated)
-			editBox_wp04_long:setText(lon_formated)
-			editBox_wp04_alt:setText(alt_formated)
+            editBox_wp04_column03:setText(lat_formated)
+			editBox_wp04_column04:setText(lon_formated)
+			editBox_wp04_column05:setText(alt_formated)
 			log("Waypoint 04 info populated")
 			radiobutton_waypoint05:setState(true)
         elseif radiobutton_waypoint05:getState(true) then
-            editBox_wp05_lat:setText(lat_formated)
-			editBox_wp05_long:setText(lon_formated)
-			editBox_wp05_alt:setText(alt_formated)
+            editBox_wp05_column03:setText(lat_formated)
+			editBox_wp05_column04:setText(lon_formated)
+			editBox_wp05_column05:setText(alt_formated)
 			log("Waypoint 05 info populated")
 			radiobutton_waypoint06:setState(true)
         elseif radiobutton_waypoint06:getState(true) then
-            editBox_wp06_lat:setText(lat_formated)
-			editBox_wp06_long:setText(lon_formated)
-			editBox_wp06_alt:setText(alt_formated)
+            editBox_wp06_column03:setText(lat_formated)
+			editBox_wp06_column04:setText(lon_formated)
+			editBox_wp06_column05:setText(alt_formated)
 			log("Waypoint 06 info populated")
 			radiobutton_waypoint07:setState(true)
         elseif radiobutton_waypoint07:getState(true) then
-            editBox_wp07_lat:setText(lat_formated)
-			editBox_wp07_long:setText(lon_formated)
-			editBox_wp07_alt:setText(alt_formated)
+            editBox_wp07_column03:setText(lat_formated)
+			editBox_wp07_column04:setText(lon_formated)
+			editBox_wp07_column05:setText(alt_formated)
 			log("Waypoint 07 info populated")
 			radiobutton_waypoint08:setState(true)
         elseif radiobutton_waypoint08:getState(true) then
-            editBox_wp08_lat:setText(lat_formated)
-			editBox_wp08_long:setText(lon_formated)
-			editBox_wp08_alt:setText(alt_formated)
+            editBox_wp08_column03:setText(lat_formated)
+			editBox_wp08_column04:setText(lon_formated)
+			editBox_wp08_column05:setText(alt_formated)
 			log("Waypoint 08 info populated")
 			radiobutton_waypoint09:setState(true)
         elseif radiobutton_waypoint09:getState(true) then
-            editBox_wp09_lat:setText(lat_formated)
-			editBox_wp09_long:setText(lon_formated)
-			editBox_wp09_alt:setText(alt_formated)
+            editBox_wp09_column03:setText(lat_formated)
+			editBox_wp09_column04:setText(lon_formated)
+			editBox_wp09_column05:setText(alt_formated)
 			log("Waypoint 09 info populated")
 			radiobutton_waypoint10:setState(true)
         elseif radiobutton_waypoint10:getState(true) then
-            editBox_wp10_lat:setText(lat_formated)
-			editBox_wp10_long:setText(lon_formated)
-			editBox_wp10_alt:setText(alt_formated)
+            editBox_wp10_column03:setText(lat_formated)
+			editBox_wp10_column04:setText(lon_formated)
+			editBox_wp10_column05:setText(alt_formated)
 			log("Waypoint 10 info populated")
 			--radiobutton_waypoint01:setState(true) -- the option to cycle to the beginning
 		end
-    end
+	end
 
     local function setVisible(b)
         window:setVisible(b)
@@ -440,7 +475,7 @@ local function loadDMPS()
 		if checkbox_clearAllData:getState() then
 		
 			-- using one line to test
-			--editBox_wp01_lat:setText("")
+			--editBox_wp01_column03:setText("")
 			
 			-- clears all edit boxes
 			-- clears the log edit box
@@ -455,139 +490,139 @@ local function loadDMPS()
 			
 			editBox_output:setText("")
 			
-			editBox_wp01_name:setText("")
-			editBox_wp02_name:setText("")
-			editBox_wp03_name:setText("")
-			editBox_wp04_name:setText("")
-			editBox_wp05_name:setText("")
-			editBox_wp06_name:setText("")
-			editBox_wp07_name:setText("")
-			editBox_wp08_name:setText("")
-			editBox_wp09_name:setText("")
-			editBox_wp10_name:setText("")
+			editBox_wp01_column02:setText("")
+			editBox_wp02_column02:setText("")
+			editBox_wp03_column02:setText("")
+			editBox_wp04_column02:setText("")
+			editBox_wp05_column02:setText("")
+			editBox_wp06_column02:setText("")
+			editBox_wp07_column02:setText("")
+			editBox_wp08_column02:setText("")
+			editBox_wp09_column02:setText("")
+			editBox_wp10_column02:setText("")
 			
-			editBox_wp01_lat:setText("")
-			editBox_wp02_lat:setText("")
-			editBox_wp03_lat:setText("")
-			editBox_wp04_lat:setText("")
-			editBox_wp05_lat:setText("")
-			editBox_wp06_lat:setText("")
-			editBox_wp07_lat:setText("")
-			editBox_wp08_lat:setText("")
-			editBox_wp09_lat:setText("")
-			editBox_wp10_lat:setText("")
+			editBox_wp01_column03:setText("")
+			editBox_wp02_column03:setText("")
+			editBox_wp03_column03:setText("")
+			editBox_wp04_column03:setText("")
+			editBox_wp05_column03:setText("")
+			editBox_wp06_column03:setText("")
+			editBox_wp07_column03:setText("")
+			editBox_wp08_column03:setText("")
+			editBox_wp09_column03:setText("")
+			editBox_wp10_column03:setText("")
 			
-			editBox_wp01_long:setText("")
-			editBox_wp02_long:setText("")
-			editBox_wp03_long:setText("")
-			editBox_wp04_long:setText("")
-			editBox_wp05_long:setText("")
-			editBox_wp06_long:setText("")
-			editBox_wp07_long:setText("")
-			editBox_wp08_long:setText("")
-			editBox_wp09_long:setText("")
-			editBox_wp10_long:setText("")
+			editBox_wp01_column04:setText("")
+			editBox_wp02_column04:setText("")
+			editBox_wp03_column04:setText("")
+			editBox_wp04_column04:setText("")
+			editBox_wp05_column04:setText("")
+			editBox_wp06_column04:setText("")
+			editBox_wp07_column04:setText("")
+			editBox_wp08_column04:setText("")
+			editBox_wp09_column04:setText("")
+			editBox_wp10_column04:setText("")
 			
-			editBox_wp01_alt:setText("")
-			editBox_wp02_alt:setText("")
-			editBox_wp03_alt:setText("")
-			editBox_wp04_alt:setText("")
-			editBox_wp05_alt:setText("")
-			editBox_wp06_alt:setText("")
-			editBox_wp07_alt:setText("")
-			editBox_wp08_alt:setText("")
-			editBox_wp09_alt:setText("")
-			editBox_wp10_alt:setText("")
+			editBox_wp01_column05:setText("")
+			editBox_wp02_column05:setText("")
+			editBox_wp03_column05:setText("")
+			editBox_wp04_column05:setText("")
+			editBox_wp05_column05:setText("")
+			editBox_wp06_column05:setText("")
+			editBox_wp07_column05:setText("")
+			editBox_wp08_column05:setText("")
+			editBox_wp09_column05:setText("")
+			editBox_wp10_column05:setText("")
 			
-			editBox_wp01_cp:setText("")
-			editBox_wp02_cp:setText("")
-			editBox_wp03_cp:setText("")
-			editBox_wp04_cp:setText("")
-			editBox_wp05_cp:setText("")
-			editBox_wp06_cp:setText("")
-			editBox_wp07_cp:setText("")
-			editBox_wp08_cp:setText("")
-			editBox_wp09_cp:setText("")
-			editBox_wp10_cp:setText("")
-			
-			
-			editBox_wp01_pd:setText("")
-			editBox_wp02_pd:setText("")
-			editBox_wp03_pd:setText("")
-			editBox_wp04_pd:setText("")
-			editBox_wp05_pd:setText("")
-			editBox_wp06_pd:setText("")
-			editBox_wp07_pd:setText("")
-			editBox_wp08_pd:setText("")
-			editBox_wp09_pd:setText("")
-			editBox_wp10_pd:setText("")
+			editBox_wp01_column06:setText("")
+			editBox_wp02_column06:setText("")
+			editBox_wp03_column06:setText("")
+			editBox_wp04_column06:setText("")
+			editBox_wp05_column06:setText("")
+			editBox_wp06_column06:setText("")
+			editBox_wp07_column06:setText("")
+			editBox_wp08_column06:setText("")
+			editBox_wp09_column06:setText("")
+			editBox_wp10_column06:setText("")
 			
 			
-			editBox_wp01_rd:setText("")
-			editBox_wp02_rd:setText("")
-			editBox_wp03_rd:setText("")
-			editBox_wp04_rd:setText("")
-			editBox_wp05_rd:setText("")
-			editBox_wp06_rd:setText("")
-			editBox_wp07_rd:setText("")
-			editBox_wp08_rd:setText("")
-			editBox_wp09_rd:setText("")
-			editBox_wp10_rd:setText("")
+			editBox_wp01_column07:setText("")
+			editBox_wp02_column07:setText("")
+			editBox_wp03_column07:setText("")
+			editBox_wp04_column07:setText("")
+			editBox_wp05_column07:setText("")
+			editBox_wp06_column07:setText("")
+			editBox_wp07_column07:setText("")
+			editBox_wp08_column07:setText("")
+			editBox_wp09_column07:setText("")
+			editBox_wp10_column07:setText("")
 			
-			editBox_wp01_rho:setText("")
-			editBox_wp02_rho:setText("")
-			editBox_wp03_rho:setText("")
-			editBox_wp04_rho:setText("")
-			editBox_wp05_rho:setText("")
-			editBox_wp06_rho:setText("")
-			editBox_wp07_rho:setText("")
-			editBox_wp08_rho:setText("")
-			editBox_wp09_rho:setText("")
-			editBox_wp10_rho:setText("")
 			
-			editBox_wp01_theta:setText("")
-			editBox_wp02_theta:setText("")
-			editBox_wp03_theta:setText("")
-			editBox_wp04_theta:setText("")
-			editBox_wp05_theta:setText("")
-			editBox_wp06_theta:setText("")
-			editBox_wp07_theta:setText("")
-			editBox_wp08_theta:setText("")
-			editBox_wp09_theta:setText("")
-			editBox_wp10_theta:setText("")
+			editBox_wp01_column08:setText("")
+			editBox_wp02_column08:setText("")
+			editBox_wp03_column08:setText("")
+			editBox_wp04_column08:setText("")
+			editBox_wp05_column08:setText("")
+			editBox_wp06_column08:setText("")
+			editBox_wp07_column08:setText("")
+			editBox_wp08_column08:setText("")
+			editBox_wp09_column08:setText("")
+			editBox_wp10_column08:setText("")
 			
-			editBox_wp01_dalt:setText("")
-			editBox_wp02_dalt:setText("")
-			editBox_wp03_dalt:setText("")
-			editBox_wp04_dalt:setText("")
-			editBox_wp05_dalt:setText("")
-			editBox_wp06_dalt:setText("")
-			editBox_wp07_dalt:setText("")
-			editBox_wp08_dalt:setText("")
-			editBox_wp09_dalt:setText("")
-			editBox_wp10_dalt:setText("")
+			editBox_wp01_column09:setText("")
+			editBox_wp02_column09:setText("")
+			editBox_wp03_column09:setText("")
+			editBox_wp04_column09:setText("")
+			editBox_wp05_column09:setText("")
+			editBox_wp06_column09:setText("")
+			editBox_wp07_column09:setText("")
+			editBox_wp08_column09:setText("")
+			editBox_wp09_column09:setText("")
+			editBox_wp10_column09:setText("")
 			
-			editBox_wp01_dnorth:setText("")
-			editBox_wp02_dnorth:setText("")
-			editBox_wp03_dnorth:setText("")
-			editBox_wp04_dnorth:setText("")
-			editBox_wp05_dnorth:setText("")
-			editBox_wp06_dnorth:setText("")
-			editBox_wp07_dnorth:setText("")
-			editBox_wp08_dnorth:setText("")
-			editBox_wp09_dnorth:setText("")
-			editBox_wp10_dnorth:setText("")
+			editBox_wp01_column10:setText("")
+			editBox_wp02_column10:setText("")
+			editBox_wp03_column10:setText("")
+			editBox_wp04_column10:setText("")
+			editBox_wp05_column10:setText("")
+			editBox_wp06_column10:setText("")
+			editBox_wp07_column10:setText("")
+			editBox_wp08_column10:setText("")
+			editBox_wp09_column10:setText("")
+			editBox_wp10_column10:setText("")
 			
-			editBox_wp01_deast:setText("")
-			editBox_wp02_deast:setText("")
-			editBox_wp03_deast:setText("")
-			editBox_wp04_deast:setText("")
-			editBox_wp05_deast:setText("")
-			editBox_wp06_deast:setText("")
-			editBox_wp07_deast:setText("")
-			editBox_wp08_deast:setText("")
-			editBox_wp09_deast:setText("")
-			editBox_wp10_deast:setText("")
+			editBox_wp01_column11:setText("")
+			editBox_wp02_column11:setText("")
+			editBox_wp03_column11:setText("")
+			editBox_wp04_column11:setText("")
+			editBox_wp05_column11:setText("")
+			editBox_wp06_column11:setText("")
+			editBox_wp07_column11:setText("")
+			editBox_wp08_column11:setText("")
+			editBox_wp09_column11:setText("")
+			editBox_wp10_column11:setText("")
+			
+			editBox_wp01_column12:setText("")
+			editBox_wp02_column12:setText("")
+			editBox_wp03_column12:setText("")
+			editBox_wp04_column12:setText("")
+			editBox_wp05_column12:setText("")
+			editBox_wp06_column12:setText("")
+			editBox_wp07_column12:setText("")
+			editBox_wp08_column12:setText("")
+			editBox_wp09_column12:setText("")
+			editBox_wp10_column12:setText("")
+			
+			editBox_wp01_column13:setText("")
+			editBox_wp02_column13:setText("")
+			editBox_wp03_column13:setText("")
+			editBox_wp04_column13:setText("")
+			editBox_wp05_column13:setText("")
+			editBox_wp06_column13:setText("")
+			editBox_wp07_column13:setText("")
+			editBox_wp08_column13:setText("")
+			editBox_wp09_column13:setText("")
+			editBox_wp10_column13:setText("")
 			--end
 			--]]
 			radiobutton_waypoint01:setState(true)
@@ -646,6 +681,16 @@ local function loadDMPS()
 			outputBoxLog('Could not find the DTC named: ' .. requestedDtc)
 		end
 	end
+	--[[function changeColumnNames()
+	
+		editBox_output:setText('new aircraft selected')
+	 Not working
+		local item = comboList_aircraft:getSelectedItem().index)
+		--local index = comboList_aircraft:getItemIndex(item)+1
+		editBox_output:setText(item)
+		
+	
+	end--]]
 	
 	function loadDtc(requestedDtcFullPath)
 		log('Putting ' .. requestedDtcFullPath .. ' in a table...')
@@ -684,91 +729,91 @@ local function loadDMPS()
 				if string.match(line,"name%s*=%s*") then
 					log("Wp01 name detected")
 					local capture =  string.match(line,"name%s*=%s*([^,]+)")
-					editBox_wp01_name:setText(capture)
+					editBox_wp01_column02:setText(capture)
 					log("Wp01 Name is: " .. capture)
 				end
 				
 				if string.match(line,"lat%s*=%s*") then
 					log("Wp01 lat detected")
 					local capture =  string.match(line,"lat%s*=%s*([^,]+)")
-					editBox_wp01_lat:setText(capture)
+					editBox_wp01_column03:setText(capture)
 					log("Wp01 lat is: " .. capture)
 				end
 				
 				if string.match(line,"lon%s*=%s*") then
 					log("Wp01 long detected")
 					local capture =  string.match(line,"lon%s*=%s*([^,]+)")
-					editBox_wp01_long:setText(capture)
+					editBox_wp01_column04:setText(capture)
 					log("Wp01 long is: " .. capture)
 				end
 				
 				if string.match(line,"alt%s*=%s*") then
 					log("Wp01 alt detected")
 					local capture =  string.match(line,"alt%s*=%s*([^,]+)")
-					editBox_wp01_alt:setText(capture)
+					editBox_wp01_column05:setText(capture)
 					log("Wp01 alt is: " .. capture)
 				end
 				
 				if string.match(line,"alt%s*=%s*") then
 					log("Wp01 alt detected")
 					local capture =  string.match(line,"alt%s*=%s*([^,]+)")
-					editBox_wp01_alt:setText(capture)
+					editBox_wp01_column05:setText(capture)
 					log("Wp01 alt is: " .. capture)
 				end
 				
 				if string.match(line,"cp%s*=%s*") then
 					log("Wp01 cp detected")
 					local capture =  string.match(line,"cp%s*=%s*([^,]+)")
-					editBox_wp01_cp:setText(capture)
+					editBox_wp01_column06:setText(capture)
 					log("Wp01 cp is: " .. capture)
 				end
 				
 				if string.match(line,"pd%s*=%s*") then
 					log("Wp01 pd detected")
 					local capture =  string.match(line,"pd%s*=%s*([^,]+)")
-					editBox_wp01_pd:setText(capture)
+					editBox_wp01_column07:setText(capture)
 					log("Wp01 pd is: " .. capture)
 				end
 				
 				if string.match(line,"rd%s*=%s*") then
 					log("Wp01 rd detected")
 					local capture =  string.match(line,"rd%s*=%s*([^,]+)")
-					editBox_wp01_rd:setText(capture)
+					editBox_wp01_column08:setText(capture)
 					log("Wp01 rd is: " .. capture)
 				end
 				
 				if string.match(line,"rho%s*=%s*") then
 					log("Wp01 rho detected")
 					local capture =  string.match(line,"rho%s*=%s*([^,]+)")
-					editBox_wp01_rho:setText(capture)
+					editBox_wp01_column09:setText(capture)
 					log("Wp01 rho is: " .. capture)
 				end
 				
 				if string.match(line,"theta%s*=%s*") then
 					log("Wp01 theta detected")
 					local capture =  string.match(line,"theta%s*=%s*([^,]+)")
-					editBox_wp01_theta:setText(capture)
+					editBox_wp01_column10:setText(capture)
 					log("Wp01 theta is: " .. capture)
 				end
 				
 				if string.match(line,"dalt%s*=%s*") then
 					log("Wp01 dalt detected")
 					local capture =  string.match(line,"dalt%s*=%s*([^,]+)")
-					editBox_wp01_dalt:setText(capture)
+					editBox_wp01_column11:setText(capture)
 					log("Wp01 dalt is: " .. capture)
 				end
 				
 				if string.match(line,"dnorth%s*=%s*") then
 					log("Wp01 dnorth detected")
 					local capture =  string.match(line,"dnorth%s*=%s*([^,]+)")
-					editBox_wp01_dnorth:setText(capture)
+					editBox_wp01_column12:setText(capture)
 					log("Wp01 dnorth is: " .. capture)
 				end
 				
 				if string.match(line,"deast%s*=%s*") then
 					log("Wp01 deast detected")
 					local capture =  string.match(line,"deast%s*=%s*([^,]+)")
-					editBox_wp01_deast:setText(capture)
+					editBox_wp01_column13:setText(capture)
 					log("Wp01 deast is: " .. capture)
 				end
 			
@@ -777,459 +822,459 @@ local function loadDMPS()
 				if string.match(line,"name%s*=%s*") then
 					log("Wp02 name detected")
 					local capture =  string.match(line,"name%s*=%s*([^,]+)")
-					editBox_wp02_name:setText(capture)
+					editBox_wp02_column02:setText(capture)
 					log("Wp02 Name is: " .. capture)
 				end
 				
 				if string.match(line,"lat%s*=%s*") then
 					log("Wp02 lat detected")
 					local capture =  string.match(line,"lat%s*=%s*([^,]+)")
-					editBox_wp02_lat:setText(capture)
+					editBox_wp02_column03:setText(capture)
 					log("Wp02 lat is: " .. capture)
 				end
 				
 				if string.match(line,"lon%s*=%s*") then
 					log("Wp02 long detected")
 					local capture =  string.match(line,"lon%s*=%s*([^,]+)")
-					editBox_wp02_long:setText(capture)
+					editBox_wp02_column04:setText(capture)
 					log("Wp02 long is: " .. capture)
 				end
 				
 				if string.match(line,"alt%s*=%s*") then
 					log("Wp02 alt detected")
 					local capture =  string.match(line,"alt%s*=%s*([^,]+)")
-					editBox_wp02_alt:setText(capture)
+					editBox_wp02_column05:setText(capture)
 					log("Wp02 alt is: " .. capture)
 				end
 				
 				if string.match(line,"alt%s*=%s*") then
 					log("Wp02 alt detected")
 					local capture =  string.match(line,"alt%s*=%s*([^,]+)")
-					editBox_wp02_alt:setText(capture)
+					editBox_wp02_column05:setText(capture)
 					log("Wp02 alt is: " .. capture)
 				end
 				
 				if string.match(line,"cp%s*=%s*") then
 					log("Wp02 cp detected")
 					local capture =  string.match(line,"cp%s*=%s*([^,]+)")
-					editBox_wp02_cp:setText(capture)
+					editBox_wp02_column06:setText(capture)
 					log("Wp02 cp is: " .. capture)
 				end
 				
 				if string.match(line,"pd%s*=%s*") then
 					log("Wp02 pd detected")
 					local capture =  string.match(line,"pd%s*=%s*([^,]+)")
-					editBox_wp02_pd:setText(capture)
+					editBox_wp02_column07:setText(capture)
 					log("Wp02 pd is: " .. capture)
 				end
 				
 				if string.match(line,"rd%s*=%s*") then
 					log("Wp02 rd detected")
 					local capture =  string.match(line,"rd%s*=%s*([^,]+)")
-					editBox_wp02_rd:setText(capture)
+					editBox_wp02_column08:setText(capture)
 					log("Wp02 rd is: " .. capture)
 				end
 				
 				if string.match(line,"rho%s*=%s*") then
 					log("Wp02 rho detected")
 					local capture =  string.match(line,"rho%s*=%s*([^,]+)")
-					editBox_wp02_rho:setText(capture)
+					editBox_wp02_column09:setText(capture)
 					log("Wp02 rho is: " .. capture)
 				end
 				
 				if string.match(line,"theta%s*=%s*") then
 					log("Wp02 theta detected")
 					local capture =  string.match(line,"theta%s*=%s*([^,]+)")
-					editBox_wp02_theta:setText(capture)
+					editBox_wp02_column10:setText(capture)
 					log("Wp02 theta is: " .. capture)
 				end
 				
 				if string.match(line,"dalt%s*=%s*") then
 					log("Wp02 dalt detected")
 					local capture =  string.match(line,"dalt%s*=%s*([^,]+)")
-					editBox_wp02_dalt:setText(capture)
+					editBox_wp02_column11:setText(capture)
 					log("Wp02 dalt is: " .. capture)
 				end
 				
 				if string.match(line,"dnorth%s*=%s*") then
 					log("Wp02 dnorth detected")
 					local capture =  string.match(line,"dnorth%s*=%s*([^,]+)")
-					editBox_wp02_dnorth:setText(capture)
+					editBox_wp02_column12:setText(capture)
 					log("Wp02 dnorth is: " .. capture)
 				end
 				
 				if string.match(line,"deast%s*=%s*") then
 					log("Wp02 deast detected")
 					local capture =  string.match(line,"deast%s*=%s*([^,]+)")
-					editBox_wp02_deast:setText(capture)
+					editBox_wp02_column13:setText(capture)
 					log("Wp02 deast is: " .. capture)
 				end
 			elseif string.match(line,"waypoints%[3%]") then
-    log("Wp03 detected")
-    if string.match(line,"name%s*=%s*") then
-        log("Wp03 name detected")
-        local capture =  string.match(line,"name%s*=%s*([^,]+)")
-        editBox_wp03_name:setText(capture)
-        log("Wp03 Name is: " .. capture)
-    end
-    
-    if string.match(line,"lat%s*=%s*") then
-        log("Wp03 lat detected")
-        local capture =  string.match(line,"lat%s*=%s*([^,]+)")
-        editBox_wp03_lat:setText(capture)
-        log("Wp03 lat is: " .. capture)
-    end
-    
-    if string.match(line,"lon%s*=%s*") then
-        log("Wp03 long detected")
-        local capture =  string.match(line,"lon%s*=%s*([^,]+)")
-        editBox_wp03_long:setText(capture)
-        log("Wp03 long is: " .. capture)
-    end
-    
-    if string.match(line,"alt%s*=%s*") then
-        log("Wp03 alt detected")
-        local capture =  string.match(line,"alt%s*=%s*([^,]+)")
-        editBox_wp03_alt:setText(capture)
-        log("Wp03 alt is: " .. capture)
-    end
-    
-    if string.match(line,"alt%s*=%s*") then
-        log("Wp03 alt detected")
-        local capture =  string.match(line,"alt%s*=%s*([^,]+)")
-        editBox_wp03_alt:setText(capture)
-        log("Wp03 alt is: " .. capture)
-    end
-    
-    if string.match(line,"cp%s*=%s*") then
-        log("Wp03 cp detected")
-        local capture =  string.match(line,"cp%s*=%s*([^,]+)")
-        editBox_wp03_cp:setText(capture)
-        log("Wp03 cp is: " .. capture)
-    end
-    
-    if string.match(line,"pd%s*=%s*") then
-        log("Wp03 pd detected")
-        local capture =  string.match(line,"pd%s*=%s*([^,]+)")
-        editBox_wp03_pd:setText(capture)
-        log("Wp03 pd is: " .. capture)
-    end
-    
-    if string.match(line,"rd%s*=%s*") then
-        log("Wp03 rd detected")
-        local capture =  string.match(line,"rd%s*=%s*([^,]+)")
-        editBox_wp03_rd:setText(capture)
-        log("Wp03 rd is: " .. capture)
-    end
-    
-    if string.match(line,"rho%s*=%s*") then
-        log("Wp03 rho detected")
-        local capture =  string.match(line,"rho%s*=%s*([^,]+)")
-        editBox_wp03_rho:setText(capture)
-        log("Wp03 rho is: " .. capture)
-    end
-    
-    if string.match(line,"theta%s*=%s*") then
-        log("Wp03 theta detected")
-        local capture =  string.match(line,"theta%s*=%s*([^,]+)")
-        editBox_wp03_theta:setText(capture)
-        log("Wp03 theta is: " .. capture)
-    end
-    
-    if string.match(line,"dalt%s*=%s*") then
-        log("Wp03 dalt detected")
-        local capture =  string.match(line,"dalt%s*=%s*([^,]+)")
-        editBox_wp03_dalt:setText(capture)
-        log("Wp03 dalt is: " .. capture)
-    end
-    
-    if string.match(line,"dnorth%s*=%s*") then
-        log("Wp03 dnorth detected")
-        local capture =  string.match(line,"dnorth%s*=%s*([^,]+)")
-        editBox_wp03_dnorth:setText(capture)
-        log("Wp03 dnorth is: " .. capture)
-    end
-    
-    if string.match(line,"deast%s*=%s*") then
-        log("Wp03 deast detected")
-        local capture =  string.match(line,"deast%s*=%s*([^,]+)")
-        editBox_wp03_deast:setText(capture)
-        log("Wp03 deast is: " .. capture)
-    end	
-elseif string.match(line,"waypoints%[4%]") then
-    log("Wp04 detected")
-    if string.match(line,"name%s*=%s*") then
-        log("Wp04 name detected")
-        local capture =  string.match(line,"name%s*=%s*([^,]+)")
-        editBox_wp04_name:setText(capture)
-        log("Wp04 Name is: " .. capture)
-    end
-    
-    if string.match(line,"lat%s*=%s*") then
-        log("Wp04 lat detected")
-        local capture =  string.match(line,"lat%s*=%s*([^,]+)")
-        editBox_wp04_lat:setText(capture)
-        log("Wp04 lat is: " .. capture)
-    end
-    
-    if string.match(line,"lon%s*=%s*") then
-        log("Wp04 long detected")
-        local capture =  string.match(line,"lon%s*=%s*([^,]+)")
-        editBox_wp04_long:setText(capture)
-        log("Wp04 long is: " .. capture)
-    end
-    
-    if string.match(line,"alt%s*=%s*") then
-        log("Wp04 alt detected")
-        local capture =  string.match(line,"alt%s*=%s*([^,]+)")
-        editBox_wp04_alt:setText(capture)
-        log("Wp04 alt is: " .. capture)
-    end
-    
-    if string.match(line,"alt%s*=%s*") then
-        log("Wp04 alt detected")
-        local capture =  string.match(line,"alt%s*=%s*([^,]+)")
-        editBox_wp04_alt:setText(capture)
-        log("Wp04 alt is: " .. capture)
-    end
-    
-    if string.match(line,"cp%s*=%s*") then
-        log("Wp04 cp detected")
-        local capture =  string.match(line,"cp%s*=%s*([^,]+)")
-        editBox_wp04_cp:setText(capture)
-        log("Wp04 cp is: " .. capture)
-    end
-    
-    if string.match(line,"pd%s*=%s*") then
-        log("Wp04 pd detected")
-        local capture =  string.match(line,"pd%s*=%s*([^,]+)")
-        editBox_wp04_pd:setText(capture)
-        log("Wp04 pd is: " .. capture)
-    end
-    
-    if string.match(line,"rd%s*=%s*") then
-        log("Wp04 rd detected")
-        local capture =  string.match(line,"rd%s*=%s*([^,]+)")
-        editBox_wp04_rd:setText(capture)
-        log("Wp04 rd is: " .. capture)
-    end
-    
-    if string.match(line,"rho%s*=%s*") then
-        log("Wp04 rho detected")
-        local capture =  string.match(line,"rho%s*=%s*([^,]+)")
-        editBox_wp04_rho:setText(capture)
-        log("Wp04 rho is: " .. capture)
-    end
-    
-    if string.match(line,"theta%s*=%s*") then
-        log("Wp04 theta detected")
-        local capture =  string.match(line,"theta%s*=%s*([^,]+)")
-        editBox_wp04_theta:setText(capture)
-        log("Wp04 theta is: " .. capture)
-    end
-    
-    if string.match(line,"dalt%s*=%s*") then
-        log("Wp04 dalt detected")
-        local capture =  string.match(line,"dalt%s*=%s*([^,]+)")
-        editBox_wp04_dalt:setText(capture)
-        log("Wp04 dalt is: " .. capture)
-    end
-    
-    if string.match(line,"dnorth%s*=%s*") then
-        log("Wp04 dnorth detected")
-        local capture =  string.match(line,"dnorth%s*=%s*([^,]+)")
-        editBox_wp04_dnorth:setText(capture)
-        log("Wp04 dnorth is: " .. capture)
-    end
-    
-    if string.match(line,"deast%s*=%s*") then
-        log("Wp04 deast detected")
-        local capture =  string.match(line,"deast%s*=%s*([^,]+)")
-        editBox_wp04_deast:setText(capture)
-        log("Wp04 deast is: " .. capture)
-    end				
-elseif string.match(line,"waypoints%[5%]") then
-    log("Wp05 detected")
-    if string.match(line,"name%s*=%s*") then
-        log("Wp05 name detected")
-        local capture =  string.match(line,"name%s*=%s*([^,]+)")
-        editBox_wp05_name:setText(capture)
-        log("Wp05 Name is: " .. capture)
-    end
-    
-    if string.match(line,"lat%s*=%s*") then
-        log("Wp05 lat detected")
-        local capture =  string.match(line,"lat%s*=%s*([^,]+)")
-        editBox_wp05_lat:setText(capture)
-        log("Wp05 lat is: " .. capture)
-    end
-    
-    if string.match(line,"lon%s*=%s*") then
-        log("Wp05 long detected")
-        local capture =  string.match(line,"lon%s*=%s*([^,]+)")
-        editBox_wp05_long:setText(capture)
-        log("Wp05 long is: " .. capture)
-    end
-    
-    if string.match(line,"alt%s*=%s*") then
-        log("Wp05 alt detected")
-        local capture =  string.match(line,"alt%s*=%s*([^,]+)")
-        editBox_wp05_alt:setText(capture)
-        log("Wp05 alt is: " .. capture)
-    end
-    
-    if string.match(line,"alt%s*=%s*") then
-        log("Wp05 alt detected")
-        local capture =  string.match(line,"alt%s*=%s*([^,]+)")
-        editBox_wp05_alt:setText(capture)
-        log("Wp05 alt is: " .. capture)
-    end
-    
-    if string.match(line,"cp%s*=%s*") then
-        log("Wp05 cp detected")
-        local capture =  string.match(line,"cp%s*=%s*([^,]+)")
-        editBox_wp05_cp:setText(capture)
-        log("Wp05 cp is: " .. capture)
-    end
-    
-    if string.match(line,"pd%s*=%s*") then
-        log("Wp05 pd detected")
-        local capture =  string.match(line,"pd%s*=%s*([^,]+)")
-        editBox_wp05_pd:setText(capture)
-        log("Wp05 pd is: " .. capture)
-    end
-    
-    if string.match(line,"rd%s*=%s*") then
-        log("Wp05 rd detected")
-        local capture =  string.match(line,"rd%s*=%s*([^,]+)")
-        editBox_wp05_rd:setText(capture)
-        log("Wp05 rd is: " .. capture)
-    end
-    
-    if string.match(line,"rho%s*=%s*") then
-        log("Wp05 rho detected")
-        local capture =  string.match(line,"rho%s*=%s*([^,]+)")
-        editBox_wp05_rho:setText(capture)
-        log("Wp05 rho is: " .. capture)
-    end
-    
-    if string.match(line,"theta%s*=%s*") then
-        log("Wp05 theta detected")
-        local capture =  string.match(line,"theta%s*=%s*([^,]+)")
-        editBox_wp05_theta:setText(capture)
-        log("Wp05 theta is: " .. capture)
-    end
-    
-    if string.match(line,"dalt%s*=%s*") then
-        log("Wp05 dalt detected")
-        local capture =  string.match(line,"dalt%s*=%s*([^,]+)")
-        editBox_wp05_dalt:setText(capture)
-        log("Wp05 dalt is: " .. capture)
-    end
-    
-    if string.match(line,"dnorth%s*=%s*") then
-        log("Wp05 dnorth detected")
-        local capture =  string.match(line,"dnorth%s*=%s*([^,]+)")
-        editBox_wp05_dnorth:setText(capture)
-        log("Wp05 dnorth is: " .. capture)
-    end
-    
-    if string.match(line,"deast%s*=%s*") then
-        log("Wp05 deast detected")
-        local capture =  string.match(line,"deast%s*=%s*([^,]+)")
-        editBox_wp05_deast:setText(capture)
-        log("Wp05 deast is: " .. capture)
-    end				
+				log("Wp03 detected")
+				if string.match(line,"name%s*=%s*") then
+					log("Wp03 name detected")
+					local capture =  string.match(line,"name%s*=%s*([^,]+)")
+					editBox_wp03_column02:setText(capture)
+					log("Wp03 Name is: " .. capture)
+				end
+				
+				if string.match(line,"lat%s*=%s*") then
+					log("Wp03 lat detected")
+					local capture =  string.match(line,"lat%s*=%s*([^,]+)")
+					editBox_wp03_column03:setText(capture)
+					log("Wp03 lat is: " .. capture)
+				end
+				
+				if string.match(line,"lon%s*=%s*") then
+					log("Wp03 long detected")
+					local capture =  string.match(line,"lon%s*=%s*([^,]+)")
+					editBox_wp03_column04:setText(capture)
+					log("Wp03 long is: " .. capture)
+				end
+				
+				if string.match(line,"alt%s*=%s*") then
+					log("Wp03 alt detected")
+					local capture =  string.match(line,"alt%s*=%s*([^,]+)")
+					editBox_wp03_column05:setText(capture)
+					log("Wp03 alt is: " .. capture)
+				end
+				
+				if string.match(line,"alt%s*=%s*") then
+					log("Wp03 alt detected")
+					local capture =  string.match(line,"alt%s*=%s*([^,]+)")
+					editBox_wp03_column05:setText(capture)
+					log("Wp03 alt is: " .. capture)
+				end
+				
+				if string.match(line,"cp%s*=%s*") then
+					log("Wp03 cp detected")
+					local capture =  string.match(line,"cp%s*=%s*([^,]+)")
+					editBox_wp03_column06:setText(capture)
+					log("Wp03 cp is: " .. capture)
+				end
+				
+				if string.match(line,"pd%s*=%s*") then
+					log("Wp03 pd detected")
+					local capture =  string.match(line,"pd%s*=%s*([^,]+)")
+					editBox_wp03_column07:setText(capture)
+					log("Wp03 pd is: " .. capture)
+				end
+				
+				if string.match(line,"rd%s*=%s*") then
+					log("Wp03 rd detected")
+					local capture =  string.match(line,"rd%s*=%s*([^,]+)")
+					editBox_wp03_column08:setText(capture)
+					log("Wp03 rd is: " .. capture)
+				end
+				
+				if string.match(line,"rho%s*=%s*") then
+					log("Wp03 rho detected")
+					local capture =  string.match(line,"rho%s*=%s*([^,]+)")
+					editBox_wp03_column09:setText(capture)
+					log("Wp03 rho is: " .. capture)
+				end
+				
+				if string.match(line,"theta%s*=%s*") then
+					log("Wp03 theta detected")
+					local capture =  string.match(line,"theta%s*=%s*([^,]+)")
+					editBox_wp03_column10:setText(capture)
+					log("Wp03 theta is: " .. capture)
+				end
+				
+				if string.match(line,"dalt%s*=%s*") then
+					log("Wp03 dalt detected")
+					local capture =  string.match(line,"dalt%s*=%s*([^,]+)")
+					editBox_wp03_column11:setText(capture)
+					log("Wp03 dalt is: " .. capture)
+				end
+				
+				if string.match(line,"dnorth%s*=%s*") then
+					log("Wp03 dnorth detected")
+					local capture =  string.match(line,"dnorth%s*=%s*([^,]+)")
+					editBox_wp03_column12:setText(capture)
+					log("Wp03 dnorth is: " .. capture)
+				end
+				
+				if string.match(line,"deast%s*=%s*") then
+					log("Wp03 deast detected")
+					local capture =  string.match(line,"deast%s*=%s*([^,]+)")
+					editBox_wp03_column13:setText(capture)
+					log("Wp03 deast is: " .. capture)
+				end	
+			elseif string.match(line,"waypoints%[4%]") then
+				log("Wp04 detected")
+				if string.match(line,"name%s*=%s*") then
+					log("Wp04 name detected")
+					local capture =  string.match(line,"name%s*=%s*([^,]+)")
+					editBox_wp04_column02:setText(capture)
+					log("Wp04 Name is: " .. capture)
+				end
+				
+				if string.match(line,"lat%s*=%s*") then
+					log("Wp04 lat detected")
+					local capture =  string.match(line,"lat%s*=%s*([^,]+)")
+					editBox_wp04_column03:setText(capture)
+					log("Wp04 lat is: " .. capture)
+				end
+				
+				if string.match(line,"lon%s*=%s*") then
+					log("Wp04 long detected")
+					local capture =  string.match(line,"lon%s*=%s*([^,]+)")
+					editBox_wp04_column04:setText(capture)
+					log("Wp04 long is: " .. capture)
+				end
+				
+				if string.match(line,"alt%s*=%s*") then
+					log("Wp04 alt detected")
+					local capture =  string.match(line,"alt%s*=%s*([^,]+)")
+					editBox_wp04_column05:setText(capture)
+					log("Wp04 alt is: " .. capture)
+				end
+				
+				if string.match(line,"alt%s*=%s*") then
+					log("Wp04 alt detected")
+					local capture =  string.match(line,"alt%s*=%s*([^,]+)")
+					editBox_wp04_column05:setText(capture)
+					log("Wp04 alt is: " .. capture)
+				end
+				
+				if string.match(line,"cp%s*=%s*") then
+					log("Wp04 cp detected")
+					local capture =  string.match(line,"cp%s*=%s*([^,]+)")
+					editBox_wp04_column06:setText(capture)
+					log("Wp04 cp is: " .. capture)
+				end
+				
+				if string.match(line,"pd%s*=%s*") then
+					log("Wp04 pd detected")
+					local capture =  string.match(line,"pd%s*=%s*([^,]+)")
+					editBox_wp04_column07:setText(capture)
+					log("Wp04 pd is: " .. capture)
+				end
+				
+				if string.match(line,"rd%s*=%s*") then
+					log("Wp04 rd detected")
+					local capture =  string.match(line,"rd%s*=%s*([^,]+)")
+					editBox_wp04_column08:setText(capture)
+					log("Wp04 rd is: " .. capture)
+				end
+				
+				if string.match(line,"rho%s*=%s*") then
+					log("Wp04 rho detected")
+					local capture =  string.match(line,"rho%s*=%s*([^,]+)")
+					editBox_wp04_column09:setText(capture)
+					log("Wp04 rho is: " .. capture)
+				end
+				
+				if string.match(line,"theta%s*=%s*") then
+					log("Wp04 theta detected")
+					local capture =  string.match(line,"theta%s*=%s*([^,]+)")
+					editBox_wp04_column10:setText(capture)
+					log("Wp04 theta is: " .. capture)
+				end
+				
+				if string.match(line,"dalt%s*=%s*") then
+					log("Wp04 dalt detected")
+					local capture =  string.match(line,"dalt%s*=%s*([^,]+)")
+					editBox_wp04_column11:setText(capture)
+					log("Wp04 dalt is: " .. capture)
+				end
+				
+				if string.match(line,"dnorth%s*=%s*") then
+					log("Wp04 dnorth detected")
+					local capture =  string.match(line,"dnorth%s*=%s*([^,]+)")
+					editBox_wp04_column12:setText(capture)
+					log("Wp04 dnorth is: " .. capture)
+				end
+				
+				if string.match(line,"deast%s*=%s*") then
+					log("Wp04 deast detected")
+					local capture =  string.match(line,"deast%s*=%s*([^,]+)")
+					editBox_wp04_column13:setText(capture)
+					log("Wp04 deast is: " .. capture)
+				end				
+			elseif string.match(line,"waypoints%[5%]") then
+				log("Wp05 detected")
+				if string.match(line,"name%s*=%s*") then
+					log("Wp05 name detected")
+					local capture =  string.match(line,"name%s*=%s*([^,]+)")
+					editBox_wp05_column02:setText(capture)
+					log("Wp05 Name is: " .. capture)
+				end
+				
+				if string.match(line,"lat%s*=%s*") then
+					log("Wp05 lat detected")
+					local capture =  string.match(line,"lat%s*=%s*([^,]+)")
+					editBox_wp05_column03:setText(capture)
+					log("Wp05 lat is: " .. capture)
+				end
+				
+				if string.match(line,"lon%s*=%s*") then
+					log("Wp05 long detected")
+					local capture =  string.match(line,"lon%s*=%s*([^,]+)")
+					editBox_wp05_column04:setText(capture)
+					log("Wp05 long is: " .. capture)
+				end
+				
+				if string.match(line,"alt%s*=%s*") then
+					log("Wp05 alt detected")
+					local capture =  string.match(line,"alt%s*=%s*([^,]+)")
+					editBox_wp05_column05:setText(capture)
+					log("Wp05 alt is: " .. capture)
+				end
+				
+				if string.match(line,"alt%s*=%s*") then
+					log("Wp05 alt detected")
+					local capture =  string.match(line,"alt%s*=%s*([^,]+)")
+					editBox_wp05_column05:setText(capture)
+					log("Wp05 alt is: " .. capture)
+				end
+				
+				if string.match(line,"cp%s*=%s*") then
+					log("Wp05 cp detected")
+					local capture =  string.match(line,"cp%s*=%s*([^,]+)")
+					editBox_wp05_column06:setText(capture)
+					log("Wp05 cp is: " .. capture)
+				end
+				
+				if string.match(line,"pd%s*=%s*") then
+					log("Wp05 pd detected")
+					local capture =  string.match(line,"pd%s*=%s*([^,]+)")
+					editBox_wp05_column07:setText(capture)
+					log("Wp05 pd is: " .. capture)
+				end
+				
+				if string.match(line,"rd%s*=%s*") then
+					log("Wp05 rd detected")
+					local capture =  string.match(line,"rd%s*=%s*([^,]+)")
+					editBox_wp05_column08:setText(capture)
+					log("Wp05 rd is: " .. capture)
+				end
+				
+				if string.match(line,"rho%s*=%s*") then
+					log("Wp05 rho detected")
+					local capture =  string.match(line,"rho%s*=%s*([^,]+)")
+					editBox_wp05_column09:setText(capture)
+					log("Wp05 rho is: " .. capture)
+				end
+				
+				if string.match(line,"theta%s*=%s*") then
+					log("Wp05 theta detected")
+					local capture =  string.match(line,"theta%s*=%s*([^,]+)")
+					editBox_wp05_column10:setText(capture)
+					log("Wp05 theta is: " .. capture)
+				end
+				
+				if string.match(line,"dalt%s*=%s*") then
+					log("Wp05 dalt detected")
+					local capture =  string.match(line,"dalt%s*=%s*([^,]+)")
+					editBox_wp05_column11:setText(capture)
+					log("Wp05 dalt is: " .. capture)
+				end
+				
+				if string.match(line,"dnorth%s*=%s*") then
+					log("Wp05 dnorth detected")
+					local capture =  string.match(line,"dnorth%s*=%s*([^,]+)")
+					editBox_wp05_column12:setText(capture)
+					log("Wp05 dnorth is: " .. capture)
+				end
+				
+				if string.match(line,"deast%s*=%s*") then
+					log("Wp05 deast detected")
+					local capture =  string.match(line,"deast%s*=%s*([^,]+)")
+					editBox_wp05_column13:setText(capture)
+					log("Wp05 deast is: " .. capture)
+				end				
 			elseif string.match(line,"waypoints%[6%]") then
 				log("Wp06 detected")
 				if string.match(line,"name%s*=%s*") then
 					log("Wp06 name detected")
 					local capture =  string.match(line,"name%s*=%s*([^,]+)")
-					editBox_wp06_name:setText(capture)
+					editBox_wp06_column02:setText(capture)
 					log("Wp06 Name is: " .. capture)
 				end
 				
 				if string.match(line,"lat%s*=%s*") then
 					log("Wp06 lat detected")
 					local capture =  string.match(line,"lat%s*=%s*([^,]+)")
-					editBox_wp06_lat:setText(capture)
+					editBox_wp06_column03:setText(capture)
 					log("Wp06 lat is: " .. capture)
 				end
 				
 				if string.match(line,"lon%s*=%s*") then
 					log("Wp06 long detected")
 					local capture =  string.match(line,"lon%s*=%s*([^,]+)")
-					editBox_wp06_long:setText(capture)
+					editBox_wp06_column04:setText(capture)
 					log("Wp06 long is: " .. capture)
 				end
 				
 				if string.match(line,"alt%s*=%s*") then
 					log("Wp06 alt detected")
 					local capture =  string.match(line,"alt%s*=%s*([^,]+)")
-					editBox_wp06_alt:setText(capture)
+					editBox_wp06_column05:setText(capture)
 					log("Wp06 alt is: " .. capture)
 				end
 				
 				if string.match(line,"alt%s*=%s*") then
 					log("Wp06 alt detected")
 					local capture =  string.match(line,"alt%s*=%s*([^,]+)")
-					editBox_wp06_alt:setText(capture)
+					editBox_wp06_column05:setText(capture)
 					log("Wp06 alt is: " .. capture)
 				end
 				
 				if string.match(line,"cp%s*=%s*") then
 					log("Wp06 cp detected")
 					local capture =  string.match(line,"cp%s*=%s*([^,]+)")
-					editBox_wp06_cp:setText(capture)
+					editBox_wp06_column06:setText(capture)
 					log("Wp06 cp is: " .. capture)
 				end
 				
 				if string.match(line,"pd%s*=%s*") then
 					log("Wp06 pd detected")
 					local capture =  string.match(line,"pd%s*=%s*([^,]+)")
-					editBox_wp06_pd:setText(capture)
+					editBox_wp06_column07:setText(capture)
 					log("Wp06 pd is: " .. capture)
 				end
 				
 				if string.match(line,"rd%s*=%s*") then
 					log("Wp06 rd detected")
 					local capture =  string.match(line,"rd%s*=%s*([^,]+)")
-					editBox_wp06_rd:setText(capture)
+					editBox_wp06_column08:setText(capture)
 					log("Wp06 rd is: " .. capture)
 				end
 				
 				if string.match(line,"rho%s*=%s*") then
 					log("Wp06 rho detected")
 					local capture =  string.match(line,"rho%s*=%s*([^,]+)")
-					editBox_wp06_rho:setText(capture)
+					editBox_wp06_column09:setText(capture)
 					log("Wp06 rho is: " .. capture)
 				end
 				
 				if string.match(line,"theta%s*=%s*") then
 					log("Wp06 theta detected")
 					local capture =  string.match(line,"theta%s*=%s*([^,]+)")
-					editBox_wp06_theta:setText(capture)
+					editBox_wp06_column10:setText(capture)
 					log("Wp06 theta is: " .. capture)
 				end
 				
 				if string.match(line,"dalt%s*=%s*") then
 					log("Wp06 dalt detected")
 					local capture =  string.match(line,"dalt%s*=%s*([^,]+)")
-					editBox_wp06_dalt:setText(capture)
+					editBox_wp06_column11:setText(capture)
 					log("Wp06 dalt is: " .. capture)
 				end
 				
 				if string.match(line,"dnorth%s*=%s*") then
 					log("Wp06 dnorth detected")
 					local capture =  string.match(line,"dnorth%s*=%s*([^,]+)")
-					editBox_wp06_dnorth:setText(capture)
+					editBox_wp06_column12:setText(capture)
 					log("Wp06 dnorth is: " .. capture)
 				end
 				
 				if string.match(line,"deast%s*=%s*") then
 					log("Wp06 deast detected")
 					local capture =  string.match(line,"deast%s*=%s*([^,]+)")
-					editBox_wp06_deast:setText(capture)
+					editBox_wp06_column13:setText(capture)
 					log("Wp06 deast is: " .. capture)
 				end
 			
@@ -1238,383 +1283,375 @@ elseif string.match(line,"waypoints%[5%]") then
 				if string.match(line,"name%s*=%s*") then
 					log("Wp07 name detected")
 					local capture =  string.match(line,"name%s*=%s*([^,]+)")
-					editBox_wp07_name:setText(capture)
+					editBox_wp07_column02:setText(capture)
 					log("Wp07 Name is: " .. capture)
 				end
 				
 				if string.match(line,"lat%s*=%s*") then
 					log("Wp07 lat detected")
 					local capture =  string.match(line,"lat%s*=%s*([^,]+)")
-					editBox_wp07_lat:setText(capture)
+					editBox_wp07_column03:setText(capture)
 					log("Wp07 lat is: " .. capture)
 				end
 				
 				if string.match(line,"lon%s*=%s*") then
 					log("Wp07 long detected")
 					local capture =  string.match(line,"lon%s*=%s*([^,]+)")
-					editBox_wp07_long:setText(capture)
+					editBox_wp07_column04:setText(capture)
 					log("Wp07 long is: " .. capture)
 				end
 				
 				if string.match(line,"alt%s*=%s*") then
 					log("Wp07 alt detected")
 					local capture =  string.match(line,"alt%s*=%s*([^,]+)")
-					editBox_wp07_alt:setText(capture)
+					editBox_wp07_column05:setText(capture)
 					log("Wp07 alt is: " .. capture)
 				end
 				
 				if string.match(line,"alt%s*=%s*") then
 					log("Wp07 alt detected")
 					local capture =  string.match(line,"alt%s*=%s*([^,]+)")
-					editBox_wp07_alt:setText(capture)
+					editBox_wp07_column05:setText(capture)
 					log("Wp07 alt is: " .. capture)
 				end
 				
 				if string.match(line,"cp%s*=%s*") then
 					log("Wp07 cp detected")
 					local capture =  string.match(line,"cp%s*=%s*([^,]+)")
-					editBox_wp07_cp:setText(capture)
+					editBox_wp07_column06:setText(capture)
 					log("Wp07 cp is: " .. capture)
 				end
 				
 				if string.match(line,"pd%s*=%s*") then
 					log("Wp07 pd detected")
 					local capture =  string.match(line,"pd%s*=%s*([^,]+)")
-					editBox_wp07_pd:setText(capture)
+					editBox_wp07_column07:setText(capture)
 					log("Wp07 pd is: " .. capture)
 				end
 				
 				if string.match(line,"rd%s*=%s*") then
 					log("Wp07 rd detected")
 					local capture =  string.match(line,"rd%s*=%s*([^,]+)")
-					editBox_wp07_rd:setText(capture)
+					editBox_wp07_column08:setText(capture)
 					log("Wp07 rd is: " .. capture)
 				end
 				
 				if string.match(line,"rho%s*=%s*") then
 					log("Wp07 rho detected")
 					local capture =  string.match(line,"rho%s*=%s*([^,]+)")
-					editBox_wp07_rho:setText(capture)
+					editBox_wp07_column09:setText(capture)
 					log("Wp07 rho is: " .. capture)
 				end
 				
 				if string.match(line,"theta%s*=%s*") then
 					log("Wp07 theta detected")
 					local capture =  string.match(line,"theta%s*=%s*([^,]+)")
-					editBox_wp07_theta:setText(capture)
+					editBox_wp07_column10:setText(capture)
 					log("Wp07 theta is: " .. capture)
 				end
 				
 				if string.match(line,"dalt%s*=%s*") then
 					log("Wp07 dalt detected")
 					local capture =  string.match(line,"dalt%s*=%s*([^,]+)")
-					editBox_wp07_dalt:setText(capture)
+					editBox_wp07_column11:setText(capture)
 					log("Wp07 dalt is: " .. capture)
 				end
 				
 				if string.match(line,"dnorth%s*=%s*") then
 					log("Wp07 dnorth detected")
 					local capture =  string.match(line,"dnorth%s*=%s*([^,]+)")
-					editBox_wp07_dnorth:setText(capture)
+					editBox_wp07_column12:setText(capture)
 					log("Wp07 dnorth is: " .. capture)
 				end
 				
 				if string.match(line,"deast%s*=%s*") then
 					log("Wp07 deast detected")
 					local capture =  string.match(line,"deast%s*=%s*([^,]+)")
-					editBox_wp07_deast:setText(capture)
+					editBox_wp07_column13:setText(capture)
 					log("Wp07 deast is: " .. capture)
 				end
 			elseif string.match(line,"waypoints%[8%]") then
-    log("Wp08 detected")
-    if string.match(line,"name%s*=%s*") then
-        log("Wp08 name detected")
-        local capture =  string.match(line,"name%s*=%s*([^,]+)")
-        editBox_wp08_name:setText(capture)
-        log("Wp08 Name is: " .. capture)
-    end
-    
-    if string.match(line,"lat%s*=%s*") then
-        log("Wp08 lat detected")
-        local capture =  string.match(line,"lat%s*=%s*([^,]+)")
-        editBox_wp08_lat:setText(capture)
-        log("Wp08 lat is: " .. capture)
-    end
-    
-    if string.match(line,"lon%s*=%s*") then
-        log("Wp08 long detected")
-        local capture =  string.match(line,"lon%s*=%s*([^,]+)")
-        editBox_wp08_long:setText(capture)
-        log("Wp08 long is: " .. capture)
-    end
-    
-    if string.match(line,"alt%s*=%s*") then
-        log("Wp08 alt detected")
-        local capture =  string.match(line,"alt%s*=%s*([^,]+)")
-        editBox_wp08_alt:setText(capture)
-        log("Wp08 alt is: " .. capture)
-    end
-    
-    if string.match(line,"alt%s*=%s*") then
-        log("Wp08 alt detected")
-        local capture =  string.match(line,"alt%s*=%s*([^,]+)")
-        editBox_wp08_alt:setText(capture)
-        log("Wp08 alt is: " .. capture)
-    end
-    
-    if string.match(line,"cp%s*=%s*") then
-        log("Wp08 cp detected")
-        local capture =  string.match(line,"cp%s*=%s*([^,]+)")
-        editBox_wp08_cp:setText(capture)
-        log("Wp08 cp is: " .. capture)
-    end
-    
-    if string.match(line,"pd%s*=%s*") then
-        log("Wp08 pd detected")
-        local capture =  string.match(line,"pd%s*=%s*([^,]+)")
-        editBox_wp08_pd:setText(capture)
-        log("Wp08 pd is: " .. capture)
-    end
-    
-    if string.match(line,"rd%s*=%s*") then
-        log("Wp08 rd detected")
-        local capture =  string.match(line,"rd%s*=%s*([^,]+)")
-        editBox_wp08_rd:setText(capture)
-        log("Wp08 rd is: " .. capture)
-    end
-    
-    if string.match(line,"rho%s*=%s*") then
-        log("Wp08 rho detected")
-        local capture =  string.match(line,"rho%s*=%s*([^,]+)")
-        editBox_wp08_rho:setText(capture)
-        log("Wp08 rho is: " .. capture)
-    end
-    
-    if string.match(line,"theta%s*=%s*") then
-        log("Wp08 theta detected")
-        local capture =  string.match(line,"theta%s*=%s*([^,]+)")
-        editBox_wp08_theta:setText(capture)
-        log("Wp08 theta is: " .. capture)
-    end
-    
-    if string.match(line,"dalt%s*=%s*") then
-        log("Wp08 dalt detected")
-        local capture =  string.match(line,"dalt%s*=%s*([^,]+)")
-        editBox_wp08_dalt:setText(capture)
-        log("Wp08 dalt is: " .. capture)
-    end
-    
-    if string.match(line,"dnorth%s*=%s*") then
-        log("Wp08 dnorth detected")
-        local capture =  string.match(line,"dnorth%s*=%s*([^,]+)")
-        editBox_wp08_dnorth:setText(capture)
-        log("Wp08 dnorth is: " .. capture)
-    end
-    
-    if string.match(line,"deast%s*=%s*") then
-        log("Wp08 deast detected")
-        local capture =  string.match(line,"deast%s*=%s*([^,]+)")
-        editBox_wp08_deast:setText(capture)
-        log("Wp08 deast is: " .. capture)
-    end	
-elseif string.match(line,"waypoints%[9%]") then
-    log("Wp09 detected")
-    if string.match(line,"name%s*=%s*") then
-        log("Wp09 name detected")
-        local capture =  string.match(line,"name%s*=%s*([^,]+)")
-        editBox_wp09_name:setText(capture)
-        log("Wp09 Name is: " .. capture)
-    end
-    
-    if string.match(line,"lat%s*=%s*") then
-        log("Wp09 lat detected")
-        local capture =  string.match(line,"lat%s*=%s*([^,]+)")
-        editBox_wp09_lat:setText(capture)
-        log("Wp09 lat is: " .. capture)
-    end
-    
-    if string.match(line,"lon%s*=%s*") then
-        log("Wp09 long detected")
-        local capture =  string.match(line,"lon%s*=%s*([^,]+)")
-        editBox_wp09_long:setText(capture)
-        log("Wp09 long is: " .. capture)
-    end
-    
-    if string.match(line,"alt%s*=%s*") then
-        log("Wp09 alt detected")
-        local capture =  string.match(line,"alt%s*=%s*([^,]+)")
-        editBox_wp09_alt:setText(capture)
-        log("Wp09 alt is: " .. capture)
-    end
-    
-    if string.match(line,"alt%s*=%s*") then
-        log("Wp09 alt detected")
-        local capture =  string.match(line,"alt%s*=%s*([^,]+)")
-        editBox_wp09_alt:setText(capture)
-        log("Wp09 alt is: " .. capture)
-    end
-    
-    if string.match(line,"cp%s*=%s*") then
-        log("Wp09 cp detected")
-        local capture =  string.match(line,"cp%s*=%s*([^,]+)")
-        editBox_wp09_cp:setText(capture)
-        log("Wp09 cp is: " .. capture)
-    end
-    
-    if string.match(line,"pd%s*=%s*") then
-        log("Wp09 pd detected")
-        local capture =  string.match(line,"pd%s*=%s*([^,]+)")
-        editBox_wp09_pd:setText(capture)
-        log("Wp09 pd is: " .. capture)
-    end
-    
-    if string.match(line,"rd%s*=%s*") then
-        log("Wp09 rd detected")
-        local capture =  string.match(line,"rd%s*=%s*([^,]+)")
-        editBox_wp09_rd:setText(capture)
-        log("Wp09 rd is: " .. capture)
-    end
-    
-    if string.match(line,"rho%s*=%s*") then
-        log("Wp09 rho detected")
-        local capture =  string.match(line,"rho%s*=%s*([^,]+)")
-        editBox_wp09_rho:setText(capture)
-        log("Wp09 rho is: " .. capture)
-    end
-    
-    if string.match(line,"theta%s*=%s*") then
-        log("Wp09 theta detected")
-        local capture =  string.match(line,"theta%s*=%s*([^,]+)")
-        editBox_wp09_theta:setText(capture)
-        log("Wp09 theta is: " .. capture)
-    end
-    
-    if string.match(line,"dalt%s*=%s*") then
-        log("Wp09 dalt detected")
-        local capture =  string.match(line,"dalt%s*=%s*([^,]+)")
-        editBox_wp09_dalt:setText(capture)
-        log("Wp09 dalt is: " .. capture)
-    end
-    
-    if string.match(line,"dnorth%s*=%s*") then
-        log("Wp09 dnorth detected")
-        local capture =  string.match(line,"dnorth%s*=%s*([^,]+)")
-        editBox_wp09_dnorth:setText(capture)
-        log("Wp09 dnorth is: " .. capture)
-    end
-    
-    if string.match(line,"deast%s*=%s*") then
-        log("Wp09 deast detected")
-        local capture =  string.match(line,"deast%s*=%s*([^,]+)")
-        editBox_wp09_deast:setText(capture)
-        log("Wp09 deast is: " .. capture)
-    end				
-elseif string.match(line,"waypoints%[10%]") then
-    log("Wp10 detected")
-    if string.match(line,"name%s*=%s*") then
-        log("Wp10 name detected")
-        local capture =  string.match(line,"name%s*=%s*([^,]+)")
-        editBox_wp10_name:setText(capture)
-        log("Wp10 Name is: " .. capture)
-    end
-    
-    if string.match(line,"lat%s*=%s*") then
-        log("Wp10 lat detected")
-        local capture =  string.match(line,"lat%s*=%s*([^,]+)")
-        editBox_wp10_lat:setText(capture)
-        log("Wp10 lat is: " .. capture)
-    end
-    
-    if string.match(line,"lon%s*=%s*") then
-        log("Wp10 long detected")
-        local capture =  string.match(line,"lon%s*=%s*([^,]+)")
-        editBox_wp10_long:setText(capture)
-        log("Wp10 long is: " .. capture)
-    end
-    
-    if string.match(line,"alt%s*=%s*") then
-        log("Wp10 alt detected")
-        local capture =  string.match(line,"alt%s*=%s*([^,]+)")
-        editBox_wp10_alt:setText(capture)
-        log("Wp10 alt is: " .. capture)
-    end
-    
-    if string.match(line,"alt%s*=%s*") then
-        log("Wp10 alt detected")
-        local capture =  string.match(line,"alt%s*=%s*([^,]+)")
-        editBox_wp10_alt:setText(capture)
-        log("Wp10 alt is: " .. capture)
-    end
-    
-    if string.match(line,"cp%s*=%s*") then
-        log("Wp10 cp detected")
-        local capture =  string.match(line,"cp%s*=%s*([^,]+)")
-        editBox_wp10_cp:setText(capture)
-        log("Wp10 cp is: " .. capture)
-    end
-    
-    if string.match(line,"pd%s*=%s*") then
-        log("Wp10 pd detected")
-        local capture =  string.match(line,"pd%s*=%s*([^,]+)")
-        editBox_wp10_pd:setText(capture)
-        log("Wp10 pd is: " .. capture)
-    end
-    
-    if string.match(line,"rd%s*=%s*") then
-        log("Wp10 rd detected")
-        local capture =  string.match(line,"rd%s*=%s*([^,]+)")
-        editBox_wp10_rd:setText(capture)
-        log("Wp10 rd is: " .. capture)
-    end
-    
-    if string.match(line,"rho%s*=%s*") then
-        log("Wp10 rho detected")
-        local capture =  string.match(line,"rho%s*=%s*([^,]+)")
-        editBox_wp10_rho:setText(capture)
-        log("Wp10 rho is: " .. capture)
-    end
-    
-    if string.match(line,"theta%s*=%s*") then
-        log("Wp10 theta detected")
-        local capture =  string.match(line,"theta%s*=%s*([^,]+)")
-        editBox_wp10_theta:setText(capture)
-        log("Wp10 theta is: " .. capture)
-    end
-    
-    if string.match(line,"dalt%s*=%s*") then
-        log("Wp10 dalt detected")
-        local capture =  string.match(line,"dalt%s*=%s*([^,]+)")
-        editBox_wp10_dalt:setText(capture)
-        log("Wp10 dalt is: " .. capture)
-    end
-    
-    if string.match(line,"dnorth%s*=%s*") then
-        log("Wp10 dnorth detected")
-        local capture =  string.match(line,"dnorth%s*=%s*([^,]+)")
-        editBox_wp10_dnorth:setText(capture)
-        log("Wp10 dnorth is: " .. capture)
-    end
-    
-    if string.match(line,"deast%s*=%s*") then
-        log("Wp10 deast detected")
-        local capture =  string.match(line,"deast%s*=%s*([^,]+)")
-        editBox_wp10_deast:setText(capture)
-        log("Wp10 deast is: " .. capture)
-    end						
+				log("Wp08 detected")
+				if string.match(line,"name%s*=%s*") then
+					log("Wp08 name detected")
+					local capture =  string.match(line,"name%s*=%s*([^,]+)")
+					editBox_wp08_column02:setText(capture)
+					log("Wp08 Name is: " .. capture)
+				end
 				
+				if string.match(line,"lat%s*=%s*") then
+					log("Wp08 lat detected")
+					local capture =  string.match(line,"lat%s*=%s*([^,]+)")
+					editBox_wp08_column03:setText(capture)
+					log("Wp08 lat is: " .. capture)
+				end
 				
+				if string.match(line,"lon%s*=%s*") then
+					log("Wp08 long detected")
+					local capture =  string.match(line,"lon%s*=%s*([^,]+)")
+					editBox_wp08_column04:setText(capture)
+					log("Wp08 long is: " .. capture)
+				end
 				
+				if string.match(line,"alt%s*=%s*") then
+					log("Wp08 alt detected")
+					local capture =  string.match(line,"alt%s*=%s*([^,]+)")
+					editBox_wp08_column05:setText(capture)
+					log("Wp08 alt is: " .. capture)
+				end
 				
+				if string.match(line,"alt%s*=%s*") then
+					log("Wp08 alt detected")
+					local capture =  string.match(line,"alt%s*=%s*([^,]+)")
+					editBox_wp08_column05:setText(capture)
+					log("Wp08 alt is: " .. capture)
+				end
 				
+				if string.match(line,"cp%s*=%s*") then
+					log("Wp08 cp detected")
+					local capture =  string.match(line,"cp%s*=%s*([^,]+)")
+					editBox_wp08_column06:setText(capture)
+					log("Wp08 cp is: " .. capture)
+				end
 				
+				if string.match(line,"pd%s*=%s*") then
+					log("Wp08 pd detected")
+					local capture =  string.match(line,"pd%s*=%s*([^,]+)")
+					editBox_wp08_column07:setText(capture)
+					log("Wp08 pd is: " .. capture)
+				end
 				
+				if string.match(line,"rd%s*=%s*") then
+					log("Wp08 rd detected")
+					local capture =  string.match(line,"rd%s*=%s*([^,]+)")
+					editBox_wp08_column08:setText(capture)
+					log("Wp08 rd is: " .. capture)
+				end
 				
+				if string.match(line,"rho%s*=%s*") then
+					log("Wp08 rho detected")
+					local capture =  string.match(line,"rho%s*=%s*([^,]+)")
+					editBox_wp08_column09:setText(capture)
+					log("Wp08 rho is: " .. capture)
+				end
+				
+				if string.match(line,"theta%s*=%s*") then
+					log("Wp08 theta detected")
+					local capture =  string.match(line,"theta%s*=%s*([^,]+)")
+					editBox_wp08_column10:setText(capture)
+					log("Wp08 theta is: " .. capture)
+				end
+				
+				if string.match(line,"dalt%s*=%s*") then
+					log("Wp08 dalt detected")
+					local capture =  string.match(line,"dalt%s*=%s*([^,]+)")
+					editBox_wp08_column11:setText(capture)
+					log("Wp08 dalt is: " .. capture)
+				end
+				
+				if string.match(line,"dnorth%s*=%s*") then
+					log("Wp08 dnorth detected")
+					local capture =  string.match(line,"dnorth%s*=%s*([^,]+)")
+					editBox_wp08_column12:setText(capture)
+					log("Wp08 dnorth is: " .. capture)
+				end
+				
+				if string.match(line,"deast%s*=%s*") then
+					log("Wp08 deast detected")
+					local capture =  string.match(line,"deast%s*=%s*([^,]+)")
+					editBox_wp08_column13:setText(capture)
+					log("Wp08 deast is: " .. capture)
+				end	
+		elseif string.match(line,"waypoints%[9%]") then
+			log("Wp09 detected")
+			if string.match(line,"name%s*=%s*") then
+				log("Wp09 name detected")
+				local capture =  string.match(line,"name%s*=%s*([^,]+)")
+				editBox_wp09_column02:setText(capture)
+				log("Wp09 Name is: " .. capture)
 			end
 			
+			if string.match(line,"lat%s*=%s*") then
+				log("Wp09 lat detected")
+				local capture =  string.match(line,"lat%s*=%s*([^,]+)")
+				editBox_wp09_column03:setText(capture)
+				log("Wp09 lat is: " .. capture)
+			end
+			
+			if string.match(line,"lon%s*=%s*") then
+				log("Wp09 long detected")
+				local capture =  string.match(line,"lon%s*=%s*([^,]+)")
+				editBox_wp09_column04:setText(capture)
+				log("Wp09 long is: " .. capture)
+			end
+			
+			if string.match(line,"alt%s*=%s*") then
+				log("Wp09 alt detected")
+				local capture =  string.match(line,"alt%s*=%s*([^,]+)")
+				editBox_wp09_column05:setText(capture)
+				log("Wp09 alt is: " .. capture)
+			end
+			
+			if string.match(line,"alt%s*=%s*") then
+				log("Wp09 alt detected")
+				local capture =  string.match(line,"alt%s*=%s*([^,]+)")
+				editBox_wp09_column05:setText(capture)
+				log("Wp09 alt is: " .. capture)
+			end
+			
+			if string.match(line,"cp%s*=%s*") then
+				log("Wp09 cp detected")
+				local capture =  string.match(line,"cp%s*=%s*([^,]+)")
+				editBox_wp09_column06:setText(capture)
+				log("Wp09 cp is: " .. capture)
+			end
+			
+			if string.match(line,"pd%s*=%s*") then
+				log("Wp09 pd detected")
+				local capture =  string.match(line,"pd%s*=%s*([^,]+)")
+				editBox_wp09_column07:setText(capture)
+				log("Wp09 pd is: " .. capture)
+			end
+			
+			if string.match(line,"rd%s*=%s*") then
+				log("Wp09 rd detected")
+				local capture =  string.match(line,"rd%s*=%s*([^,]+)")
+				editBox_wp09_column08:setText(capture)
+				log("Wp09 rd is: " .. capture)
+			end
+			
+			if string.match(line,"rho%s*=%s*") then
+				log("Wp09 rho detected")
+				local capture =  string.match(line,"rho%s*=%s*([^,]+)")
+				editBox_wp09_column09:setText(capture)
+				log("Wp09 rho is: " .. capture)
+			end
+			
+			if string.match(line,"theta%s*=%s*") then
+				log("Wp09 theta detected")
+				local capture =  string.match(line,"theta%s*=%s*([^,]+)")
+				editBox_wp09_column10:setText(capture)
+				log("Wp09 theta is: " .. capture)
+			end
+			
+			if string.match(line,"dalt%s*=%s*") then
+				log("Wp09 dalt detected")
+				local capture =  string.match(line,"dalt%s*=%s*([^,]+)")
+				editBox_wp09_column11:setText(capture)
+				log("Wp09 dalt is: " .. capture)
+			end
+			
+			if string.match(line,"dnorth%s*=%s*") then
+				log("Wp09 dnorth detected")
+				local capture =  string.match(line,"dnorth%s*=%s*([^,]+)")
+				editBox_wp09_column12:setText(capture)
+				log("Wp09 dnorth is: " .. capture)
+			end
+			
+			if string.match(line,"deast%s*=%s*") then
+				log("Wp09 deast detected")
+				local capture =  string.match(line,"deast%s*=%s*([^,]+)")
+				editBox_wp09_column13:setText(capture)
+				log("Wp09 deast is: " .. capture)
+			end				
+		elseif string.match(line,"waypoints%[10%]") then
+			log("Wp10 detected")
+			if string.match(line,"name%s*=%s*") then
+				log("Wp10 name detected")
+				local capture =  string.match(line,"name%s*=%s*([^,]+)")
+				editBox_wp10_column02:setText(capture)
+				log("Wp10 Name is: " .. capture)
+			end
+			
+			if string.match(line,"lat%s*=%s*") then
+				log("Wp10 lat detected")
+				local capture =  string.match(line,"lat%s*=%s*([^,]+)")
+				editBox_wp10_column03:setText(capture)
+				log("Wp10 lat is: " .. capture)
+			end
+			
+			if string.match(line,"lon%s*=%s*") then
+				log("Wp10 long detected")
+				local capture =  string.match(line,"lon%s*=%s*([^,]+)")
+				editBox_wp10_column04:setText(capture)
+				log("Wp10 long is: " .. capture)
+			end
+			
+			if string.match(line,"alt%s*=%s*") then
+				log("Wp10 alt detected")
+				local capture =  string.match(line,"alt%s*=%s*([^,]+)")
+				editBox_wp10_column05:setText(capture)
+				log("Wp10 alt is: " .. capture)
+			end
+			
+			if string.match(line,"alt%s*=%s*") then
+				log("Wp10 alt detected")
+				local capture =  string.match(line,"alt%s*=%s*([^,]+)")
+				editBox_wp10_column05:setText(capture)
+				log("Wp10 alt is: " .. capture)
+			end
+			
+			if string.match(line,"cp%s*=%s*") then
+				log("Wp10 cp detected")
+				local capture =  string.match(line,"cp%s*=%s*([^,]+)")
+				editBox_wp10_column06:setText(capture)
+				log("Wp10 cp is: " .. capture)
+			end
+			
+			if string.match(line,"pd%s*=%s*") then
+				log("Wp10 pd detected")
+				local capture =  string.match(line,"pd%s*=%s*([^,]+)")
+				editBox_wp10_column07:setText(capture)
+				log("Wp10 pd is: " .. capture)
+			end
+			
+			if string.match(line,"rd%s*=%s*") then
+				log("Wp10 rd detected")
+				local capture =  string.match(line,"rd%s*=%s*([^,]+)")
+				editBox_wp10_column08:setText(capture)
+				log("Wp10 rd is: " .. capture)
+			end
+			
+			if string.match(line,"rho%s*=%s*") then
+				log("Wp10 rho detected")
+				local capture =  string.match(line,"rho%s*=%s*([^,]+)")
+				editBox_wp10_column09:setText(capture)
+				log("Wp10 rho is: " .. capture)
+			end
+			
+			if string.match(line,"theta%s*=%s*") then
+				log("Wp10 theta detected")
+				local capture =  string.match(line,"theta%s*=%s*([^,]+)")
+				editBox_wp10_column10:setText(capture)
+				log("Wp10 theta is: " .. capture)
+			end
+			
+			if string.match(line,"dalt%s*=%s*") then
+				log("Wp10 dalt detected")
+				local capture =  string.match(line,"dalt%s*=%s*([^,]+)")
+				editBox_wp10_column11:setText(capture)
+				log("Wp10 dalt is: " .. capture)
+			end
+			
+			if string.match(line,"dnorth%s*=%s*") then
+				log("Wp10 dnorth detected")
+				local capture =  string.match(line,"dnorth%s*=%s*([^,]+)")
+				editBox_wp10_column12:setText(capture)
+				log("Wp10 dnorth is: " .. capture)
+			end
+			
+			if string.match(line,"deast%s*=%s*") then
+				log("Wp10 deast detected")
+				local capture =  string.match(line,"deast%s*=%s*([^,]+)")
+				editBox_wp10_column13:setText(capture)
+				log("Wp10 deast is: " .. capture)
+			end
+			end
 		end
 		
-	file:close() -- closes the file 
+		file:close() -- closes the file 
 	end
+	
 	
 	function file_exists(name)
 		local f=io.open(name,"r")
@@ -1680,42 +1717,42 @@ elseif string.match(line,"waypoints%[10%]") then
 
 	function create_wp01_set()
 		-- check if lat or long is empty. if one is, dont evaluate
-		if isempty(editBox_wp01_lat:getText()) then
+		if isempty(editBox_wp01_column03:getText()) then
 			log("Waypoint 01 did not have a Lat entry")
 			return
 		end
 		
-		if isempty(editBox_wp01_long:getText()) then
+		if isempty(editBox_wp01_column04:getText()) then
 			log("Waypoint 01 did not have a Long entry")
 			return
 		end
 		
 		_wp01_set = {}
-		table.insert(_wp01_set, "name=\"" .. editBox_wp01_name:getText() .. "\",")
-		table.insert(_wp01_set, "lat=\"" .. editBox_wp01_lat:getText() .. "\",")
-		table.insert(_wp01_set, "lon=\"" .. editBox_wp01_long:getText() .. "\",")
-		table.insert(_wp01_set, "alt=" .. editBox_wp01_alt:getText() .. ",")
-		table.insert(_wp01_set, "cp=" .. editBox_wp01_cp:getText() .. ",")
-		table.insert(_wp01_set, "pd=" .. editBox_wp01_pd:getText() .. ",")
-		table.insert(_wp01_set, "rd=" .. editBox_wp01_rd:getText() .. ",")
-		table.insert(_wp01_set, "rho=" .. editBox_wp01_rho:getText() .. ",")
-		table.insert(_wp01_set, "theta=" .. editBox_wp01_theta:getText() .. ",")
-		table.insert(_wp01_set, "dalt=" .. editBox_wp01_dalt:getText() .. ",")
-		table.insert(_wp01_set, "dnorth=" .. editBox_wp01_dnorth:getText() .. ",")
-		table.insert(_wp01_set, "deast=" .. editBox_wp01_deast:getText() .. ",")
+		table.insert(_wp01_set, "name=\"" .. editBox_wp01_column02:getText() .. "\",")
+		table.insert(_wp01_set, "lat=\"" .. editBox_wp01_column03:getText() .. "\",")
+		table.insert(_wp01_set, "lon=\"" .. editBox_wp01_column04:getText() .. "\",")
+		table.insert(_wp01_set, "alt=" .. editBox_wp01_column05:getText() .. ",")
+		table.insert(_wp01_set, "cp=" .. editBox_wp01_column06:getText() .. ",")
+		table.insert(_wp01_set, "pd=" .. editBox_wp01_column07:getText() .. ",")
+		table.insert(_wp01_set, "rd=" .. editBox_wp01_column08:getText() .. ",")
+		table.insert(_wp01_set, "rho=" .. editBox_wp01_column09:getText() .. ",")
+		table.insert(_wp01_set, "theta=" .. editBox_wp01_column10:getText() .. ",")
+		table.insert(_wp01_set, "dalt=" .. editBox_wp01_column11:getText() .. ",")
+		table.insert(_wp01_set, "dnorth=" .. editBox_wp01_column12:getText() .. ",")
+		table.insert(_wp01_set, "deast=" .. editBox_wp01_column13:getText() .. ",")
 		
-		if isempty(editBox_wp01_deast:getText()) then table.remove(_wp01_set, 12) end
-		if isempty(editBox_wp01_dnorth:getText()) then table.remove(_wp01_set, 11) end
-		if isempty(editBox_wp01_dalt:getText()) then table.remove(_wp01_set, 10) end
-		if isempty(editBox_wp01_theta:getText()) then table.remove(_wp01_set, 9) end
-		if isempty(editBox_wp01_rho:getText()) then table.remove(_wp01_set, 8) end
-		if isempty(editBox_wp01_rd:getText()) then table.remove(_wp01_set, 7) end
-		if isempty(editBox_wp01_pd:getText()) then table.remove(_wp01_set, 6) end
-		if isempty(editBox_wp01_cp:getText()) then table.remove(_wp01_set, 5) end
-		if isempty(editBox_wp01_alt:getText()) then table.remove(_wp01_set, 4) end
-		if isempty(editBox_wp01_long:getText()) then table.remove(_wp01_set, 3) end
-		if isempty(editBox_wp01_lat:getText()) then table.remove(_wp01_set, 2) end
-		if isempty(editBox_wp01_name:getText()) then table.remove(_wp01_set, 1) end
+		if isempty(editBox_wp01_column13:getText()) then table.remove(_wp01_set, 12) end
+		if isempty(editBox_wp01_column12:getText()) then table.remove(_wp01_set, 11) end
+		if isempty(editBox_wp01_column11:getText()) then table.remove(_wp01_set, 10) end
+		if isempty(editBox_wp01_column10:getText()) then table.remove(_wp01_set, 9) end
+		if isempty(editBox_wp01_column09:getText()) then table.remove(_wp01_set, 8) end
+		if isempty(editBox_wp01_column08:getText()) then table.remove(_wp01_set, 7) end
+		if isempty(editBox_wp01_column07:getText()) then table.remove(_wp01_set, 6) end
+		if isempty(editBox_wp01_column06:getText()) then table.remove(_wp01_set, 5) end
+		if isempty(editBox_wp01_column05:getText()) then table.remove(_wp01_set, 4) end
+		if isempty(editBox_wp01_column04:getText()) then table.remove(_wp01_set, 3) end
+		if isempty(editBox_wp01_column03:getText()) then table.remove(_wp01_set, 2) end
+		if isempty(editBox_wp01_column02:getText()) then table.remove(_wp01_set, 1) end
 		
 		local output = "waypoints[1] = { "
 		for _i,_k in pairs(_wp01_set) do -- try to understand this more. It works though.
@@ -1731,42 +1768,42 @@ elseif string.match(line,"waypoints%[10%]") then
 	end
 	
 	function create_wp02_set()
-		if isempty(editBox_wp02_lat:getText()) then
+		if isempty(editBox_wp02_column03:getText()) then
 		log("Waypoint 02 did not have a Lat entry")
 			return
 		end
 		
-		if isempty(editBox_wp02_long:getText()) then
+		if isempty(editBox_wp02_column04:getText()) then
 		log("Waypoint 02 did not have a Long entry")
 			return
 		end
 		
 		_wp02_set = {}
-		table.insert(_wp02_set, "name=\"" .. editBox_wp02_name:getText() .. "\",")
-		table.insert(_wp02_set, "lat=\"" .. editBox_wp02_lat:getText() .. "\",")
-		table.insert(_wp02_set, "lon=\"" .. editBox_wp02_long:getText() .. "\",")
-		table.insert(_wp02_set, "alt=" .. editBox_wp02_alt:getText() .. ",")
-		table.insert(_wp02_set, "cp=" .. editBox_wp02_cp:getText() .. ",")
-		table.insert(_wp02_set, "pd=" .. editBox_wp02_pd:getText() .. ",")
-		table.insert(_wp02_set, "rd=" .. editBox_wp02_rd:getText() .. ",")
-		table.insert(_wp02_set, "rho=" .. editBox_wp02_rho:getText() .. ",")
-		table.insert(_wp02_set, "theta=" .. editBox_wp02_theta:getText() .. ",")
-		table.insert(_wp02_set, "dalt=" .. editBox_wp02_dalt:getText() .. ",")
-		table.insert(_wp02_set, "dnorth=" .. editBox_wp02_dnorth:getText() .. ",")
-		table.insert(_wp02_set, "deast=" .. editBox_wp02_deast:getText() .. ",")
+		table.insert(_wp02_set, "name=\"" .. editBox_wp02_column02:getText() .. "\",")
+		table.insert(_wp02_set, "lat=\"" .. editBox_wp02_column03:getText() .. "\",")
+		table.insert(_wp02_set, "lon=\"" .. editBox_wp02_column04:getText() .. "\",")
+		table.insert(_wp02_set, "alt=" .. editBox_wp02_column05:getText() .. ",")
+		table.insert(_wp02_set, "cp=" .. editBox_wp02_column06:getText() .. ",")
+		table.insert(_wp02_set, "pd=" .. editBox_wp02_column07:getText() .. ",")
+		table.insert(_wp02_set, "rd=" .. editBox_wp02_column08:getText() .. ",")
+		table.insert(_wp02_set, "rho=" .. editBox_wp02_column09:getText() .. ",")
+		table.insert(_wp02_set, "theta=" .. editBox_wp02_column10:getText() .. ",")
+		table.insert(_wp02_set, "dalt=" .. editBox_wp02_column11:getText() .. ",")
+		table.insert(_wp02_set, "dnorth=" .. editBox_wp02_column12:getText() .. ",")
+		table.insert(_wp02_set, "deast=" .. editBox_wp02_column13:getText() .. ",")
 		
-		if isempty(editBox_wp02_deast:getText()) then table.remove(_wp02_set, 12) end
-		if isempty(editBox_wp02_dnorth:getText()) then table.remove(_wp02_set, 11) end
-		if isempty(editBox_wp02_dalt:getText()) then table.remove(_wp02_set, 10) end
-		if isempty(editBox_wp02_theta:getText()) then table.remove(_wp02_set, 9) end
-		if isempty(editBox_wp02_rho:getText()) then table.remove(_wp02_set, 8) end
-		if isempty(editBox_wp02_rd:getText()) then table.remove(_wp02_set, 7) end
-		if isempty(editBox_wp02_pd:getText()) then table.remove(_wp02_set, 6) end
-		if isempty(editBox_wp02_cp:getText()) then table.remove(_wp02_set, 5) end
-		if isempty(editBox_wp02_alt:getText()) then table.remove(_wp02_set, 4) end
-		if isempty(editBox_wp02_long:getText()) then table.remove(_wp02_set, 3) end
-		if isempty(editBox_wp02_lat:getText()) then table.remove(_wp02_set, 2) end
-		if isempty(editBox_wp02_name:getText()) then table.remove(_wp02_set, 1) end
+		if isempty(editBox_wp02_column13:getText()) then table.remove(_wp02_set, 12) end
+		if isempty(editBox_wp02_column12:getText()) then table.remove(_wp02_set, 11) end
+		if isempty(editBox_wp02_column11:getText()) then table.remove(_wp02_set, 10) end
+		if isempty(editBox_wp02_column10:getText()) then table.remove(_wp02_set, 9) end
+		if isempty(editBox_wp02_column09:getText()) then table.remove(_wp02_set, 8) end
+		if isempty(editBox_wp02_column08:getText()) then table.remove(_wp02_set, 7) end
+		if isempty(editBox_wp02_column07:getText()) then table.remove(_wp02_set, 6) end
+		if isempty(editBox_wp02_column06:getText()) then table.remove(_wp02_set, 5) end
+		if isempty(editBox_wp02_column05:getText()) then table.remove(_wp02_set, 4) end
+		if isempty(editBox_wp02_column04:getText()) then table.remove(_wp02_set, 3) end
+		if isempty(editBox_wp02_column03:getText()) then table.remove(_wp02_set, 2) end
+		if isempty(editBox_wp02_column02:getText()) then table.remove(_wp02_set, 1) end
 		
 		local output = "waypoints[2] = { "
 		for _i,_k in pairs(_wp02_set) do
@@ -1781,42 +1818,42 @@ elseif string.match(line,"waypoints%[10%]") then
 	end
 	
 	function create_wp03_set()
-		if isempty(editBox_wp03_lat:getText()) then
+		if isempty(editBox_wp03_column03:getText()) then
 			log("Waypoint 03 did not have a Lat entry")
 			return
 		end
 		
-		if isempty(editBox_wp03_long:getText()) then
+		if isempty(editBox_wp03_column04:getText()) then
 			log("Waypoint 03 did not have a Long entry")
 			return
 		end
 		
 		_wp03_set = {}
-		table.insert(_wp03_set, "name=\"" .. editBox_wp03_name:getText() .. "\",")
-		table.insert(_wp03_set, "lat=\"" .. editBox_wp03_lat:getText() .. "\",")
-		table.insert(_wp03_set, "lon=\"" .. editBox_wp03_long:getText() .. "\",")
-		table.insert(_wp03_set, "alt=" .. editBox_wp03_alt:getText() .. ",")
-		table.insert(_wp03_set, "cp=" .. editBox_wp03_cp:getText() .. ",")
-		table.insert(_wp03_set, "pd=" .. editBox_wp03_pd:getText() .. ",")
-		table.insert(_wp03_set, "rd=" .. editBox_wp03_rd:getText() .. ",")
-		table.insert(_wp03_set, "rho=" .. editBox_wp03_rho:getText() .. ",")
-		table.insert(_wp03_set, "theta=" .. editBox_wp03_theta:getText() .. ",")
-		table.insert(_wp03_set, "dalt=" .. editBox_wp03_dalt:getText() .. ",")
-		table.insert(_wp03_set, "dnorth=" .. editBox_wp03_dnorth:getText() .. ",")
-		table.insert(_wp03_set, "deast=" .. editBox_wp03_deast:getText() .. ",")
+		table.insert(_wp03_set, "name=\"" .. editBox_wp03_column02:getText() .. "\",")
+		table.insert(_wp03_set, "lat=\"" .. editBox_wp03_column03:getText() .. "\",")
+		table.insert(_wp03_set, "lon=\"" .. editBox_wp03_column04:getText() .. "\",")
+		table.insert(_wp03_set, "alt=" .. editBox_wp03_column05:getText() .. ",")
+		table.insert(_wp03_set, "cp=" .. editBox_wp03_column06:getText() .. ",")
+		table.insert(_wp03_set, "pd=" .. editBox_wp03_column07:getText() .. ",")
+		table.insert(_wp03_set, "rd=" .. editBox_wp03_column08:getText() .. ",")
+		table.insert(_wp03_set, "rho=" .. editBox_wp03_column09:getText() .. ",")
+		table.insert(_wp03_set, "theta=" .. editBox_wp03_column10:getText() .. ",")
+		table.insert(_wp03_set, "dalt=" .. editBox_wp03_column11:getText() .. ",")
+		table.insert(_wp03_set, "dnorth=" .. editBox_wp03_column12:getText() .. ",")
+		table.insert(_wp03_set, "deast=" .. editBox_wp03_column13:getText() .. ",")
 		
-		if isempty(editBox_wp03_deast:getText()) then table.remove(_wp03_set, 12) end
-		if isempty(editBox_wp03_dnorth:getText()) then table.remove(_wp03_set, 11) end
-		if isempty(editBox_wp03_dalt:getText()) then table.remove(_wp03_set, 10) end
-		if isempty(editBox_wp03_theta:getText()) then table.remove(_wp03_set, 9) end
-		if isempty(editBox_wp03_rho:getText()) then table.remove(_wp03_set, 8) end
-		if isempty(editBox_wp03_rd:getText()) then table.remove(_wp03_set, 7) end
-		if isempty(editBox_wp03_pd:getText()) then table.remove(_wp03_set, 6) end
-		if isempty(editBox_wp03_cp:getText()) then table.remove(_wp03_set, 5) end
-		if isempty(editBox_wp03_alt:getText()) then table.remove(_wp03_set, 4) end
-		if isempty(editBox_wp03_long:getText()) then table.remove(_wp03_set, 3) end
-		if isempty(editBox_wp03_lat:getText()) then table.remove(_wp03_set, 2) end
-		if isempty(editBox_wp03_name:getText()) then table.remove(_wp03_set, 1) end
+		if isempty(editBox_wp03_column13:getText()) then table.remove(_wp03_set, 12) end
+		if isempty(editBox_wp03_column12:getText()) then table.remove(_wp03_set, 11) end
+		if isempty(editBox_wp03_column11:getText()) then table.remove(_wp03_set, 10) end
+		if isempty(editBox_wp03_column10:getText()) then table.remove(_wp03_set, 9) end
+		if isempty(editBox_wp03_column09:getText()) then table.remove(_wp03_set, 8) end
+		if isempty(editBox_wp03_column08:getText()) then table.remove(_wp03_set, 7) end
+		if isempty(editBox_wp03_column07:getText()) then table.remove(_wp03_set, 6) end
+		if isempty(editBox_wp03_column06:getText()) then table.remove(_wp03_set, 5) end
+		if isempty(editBox_wp03_column05:getText()) then table.remove(_wp03_set, 4) end
+		if isempty(editBox_wp03_column04:getText()) then table.remove(_wp03_set, 3) end
+		if isempty(editBox_wp03_column03:getText()) then table.remove(_wp03_set, 2) end
+		if isempty(editBox_wp03_column02:getText()) then table.remove(_wp03_set, 1) end
 		
 		local output = "waypoints[3] = { "
 		for _i,_k in pairs(_wp03_set) do
@@ -1831,42 +1868,42 @@ elseif string.match(line,"waypoints%[10%]") then
 	end
 	
 	function create_wp04_set()
-		if isempty(editBox_wp04_lat:getText()) then
+		if isempty(editBox_wp04_column03:getText()) then
 		log("Waypoint 01 did not have a Lat entry")
 			return
 		end
 		
-		if isempty(editBox_wp04_long:getText()) then
+		if isempty(editBox_wp04_column04:getText()) then
 		log("Waypoint 01 did not have a Long entry")
 			return
 		end
 		
 		_wp04_set = {}
-		table.insert(_wp04_set, "name=\"" .. editBox_wp04_name:getText() .. "\",")
-		table.insert(_wp04_set, "lat=\"" .. editBox_wp04_lat:getText() .. "\",")
-		table.insert(_wp04_set, "lon=\"" .. editBox_wp04_long:getText() .. "\",")
-		table.insert(_wp04_set, "alt=" .. editBox_wp04_alt:getText() .. ",")
-		table.insert(_wp04_set, "cp=" .. editBox_wp04_cp:getText() .. ",")
-		table.insert(_wp04_set, "pd=" .. editBox_wp04_pd:getText() .. ",")
-		table.insert(_wp04_set, "rd=" .. editBox_wp04_rd:getText() .. ",")
-		table.insert(_wp04_set, "rho=" .. editBox_wp04_rho:getText() .. ",")
-		table.insert(_wp04_set, "theta=" .. editBox_wp04_theta:getText() .. ",")
-		table.insert(_wp04_set, "dalt=" .. editBox_wp04_dalt:getText() .. ",")
-		table.insert(_wp04_set, "dnorth=" .. editBox_wp04_dnorth:getText() .. ",")
-		table.insert(_wp04_set, "deast=" .. editBox_wp04_deast:getText() .. ",")
+		table.insert(_wp04_set, "name=\"" .. editBox_wp04_column02:getText() .. "\",")
+		table.insert(_wp04_set, "lat=\"" .. editBox_wp04_column03:getText() .. "\",")
+		table.insert(_wp04_set, "lon=\"" .. editBox_wp04_column04:getText() .. "\",")
+		table.insert(_wp04_set, "alt=" .. editBox_wp04_column05:getText() .. ",")
+		table.insert(_wp04_set, "cp=" .. editBox_wp04_column06:getText() .. ",")
+		table.insert(_wp04_set, "pd=" .. editBox_wp04_column07:getText() .. ",")
+		table.insert(_wp04_set, "rd=" .. editBox_wp04_column08:getText() .. ",")
+		table.insert(_wp04_set, "rho=" .. editBox_wp04_column09:getText() .. ",")
+		table.insert(_wp04_set, "theta=" .. editBox_wp04_column10:getText() .. ",")
+		table.insert(_wp04_set, "dalt=" .. editBox_wp04_column11:getText() .. ",")
+		table.insert(_wp04_set, "dnorth=" .. editBox_wp04_column12:getText() .. ",")
+		table.insert(_wp04_set, "deast=" .. editBox_wp04_column13:getText() .. ",")
 		
-		if isempty(editBox_wp04_deast:getText()) then table.remove(_wp04_set, 12) end
-		if isempty(editBox_wp04_dnorth:getText()) then table.remove(_wp04_set, 11) end
-		if isempty(editBox_wp04_dalt:getText()) then table.remove(_wp04_set, 10) end
-		if isempty(editBox_wp04_theta:getText()) then table.remove(_wp04_set, 9) end
-		if isempty(editBox_wp04_rho:getText()) then table.remove(_wp04_set, 8) end
-		if isempty(editBox_wp04_rd:getText()) then table.remove(_wp04_set, 7) end
-		if isempty(editBox_wp04_pd:getText()) then table.remove(_wp04_set, 6) end
-		if isempty(editBox_wp04_cp:getText()) then table.remove(_wp04_set, 5) end
-		if isempty(editBox_wp04_alt:getText()) then table.remove(_wp04_set, 4) end
-		if isempty(editBox_wp04_long:getText()) then table.remove(_wp04_set, 3) end
-		if isempty(editBox_wp04_lat:getText()) then table.remove(_wp04_set, 2) end
-		if isempty(editBox_wp04_name:getText()) then table.remove(_wp04_set, 1) end
+		if isempty(editBox_wp04_column13:getText()) then table.remove(_wp04_set, 12) end
+		if isempty(editBox_wp04_column12:getText()) then table.remove(_wp04_set, 11) end
+		if isempty(editBox_wp04_column11:getText()) then table.remove(_wp04_set, 10) end
+		if isempty(editBox_wp04_column10:getText()) then table.remove(_wp04_set, 9) end
+		if isempty(editBox_wp04_column09:getText()) then table.remove(_wp04_set, 8) end
+		if isempty(editBox_wp04_column08:getText()) then table.remove(_wp04_set, 7) end
+		if isempty(editBox_wp04_column07:getText()) then table.remove(_wp04_set, 6) end
+		if isempty(editBox_wp04_column06:getText()) then table.remove(_wp04_set, 5) end
+		if isempty(editBox_wp04_column05:getText()) then table.remove(_wp04_set, 4) end
+		if isempty(editBox_wp04_column04:getText()) then table.remove(_wp04_set, 3) end
+		if isempty(editBox_wp04_column03:getText()) then table.remove(_wp04_set, 2) end
+		if isempty(editBox_wp04_column02:getText()) then table.remove(_wp04_set, 1) end
 		
 		local output = "waypoints[4] = { "
 		for _i,_k in pairs(_wp04_set) do
@@ -1881,42 +1918,42 @@ elseif string.match(line,"waypoints%[10%]") then
 	end
 	
 	function create_wp05_set()
-		if isempty(editBox_wp05_lat:getText()) then
+		if isempty(editBox_wp05_column03:getText()) then
 		log("Waypoint 01 did not have a Lat entry")
 			return
 		end
 		
-		if isempty(editBox_wp05_long:getText()) then
+		if isempty(editBox_wp05_column04:getText()) then
 		log("Waypoint 01 did not have a Long entry")
 			return
 		end
 		
 		_wp05_set = {}
-		table.insert(_wp05_set, "name=\"" .. editBox_wp05_name:getText() .. "\",")
-		table.insert(_wp05_set, "lat=\"" .. editBox_wp05_lat:getText() .. "\",")
-		table.insert(_wp05_set, "lon=\"" .. editBox_wp05_long:getText() .. "\",")
-		table.insert(_wp05_set, "alt=" .. editBox_wp05_alt:getText() .. ",")
-		table.insert(_wp05_set, "cp=" .. editBox_wp05_cp:getText() .. ",")
-		table.insert(_wp05_set, "pd=" .. editBox_wp05_pd:getText() .. ",")
-		table.insert(_wp05_set, "rd=" .. editBox_wp05_rd:getText() .. ",")
-		table.insert(_wp05_set, "rho=" .. editBox_wp05_rho:getText() .. ",")
-		table.insert(_wp05_set, "theta=" .. editBox_wp05_theta:getText() .. ",")
-		table.insert(_wp05_set, "dalt=" .. editBox_wp05_dalt:getText() .. ",")
-		table.insert(_wp05_set, "dnorth=" .. editBox_wp05_dnorth:getText() .. ",")
-		table.insert(_wp05_set, "deast=" .. editBox_wp05_deast:getText() .. ",")
+		table.insert(_wp05_set, "name=\"" .. editBox_wp05_column02:getText() .. "\",")
+		table.insert(_wp05_set, "lat=\"" .. editBox_wp05_column03:getText() .. "\",")
+		table.insert(_wp05_set, "lon=\"" .. editBox_wp05_column04:getText() .. "\",")
+		table.insert(_wp05_set, "alt=" .. editBox_wp05_column05:getText() .. ",")
+		table.insert(_wp05_set, "cp=" .. editBox_wp05_column06:getText() .. ",")
+		table.insert(_wp05_set, "pd=" .. editBox_wp05_column07:getText() .. ",")
+		table.insert(_wp05_set, "rd=" .. editBox_wp05_column08:getText() .. ",")
+		table.insert(_wp05_set, "rho=" .. editBox_wp05_column09:getText() .. ",")
+		table.insert(_wp05_set, "theta=" .. editBox_wp05_column10:getText() .. ",")
+		table.insert(_wp05_set, "dalt=" .. editBox_wp05_column11:getText() .. ",")
+		table.insert(_wp05_set, "dnorth=" .. editBox_wp05_column12:getText() .. ",")
+		table.insert(_wp05_set, "deast=" .. editBox_wp05_column13:getText() .. ",")
 		
-		if isempty(editBox_wp05_deast:getText()) then table.remove(_wp05_set, 12) end
-		if isempty(editBox_wp05_dnorth:getText()) then table.remove(_wp05_set, 11) end
-		if isempty(editBox_wp05_dalt:getText()) then table.remove(_wp05_set, 10) end
-		if isempty(editBox_wp05_theta:getText()) then table.remove(_wp05_set, 9) end
-		if isempty(editBox_wp05_rho:getText()) then table.remove(_wp05_set, 8) end
-		if isempty(editBox_wp05_rd:getText()) then table.remove(_wp05_set, 7) end
-		if isempty(editBox_wp05_pd:getText()) then table.remove(_wp05_set, 6) end
-		if isempty(editBox_wp05_cp:getText()) then table.remove(_wp05_set, 5) end
-		if isempty(editBox_wp05_alt:getText()) then table.remove(_wp05_set, 4) end
-		if isempty(editBox_wp05_long:getText()) then table.remove(_wp05_set, 3) end
-		if isempty(editBox_wp05_lat:getText()) then table.remove(_wp05_set, 2) end
-		if isempty(editBox_wp05_name:getText()) then table.remove(_wp05_set, 1) end
+		if isempty(editBox_wp05_column13:getText()) then table.remove(_wp05_set, 12) end
+		if isempty(editBox_wp05_column12:getText()) then table.remove(_wp05_set, 11) end
+		if isempty(editBox_wp05_column11:getText()) then table.remove(_wp05_set, 10) end
+		if isempty(editBox_wp05_column10:getText()) then table.remove(_wp05_set, 9) end
+		if isempty(editBox_wp05_column09:getText()) then table.remove(_wp05_set, 8) end
+		if isempty(editBox_wp05_column08:getText()) then table.remove(_wp05_set, 7) end
+		if isempty(editBox_wp05_column07:getText()) then table.remove(_wp05_set, 6) end
+		if isempty(editBox_wp05_column06:getText()) then table.remove(_wp05_set, 5) end
+		if isempty(editBox_wp05_column05:getText()) then table.remove(_wp05_set, 4) end
+		if isempty(editBox_wp05_column04:getText()) then table.remove(_wp05_set, 3) end
+		if isempty(editBox_wp05_column03:getText()) then table.remove(_wp05_set, 2) end
+		if isempty(editBox_wp05_column02:getText()) then table.remove(_wp05_set, 1) end
 		
 		local output = "waypoints[5] = { "
 		for _i,_k in pairs(_wp05_set) do
@@ -1931,42 +1968,42 @@ elseif string.match(line,"waypoints%[10%]") then
 	end
 	
 	function create_wp06_set()
-		if isempty(editBox_wp06_lat:getText()) then
+		if isempty(editBox_wp06_column03:getText()) then
 		log("Waypoint 06 did not have a Lat entry")
 			return
 		end
 		
-		if isempty(editBox_wp06_long:getText()) then
+		if isempty(editBox_wp06_column04:getText()) then
 		log("Waypoint 06 did not have a Long entry")
 			return
 		end
 		
 		_wp06_set = {}
-		table.insert(_wp06_set, "name=\"" .. editBox_wp06_name:getText() .. "\",")
-		table.insert(_wp06_set, "lat=\"" .. editBox_wp06_lat:getText() .. "\",")
-		table.insert(_wp06_set, "lon=\"" .. editBox_wp06_long:getText() .. "\",")
-		table.insert(_wp06_set, "alt=" .. editBox_wp06_alt:getText() .. ",")
-		table.insert(_wp06_set, "cp=" .. editBox_wp06_cp:getText() .. ",")
-		table.insert(_wp06_set, "pd=" .. editBox_wp06_pd:getText() .. ",")
-		table.insert(_wp06_set, "rd=" .. editBox_wp06_rd:getText() .. ",")
-		table.insert(_wp06_set, "rho=" .. editBox_wp06_rho:getText() .. ",")
-		table.insert(_wp06_set, "theta=" .. editBox_wp06_theta:getText() .. ",")
-		table.insert(_wp06_set, "dalt=" .. editBox_wp06_dalt:getText() .. ",")
-		table.insert(_wp06_set, "dnorth=" .. editBox_wp06_dnorth:getText() .. ",")
-		table.insert(_wp06_set, "deast=" .. editBox_wp06_deast:getText() .. ",")
+		table.insert(_wp06_set, "name=\"" .. editBox_wp06_column02:getText() .. "\",")
+		table.insert(_wp06_set, "lat=\"" .. editBox_wp06_column03:getText() .. "\",")
+		table.insert(_wp06_set, "lon=\"" .. editBox_wp06_column04:getText() .. "\",")
+		table.insert(_wp06_set, "alt=" .. editBox_wp06_column05:getText() .. ",")
+		table.insert(_wp06_set, "cp=" .. editBox_wp06_column06:getText() .. ",")
+		table.insert(_wp06_set, "pd=" .. editBox_wp06_column07:getText() .. ",")
+		table.insert(_wp06_set, "rd=" .. editBox_wp06_column08:getText() .. ",")
+		table.insert(_wp06_set, "rho=" .. editBox_wp06_column09:getText() .. ",")
+		table.insert(_wp06_set, "theta=" .. editBox_wp06_column10:getText() .. ",")
+		table.insert(_wp06_set, "dalt=" .. editBox_wp06_column11:getText() .. ",")
+		table.insert(_wp06_set, "dnorth=" .. editBox_wp06_column12:getText() .. ",")
+		table.insert(_wp06_set, "deast=" .. editBox_wp06_column13:getText() .. ",")
 		
-		if isempty(editBox_wp06_deast:getText()) then table.remove(_wp06_set, 12) end
-		if isempty(editBox_wp06_dnorth:getText()) then table.remove(_wp06_set, 11) end
-		if isempty(editBox_wp06_dalt:getText()) then table.remove(_wp06_set, 10) end
-		if isempty(editBox_wp06_theta:getText()) then table.remove(_wp06_set, 9) end
-		if isempty(editBox_wp06_rho:getText()) then table.remove(_wp06_set, 8) end
-		if isempty(editBox_wp06_rd:getText()) then table.remove(_wp06_set, 7) end
-		if isempty(editBox_wp06_pd:getText()) then table.remove(_wp06_set, 6) end
-		if isempty(editBox_wp06_cp:getText()) then table.remove(_wp06_set, 5) end
-		if isempty(editBox_wp06_alt:getText()) then table.remove(_wp06_set, 4) end
-		if isempty(editBox_wp06_long:getText()) then table.remove(_wp06_set, 3) end
-		if isempty(editBox_wp06_lat:getText()) then table.remove(_wp06_set, 2) end
-		if isempty(editBox_wp06_name:getText()) then table.remove(_wp06_set, 1) end
+		if isempty(editBox_wp06_column13:getText()) then table.remove(_wp06_set, 12) end
+		if isempty(editBox_wp06_column12:getText()) then table.remove(_wp06_set, 11) end
+		if isempty(editBox_wp06_column11:getText()) then table.remove(_wp06_set, 10) end
+		if isempty(editBox_wp06_column10:getText()) then table.remove(_wp06_set, 9) end
+		if isempty(editBox_wp06_column09:getText()) then table.remove(_wp06_set, 8) end
+		if isempty(editBox_wp06_column08:getText()) then table.remove(_wp06_set, 7) end
+		if isempty(editBox_wp06_column07:getText()) then table.remove(_wp06_set, 6) end
+		if isempty(editBox_wp06_column06:getText()) then table.remove(_wp06_set, 5) end
+		if isempty(editBox_wp06_column05:getText()) then table.remove(_wp06_set, 4) end
+		if isempty(editBox_wp06_column04:getText()) then table.remove(_wp06_set, 3) end
+		if isempty(editBox_wp06_column03:getText()) then table.remove(_wp06_set, 2) end
+		if isempty(editBox_wp06_column02:getText()) then table.remove(_wp06_set, 1) end
 		
 		local output = "waypoints[6] = { "
 		for _i,_k in pairs(_wp06_set) do
@@ -1981,42 +2018,42 @@ elseif string.match(line,"waypoints%[10%]") then
 	end
 	
 	function create_wp07_set()
-		if isempty(editBox_wp07_lat:getText()) then
+		if isempty(editBox_wp07_column03:getText()) then
 			log("Waypoint 07 did not have a Lat entry")
 			return
 		end
 		
-		if isempty(editBox_wp07_long:getText()) then
+		if isempty(editBox_wp07_column04:getText()) then
 			log("Waypoint 07 did not have a Long entry")
 			return
 		end
 		
 		_wp07_set = {}
-		table.insert(_wp07_set, "name=\"" .. editBox_wp07_name:getText() .. "\",")
-		table.insert(_wp07_set, "lat=\"" .. editBox_wp07_lat:getText() .. "\",")
-		table.insert(_wp07_set, "lon=\"" .. editBox_wp07_long:getText() .. "\",")
-		table.insert(_wp07_set, "alt=" .. editBox_wp07_alt:getText() .. ",")
-		table.insert(_wp07_set, "cp=" .. editBox_wp07_cp:getText() .. ",")
-		table.insert(_wp07_set, "pd=" .. editBox_wp07_pd:getText() .. ",")
-		table.insert(_wp07_set, "rd=" .. editBox_wp07_rd:getText() .. ",")
-		table.insert(_wp07_set, "rho=" .. editBox_wp07_rho:getText() .. ",")
-		table.insert(_wp07_set, "theta=" .. editBox_wp07_theta:getText() .. ",")
-		table.insert(_wp07_set, "dalt=" .. editBox_wp07_dalt:getText() .. ",")
-		table.insert(_wp07_set, "dnorth=" .. editBox_wp07_dnorth:getText() .. ",")
-		table.insert(_wp07_set, "deast=" .. editBox_wp07_deast:getText() .. ",")
+		table.insert(_wp07_set, "name=\"" .. editBox_wp07_column02:getText() .. "\",")
+		table.insert(_wp07_set, "lat=\"" .. editBox_wp07_column03:getText() .. "\",")
+		table.insert(_wp07_set, "lon=\"" .. editBox_wp07_column04:getText() .. "\",")
+		table.insert(_wp07_set, "alt=" .. editBox_wp07_column05:getText() .. ",")
+		table.insert(_wp07_set, "cp=" .. editBox_wp07_column06:getText() .. ",")
+		table.insert(_wp07_set, "pd=" .. editBox_wp07_column07:getText() .. ",")
+		table.insert(_wp07_set, "rd=" .. editBox_wp07_column08:getText() .. ",")
+		table.insert(_wp07_set, "rho=" .. editBox_wp07_column09:getText() .. ",")
+		table.insert(_wp07_set, "theta=" .. editBox_wp07_column10:getText() .. ",")
+		table.insert(_wp07_set, "dalt=" .. editBox_wp07_column11:getText() .. ",")
+		table.insert(_wp07_set, "dnorth=" .. editBox_wp07_column12:getText() .. ",")
+		table.insert(_wp07_set, "deast=" .. editBox_wp07_column13:getText() .. ",")
 		
-		if isempty(editBox_wp07_deast:getText()) then table.remove(_wp07_set, 12) end
-		if isempty(editBox_wp07_dnorth:getText()) then table.remove(_wp07_set, 11) end
-		if isempty(editBox_wp07_dalt:getText()) then table.remove(_wp07_set, 10) end
-		if isempty(editBox_wp07_theta:getText()) then table.remove(_wp07_set, 9) end
-		if isempty(editBox_wp07_rho:getText()) then table.remove(_wp07_set, 8) end
-		if isempty(editBox_wp07_rd:getText()) then table.remove(_wp07_set, 7) end
-		if isempty(editBox_wp07_pd:getText()) then table.remove(_wp07_set, 6) end
-		if isempty(editBox_wp07_cp:getText()) then table.remove(_wp07_set, 5) end
-		if isempty(editBox_wp07_alt:getText()) then table.remove(_wp07_set, 4) end
-		if isempty(editBox_wp07_long:getText()) then table.remove(_wp07_set, 3) end
-		if isempty(editBox_wp07_lat:getText()) then table.remove(_wp07_set, 2) end
-		if isempty(editBox_wp07_name:getText()) then table.remove(_wp07_set, 1) end
+		if isempty(editBox_wp07_column13:getText()) then table.remove(_wp07_set, 12) end
+		if isempty(editBox_wp07_column12:getText()) then table.remove(_wp07_set, 11) end
+		if isempty(editBox_wp07_column11:getText()) then table.remove(_wp07_set, 10) end
+		if isempty(editBox_wp07_column10:getText()) then table.remove(_wp07_set, 9) end
+		if isempty(editBox_wp07_column09:getText()) then table.remove(_wp07_set, 8) end
+		if isempty(editBox_wp07_column08:getText()) then table.remove(_wp07_set, 7) end
+		if isempty(editBox_wp07_column07:getText()) then table.remove(_wp07_set, 6) end
+		if isempty(editBox_wp07_column06:getText()) then table.remove(_wp07_set, 5) end
+		if isempty(editBox_wp07_column05:getText()) then table.remove(_wp07_set, 4) end
+		if isempty(editBox_wp07_column04:getText()) then table.remove(_wp07_set, 3) end
+		if isempty(editBox_wp07_column03:getText()) then table.remove(_wp07_set, 2) end
+		if isempty(editBox_wp07_column02:getText()) then table.remove(_wp07_set, 1) end
 		
 		local output = "waypoints[7] = { "
 		for _i,_k in pairs(_wp07_set) do
@@ -2031,42 +2068,42 @@ elseif string.match(line,"waypoints%[10%]") then
 	end
 	
 	function create_wp08_set()
-		if isempty(editBox_wp08_lat:getText()) then
+		if isempty(editBox_wp08_column03:getText()) then
 			log("Waypoint 08 did not have a Lat entry")
 			return
 		end
 		
-		if isempty(editBox_wp08_long:getText()) then
+		if isempty(editBox_wp08_column04:getText()) then
 			log("Waypoint 08 did not have a Long entry")
 			return
 		end
 		
 		_wp08_set = {}
-		table.insert(_wp08_set, "name=\"" .. editBox_wp08_name:getText() .. "\",")
-		table.insert(_wp08_set, "lat=\"" .. editBox_wp08_lat:getText() .. "\",")
-		table.insert(_wp08_set, "lon=\"" .. editBox_wp08_long:getText() .. "\",")
-		table.insert(_wp08_set, "alt=" .. editBox_wp08_alt:getText() .. ",")
-		table.insert(_wp08_set, "cp=" .. editBox_wp08_cp:getText() .. ",")
-		table.insert(_wp08_set, "pd=" .. editBox_wp08_pd:getText() .. ",")
-		table.insert(_wp08_set, "rd=" .. editBox_wp08_rd:getText() .. ",")
-		table.insert(_wp08_set, "rho=" .. editBox_wp08_rho:getText() .. ",")
-		table.insert(_wp08_set, "theta=" .. editBox_wp08_theta:getText() .. ",")
-		table.insert(_wp08_set, "dalt=" .. editBox_wp08_dalt:getText() .. ",")
-		table.insert(_wp08_set, "dnorth=" .. editBox_wp08_dnorth:getText() .. ",")
-		table.insert(_wp08_set, "deast=" .. editBox_wp08_deast:getText() .. ",")
+		table.insert(_wp08_set, "name=\"" .. editBox_wp08_column02:getText() .. "\",")
+		table.insert(_wp08_set, "lat=\"" .. editBox_wp08_column03:getText() .. "\",")
+		table.insert(_wp08_set, "lon=\"" .. editBox_wp08_column04:getText() .. "\",")
+		table.insert(_wp08_set, "alt=" .. editBox_wp08_column05:getText() .. ",")
+		table.insert(_wp08_set, "cp=" .. editBox_wp08_column06:getText() .. ",")
+		table.insert(_wp08_set, "pd=" .. editBox_wp08_column07:getText() .. ",")
+		table.insert(_wp08_set, "rd=" .. editBox_wp08_column08:getText() .. ",")
+		table.insert(_wp08_set, "rho=" .. editBox_wp08_column09:getText() .. ",")
+		table.insert(_wp08_set, "theta=" .. editBox_wp08_column10:getText() .. ",")
+		table.insert(_wp08_set, "dalt=" .. editBox_wp08_column11:getText() .. ",")
+		table.insert(_wp08_set, "dnorth=" .. editBox_wp08_column12:getText() .. ",")
+		table.insert(_wp08_set, "deast=" .. editBox_wp08_column13:getText() .. ",")
 		
-		if isempty(editBox_wp08_deast:getText()) then table.remove(_wp08_set, 12) end
-		if isempty(editBox_wp08_dnorth:getText()) then table.remove(_wp08_set, 11) end
-		if isempty(editBox_wp08_dalt:getText()) then table.remove(_wp08_set, 10) end
-		if isempty(editBox_wp08_theta:getText()) then table.remove(_wp08_set, 9) end
-		if isempty(editBox_wp08_rho:getText()) then table.remove(_wp08_set, 8) end
-		if isempty(editBox_wp08_rd:getText()) then table.remove(_wp08_set, 7) end
-		if isempty(editBox_wp08_pd:getText()) then table.remove(_wp08_set, 6) end
-		if isempty(editBox_wp08_cp:getText()) then table.remove(_wp08_set, 5) end
-		if isempty(editBox_wp08_alt:getText()) then table.remove(_wp08_set, 4) end
-		if isempty(editBox_wp08_long:getText()) then table.remove(_wp08_set, 3) end
-		if isempty(editBox_wp08_lat:getText()) then table.remove(_wp08_set, 2) end
-		if isempty(editBox_wp08_name:getText()) then table.remove(_wp08_set, 1) end
+		if isempty(editBox_wp08_column13:getText()) then table.remove(_wp08_set, 12) end
+		if isempty(editBox_wp08_column12:getText()) then table.remove(_wp08_set, 11) end
+		if isempty(editBox_wp08_column11:getText()) then table.remove(_wp08_set, 10) end
+		if isempty(editBox_wp08_column10:getText()) then table.remove(_wp08_set, 9) end
+		if isempty(editBox_wp08_column09:getText()) then table.remove(_wp08_set, 8) end
+		if isempty(editBox_wp08_column08:getText()) then table.remove(_wp08_set, 7) end
+		if isempty(editBox_wp08_column07:getText()) then table.remove(_wp08_set, 6) end
+		if isempty(editBox_wp08_column06:getText()) then table.remove(_wp08_set, 5) end
+		if isempty(editBox_wp08_column05:getText()) then table.remove(_wp08_set, 4) end
+		if isempty(editBox_wp08_column04:getText()) then table.remove(_wp08_set, 3) end
+		if isempty(editBox_wp08_column03:getText()) then table.remove(_wp08_set, 2) end
+		if isempty(editBox_wp08_column02:getText()) then table.remove(_wp08_set, 1) end
 		
 		local output = "waypoints[8] = { "
 		for _i,_k in pairs(_wp08_set) do
@@ -2081,42 +2118,42 @@ elseif string.match(line,"waypoints%[10%]") then
 	end
 	
 	function create_wp09_set()
-		if isempty(editBox_wp09_lat:getText()) then
+		if isempty(editBox_wp09_column03:getText()) then
 			log("Waypoint 09 did not have a Lat entry")
 			return
 		end
 		
-		if isempty(editBox_wp09_long:getText()) then
+		if isempty(editBox_wp09_column04:getText()) then
 			log("Waypoint 09 did not have a Long entry")
 			return
 		end
 		
 		_wp09_set = {}
-		table.insert(_wp09_set, "name=\"" .. editBox_wp09_name:getText() .. "\",")
-		table.insert(_wp09_set, "lat=\"" .. editBox_wp09_lat:getText() .. "\",")
-		table.insert(_wp09_set, "lon=\"" .. editBox_wp09_long:getText() .. "\",")
-		table.insert(_wp09_set, "alt=" .. editBox_wp09_alt:getText() .. ",")
-		table.insert(_wp09_set, "cp=" .. editBox_wp09_cp:getText() .. ",")
-		table.insert(_wp09_set, "pd=" .. editBox_wp09_pd:getText() .. ",")
-		table.insert(_wp09_set, "rd=" .. editBox_wp09_rd:getText() .. ",")
-		table.insert(_wp09_set, "rho=" .. editBox_wp09_rho:getText() .. ",")
-		table.insert(_wp09_set, "theta=" .. editBox_wp09_theta:getText() .. ",")
-		table.insert(_wp09_set, "dalt=" .. editBox_wp09_dalt:getText() .. ",")
-		table.insert(_wp09_set, "dnorth=" .. editBox_wp09_dnorth:getText() .. ",")
-		table.insert(_wp09_set, "deast=" .. editBox_wp09_deast:getText() .. ",")
+		table.insert(_wp09_set, "name=\"" .. editBox_wp09_column02:getText() .. "\",")
+		table.insert(_wp09_set, "lat=\"" .. editBox_wp09_column03:getText() .. "\",")
+		table.insert(_wp09_set, "lon=\"" .. editBox_wp09_column04:getText() .. "\",")
+		table.insert(_wp09_set, "alt=" .. editBox_wp09_column05:getText() .. ",")
+		table.insert(_wp09_set, "cp=" .. editBox_wp09_column06:getText() .. ",")
+		table.insert(_wp09_set, "pd=" .. editBox_wp09_column07:getText() .. ",")
+		table.insert(_wp09_set, "rd=" .. editBox_wp09_column08:getText() .. ",")
+		table.insert(_wp09_set, "rho=" .. editBox_wp09_column09:getText() .. ",")
+		table.insert(_wp09_set, "theta=" .. editBox_wp09_column10:getText() .. ",")
+		table.insert(_wp09_set, "dalt=" .. editBox_wp09_column11:getText() .. ",")
+		table.insert(_wp09_set, "dnorth=" .. editBox_wp09_column12:getText() .. ",")
+		table.insert(_wp09_set, "deast=" .. editBox_wp09_column13:getText() .. ",")
 		
-		if isempty(editBox_wp09_deast:getText()) then table.remove(_wp09_set, 12) end
-		if isempty(editBox_wp09_dnorth:getText()) then table.remove(_wp09_set, 11) end
-		if isempty(editBox_wp09_dalt:getText()) then table.remove(_wp09_set, 10) end
-		if isempty(editBox_wp09_theta:getText()) then table.remove(_wp09_set, 9) end
-		if isempty(editBox_wp09_rho:getText()) then table.remove(_wp09_set, 8) end
-		if isempty(editBox_wp09_rd:getText()) then table.remove(_wp09_set, 7) end
-		if isempty(editBox_wp09_pd:getText()) then table.remove(_wp09_set, 6) end
-		if isempty(editBox_wp09_cp:getText()) then table.remove(_wp09_set, 5) end
-		if isempty(editBox_wp09_alt:getText()) then table.remove(_wp09_set, 4) end
-		if isempty(editBox_wp09_long:getText()) then table.remove(_wp09_set, 3) end
-		if isempty(editBox_wp09_lat:getText()) then table.remove(_wp09_set, 2) end
-		if isempty(editBox_wp09_name:getText()) then table.remove(_wp09_set, 1) end
+		if isempty(editBox_wp09_column13:getText()) then table.remove(_wp09_set, 12) end
+		if isempty(editBox_wp09_column12:getText()) then table.remove(_wp09_set, 11) end
+		if isempty(editBox_wp09_column11:getText()) then table.remove(_wp09_set, 10) end
+		if isempty(editBox_wp09_column10:getText()) then table.remove(_wp09_set, 9) end
+		if isempty(editBox_wp09_column09:getText()) then table.remove(_wp09_set, 8) end
+		if isempty(editBox_wp09_column08:getText()) then table.remove(_wp09_set, 7) end
+		if isempty(editBox_wp09_column07:getText()) then table.remove(_wp09_set, 6) end
+		if isempty(editBox_wp09_column06:getText()) then table.remove(_wp09_set, 5) end
+		if isempty(editBox_wp09_column05:getText()) then table.remove(_wp09_set, 4) end
+		if isempty(editBox_wp09_column04:getText()) then table.remove(_wp09_set, 3) end
+		if isempty(editBox_wp09_column03:getText()) then table.remove(_wp09_set, 2) end
+		if isempty(editBox_wp09_column02:getText()) then table.remove(_wp09_set, 1) end
 		
 		local output = "waypoints[9] = { "
 		for _i,_k in pairs(_wp09_set) do
@@ -2131,42 +2168,42 @@ elseif string.match(line,"waypoints%[10%]") then
 	end
 	
 	function create_wp10_set()
-		if isempty(editBox_wp10_lat:getText()) then
+		if isempty(editBox_wp10_column03:getText()) then
 			log("Waypoint 10 did not have a Lat entry")
 			return
 		end
 		
-		if isempty(editBox_wp10_long:getText()) then
+		if isempty(editBox_wp10_column04:getText()) then
 			log("Waypoint 10 did not have a Long entry")
 			return
 		end
 		
 		_wp10_set = {}
-		table.insert(_wp10_set, "name=\"" .. editBox_wp10_name:getText() .. "\",")
-		table.insert(_wp10_set, "lat=\"" .. editBox_wp10_lat:getText() .. "\",")
-		table.insert(_wp10_set, "lon=\"" .. editBox_wp10_long:getText() .. "\",")
-		table.insert(_wp10_set, "alt=" .. editBox_wp10_alt:getText() .. ",")
-		table.insert(_wp10_set, "cp=" .. editBox_wp10_cp:getText() .. ",")
-		table.insert(_wp10_set, "pd=" .. editBox_wp10_pd:getText() .. ",")
-		table.insert(_wp10_set, "rd=" .. editBox_wp10_rd:getText() .. ",")
-		table.insert(_wp10_set, "rho=" .. editBox_wp10_rho:getText() .. ",")
-		table.insert(_wp10_set, "theta=" .. editBox_wp10_theta:getText() .. ",")
-		table.insert(_wp10_set, "dalt=" .. editBox_wp10_dalt:getText() .. ",")
-		table.insert(_wp10_set, "dnorth=" .. editBox_wp10_dnorth:getText() .. ",")
-		table.insert(_wp10_set, "deast=" .. editBox_wp10_deast:getText() .. ",")
+		table.insert(_wp10_set, "name=\"" .. editBox_wp10_column02:getText() .. "\",")
+		table.insert(_wp10_set, "lat=\"" .. editBox_wp10_column03:getText() .. "\",")
+		table.insert(_wp10_set, "lon=\"" .. editBox_wp10_column04:getText() .. "\",")
+		table.insert(_wp10_set, "alt=" .. editBox_wp10_column05:getText() .. ",")
+		table.insert(_wp10_set, "cp=" .. editBox_wp10_column06:getText() .. ",")
+		table.insert(_wp10_set, "pd=" .. editBox_wp10_column07:getText() .. ",")
+		table.insert(_wp10_set, "rd=" .. editBox_wp10_column08:getText() .. ",")
+		table.insert(_wp10_set, "rho=" .. editBox_wp10_column09:getText() .. ",")
+		table.insert(_wp10_set, "theta=" .. editBox_wp10_column10:getText() .. ",")
+		table.insert(_wp10_set, "dalt=" .. editBox_wp10_column11:getText() .. ",")
+		table.insert(_wp10_set, "dnorth=" .. editBox_wp10_column12:getText() .. ",")
+		table.insert(_wp10_set, "deast=" .. editBox_wp10_column13:getText() .. ",")
 		
-		if isempty(editBox_wp10_deast:getText()) then table.remove(_wp10_set, 12) end
-		if isempty(editBox_wp10_dnorth:getText()) then table.remove(_wp10_set, 11) end
-		if isempty(editBox_wp10_dalt:getText()) then table.remove(_wp10_set, 10) end
-		if isempty(editBox_wp10_theta:getText()) then table.remove(_wp10_set, 9) end
-		if isempty(editBox_wp10_rho:getText()) then table.remove(_wp10_set, 8) end
-		if isempty(editBox_wp10_rd:getText()) then table.remove(_wp10_set, 7) end
-		if isempty(editBox_wp10_pd:getText()) then table.remove(_wp10_set, 6) end
-		if isempty(editBox_wp10_cp:getText()) then table.remove(_wp10_set, 5) end
-		if isempty(editBox_wp10_alt:getText()) then table.remove(_wp10_set, 4) end
-		if isempty(editBox_wp10_long:getText()) then table.remove(_wp10_set, 3) end
-		if isempty(editBox_wp10_lat:getText()) then table.remove(_wp10_set, 2) end
-		if isempty(editBox_wp10_name:getText()) then table.remove(_wp10_set, 1) end
+		if isempty(editBox_wp10_column13:getText()) then table.remove(_wp10_set, 12) end
+		if isempty(editBox_wp10_column12:getText()) then table.remove(_wp10_set, 11) end
+		if isempty(editBox_wp10_column11:getText()) then table.remove(_wp10_set, 10) end
+		if isempty(editBox_wp10_column10:getText()) then table.remove(_wp10_set, 9) end
+		if isempty(editBox_wp10_column09:getText()) then table.remove(_wp10_set, 8) end
+		if isempty(editBox_wp10_column08:getText()) then table.remove(_wp10_set, 7) end
+		if isempty(editBox_wp10_column07:getText()) then table.remove(_wp10_set, 6) end
+		if isempty(editBox_wp10_column06:getText()) then table.remove(_wp10_set, 5) end
+		if isempty(editBox_wp10_column05:getText()) then table.remove(_wp10_set, 4) end
+		if isempty(editBox_wp10_column04:getText()) then table.remove(_wp10_set, 3) end
+		if isempty(editBox_wp10_column03:getText()) then table.remove(_wp10_set, 2) end
+		if isempty(editBox_wp10_column02:getText()) then table.remove(_wp10_set, 1) end
 		
 		local output = "waypoints[10] = { "
 		for _i,_k in pairs(_wp10_set) do
@@ -2184,16 +2221,16 @@ elseif string.match(line,"waypoints%[10%]") then
 	--[[ These are the export checks that we are doing at a later time
 	function checkWaypointNames()
 
-	table.insert(_waypointNameEditBoxes, editBox_wp01_name:getText())
-	table.insert(_waypointNameEditBoxes, editBox_wp02_name:getText())
-	table.insert(_waypointNameEditBoxes, editBox_wp03_name:getText())
-	table.insert(_waypointNameEditBoxes, editBox_wp04_name:getText())
-	table.insert(_waypointNameEditBoxes, editBox_wp05_name:getText())
-	table.insert(_waypointNameEditBoxes, editBox_wp06_name:getText())
-	table.insert(_waypointNameEditBoxes, editBox_wp07_name:getText())
-	table.insert(_waypointNameEditBoxes, editBox_wp08_name:getText())
-	table.insert(_waypointNameEditBoxes, editBox_wp09_name:getText())
-	table.insert(_waypointNameEditBoxes, editBox_wp10_name:getText())
+	table.insert(_waypointNameEditBoxes, editBox_wp01_column02:getText())
+	table.insert(_waypointNameEditBoxes, editBox_wp02_column02:getText())
+	table.insert(_waypointNameEditBoxes, editBox_wp03_column02:getText())
+	table.insert(_waypointNameEditBoxes, editBox_wp04_column02:getText())
+	table.insert(_waypointNameEditBoxes, editBox_wp05_column02:getText())
+	table.insert(_waypointNameEditBoxes, editBox_wp06_column02:getText())
+	table.insert(_waypointNameEditBoxes, editBox_wp07_column02:getText())
+	table.insert(_waypointNameEditBoxes, editBox_wp08_column02:getText())
+	table.insert(_waypointNameEditBoxes, editBox_wp09_column02:getText())
+	table.insert(_waypointNameEditBoxes, editBox_wp10_column02:getText())
 	
 	for _i,_k in pairs(_waypointNameEditBoxes) do -- try to understand this more. It works though.
 		--local output = _k:getText()
@@ -2211,19 +2248,19 @@ end
 
 function checkLat()
 
-	_latEditBoxes = {} -- init the table
-    table.insert(_latEditBoxes, editBox_wp01_lat:getText())
-	table.insert(_latEditBoxes, editBox_wp02_lat:getText())
-	table.insert(_latEditBoxes, editBox_wp03_lat:getText())
-	table.insert(_latEditBoxes, editBox_wp04_lat:getText())
-	table.insert(_latEditBoxes, editBox_wp05_lat:getText())
-	table.insert(_latEditBoxes, editBox_wp06_lat:getText())
-	table.insert(_latEditBoxes, editBox_wp07_lat:getText())
-	table.insert(_latEditBoxes, editBox_wp08_lat:getText())
-	table.insert(_latEditBoxes, editBox_wp09_lat:getText())
-	table.insert(_latEditBoxes, editBox_wp10_lat:getText())
+	_column03EditBoxes = {} -- init the table
+    table.insert(_column03EditBoxes, editBox_wp01_column03:getText())
+	table.insert(_column03EditBoxes, editBox_wp02_column03:getText())
+	table.insert(_column03EditBoxes, editBox_wp03_column03:getText())
+	table.insert(_column03EditBoxes, editBox_wp04_column03:getText())
+	table.insert(_column03EditBoxes, editBox_wp05_column03:getText())
+	table.insert(_column03EditBoxes, editBox_wp06_column03:getText())
+	table.insert(_column03EditBoxes, editBox_wp07_column03:getText())
+	table.insert(_column03EditBoxes, editBox_wp08_column03:getText())
+	table.insert(_column03EditBoxes, editBox_wp09_column03:getText())
+	table.insert(_column03EditBoxes, editBox_wp10_column03:getText())
 	
-	for _i,_k in pairs(_latEditBoxes) do -- try to understand this more. It works though.
+	for _i,_k in pairs(_column03EditBoxes) do -- try to understand this more. It works though.
 		--local output = _k:getText()
 		local output = _k
 		if (output:match("[^%dNS:.]")) then --very lazy regex. will NOT catch everything. it is case sensitive, sry
@@ -2239,19 +2276,19 @@ end
 
 function checkLong()
 
-	_longEditBoxes = {} -- init the table
-    table.insert(_longEditBoxes, editBox_wp01_long:getText())
-	table.insert(_longEditBoxes, editBox_wp02_long:getText())
-	table.insert(_longEditBoxes, editBox_wp03_long:getText())
-	table.insert(_longEditBoxes, editBox_wp04_long:getText())
-	table.insert(_longEditBoxes, editBox_wp05_long:getText())
-	table.insert(_longEditBoxes, editBox_wp06_long:getText())
-	table.insert(_longEditBoxes, editBox_wp07_long:getText())
-	table.insert(_longEditBoxes, editBox_wp08_long:getText())
-	table.insert(_longEditBoxes, editBox_wp09_long:getText())
-	table.insert(_longEditBoxes, editBox_wp10_long:getText())
+	_column04EditBoxes = {} -- init the table
+    table.insert(_column04EditBoxes, editBox_wp01_column04:getText())
+	table.insert(_column04EditBoxes, editBox_wp02_column04:getText())
+	table.insert(_column04EditBoxes, editBox_wp03_column04:getText())
+	table.insert(_column04EditBoxes, editBox_wp04_column04:getText())
+	table.insert(_column04EditBoxes, editBox_wp05_column04:getText())
+	table.insert(_column04EditBoxes, editBox_wp06_column04:getText())
+	table.insert(_column04EditBoxes, editBox_wp07_column04:getText())
+	table.insert(_column04EditBoxes, editBox_wp08_column04:getText())
+	table.insert(_column04EditBoxes, editBox_wp09_column04:getText())
+	table.insert(_column04EditBoxes, editBox_wp10_column04:getText())
 	
-	for _i,_k in pairs(_longEditBoxes) do -- try to understand this more. It works though.
+	for _i,_k in pairs(_column04EditBoxes) do -- try to understand this more. It works though.
 		--local output = _k:getText()
 		local output = _k
 		if (output:match("[^%dEW:.]")) then --very lazy regex. will NOT catch everything. it is case sensitive, sry
@@ -2325,105 +2362,105 @@ end
 function checkDecimalEntryBoxes()
  
 	_decimalEditBoxes = {} -- init the table
-	table.insert(_decimalEditBoxes, editBox_wp01_alt:getText())
-	table.insert(_decimalEditBoxes, editBox_wp02_alt:getText())
-	table.insert(_decimalEditBoxes, editBox_wp03_alt:getText())
-	table.insert(_decimalEditBoxes, editBox_wp04_alt:getText())
-	table.insert(_decimalEditBoxes, editBox_wp05_alt:getText())
-	table.insert(_decimalEditBoxes, editBox_wp06_alt:getText())
-	table.insert(_decimalEditBoxes, editBox_wp07_alt:getText())
-	table.insert(_decimalEditBoxes, editBox_wp08_alt:getText())
-	table.insert(_decimalEditBoxes, editBox_wp09_alt:getText())
-	table.insert(_decimalEditBoxes, editBox_wp10_alt:getText())
+	table.insert(_decimalEditBoxes, editBox_wp01_column05:getText())
+	table.insert(_decimalEditBoxes, editBox_wp02_column05:getText())
+	table.insert(_decimalEditBoxes, editBox_wp03_column05:getText())
+	table.insert(_decimalEditBoxes, editBox_wp04_column05:getText())
+	table.insert(_decimalEditBoxes, editBox_wp05_column05:getText())
+	table.insert(_decimalEditBoxes, editBox_wp06_column05:getText())
+	table.insert(_decimalEditBoxes, editBox_wp07_column05:getText())
+	table.insert(_decimalEditBoxes, editBox_wp08_column05:getText())
+	table.insert(_decimalEditBoxes, editBox_wp09_column05:getText())
+	table.insert(_decimalEditBoxes, editBox_wp10_column05:getText())
 		
-	table.insert(_decimalEditBoxes, editBox_wp01_cp:getText())
-	table.insert(_decimalEditBoxes, editBox_wp02_cp:getText())
-	table.insert(_decimalEditBoxes, editBox_wp03_cp:getText())
-	table.insert(_decimalEditBoxes, editBox_wp04_cp:getText())
-	table.insert(_decimalEditBoxes, editBox_wp05_cp:getText())
-	table.insert(_decimalEditBoxes, editBox_wp06_cp:getText())
-	table.insert(_decimalEditBoxes, editBox_wp07_cp:getText())
-	table.insert(_decimalEditBoxes, editBox_wp08_cp:getText())
-	table.insert(_decimalEditBoxes, editBox_wp09_cp:getText())
-	table.insert(_decimalEditBoxes, editBox_wp10_cp:getText())
+	table.insert(_decimalEditBoxes, editBox_wp01_column06:getText())
+	table.insert(_decimalEditBoxes, editBox_wp02_column06:getText())
+	table.insert(_decimalEditBoxes, editBox_wp03_column06:getText())
+	table.insert(_decimalEditBoxes, editBox_wp04_column06:getText())
+	table.insert(_decimalEditBoxes, editBox_wp05_column06:getText())
+	table.insert(_decimalEditBoxes, editBox_wp06_column06:getText())
+	table.insert(_decimalEditBoxes, editBox_wp07_column06:getText())
+	table.insert(_decimalEditBoxes, editBox_wp08_column06:getText())
+	table.insert(_decimalEditBoxes, editBox_wp09_column06:getText())
+	table.insert(_decimalEditBoxes, editBox_wp10_column06:getText())
 		
-	table.insert(_decimalEditBoxes, editBox_wp01_pd:getText())
-	table.insert(_decimalEditBoxes, editBox_wp02_pd:getText())
-	table.insert(_decimalEditBoxes, editBox_wp03_pd:getText())
-	table.insert(_decimalEditBoxes, editBox_wp04_pd:getText())
-	table.insert(_decimalEditBoxes, editBox_wp05_pd:getText())
-	table.insert(_decimalEditBoxes, editBox_wp06_pd:getText())
-	table.insert(_decimalEditBoxes, editBox_wp07_pd:getText())
-	table.insert(_decimalEditBoxes, editBox_wp08_pd:getText())
-	table.insert(_decimalEditBoxes, editBox_wp09_pd:getText())
-	table.insert(_decimalEditBoxes, editBox_wp10_pd:getText())
+	table.insert(_decimalEditBoxes, editBox_wp01_column07:getText())
+	table.insert(_decimalEditBoxes, editBox_wp02_column07:getText())
+	table.insert(_decimalEditBoxes, editBox_wp03_column07:getText())
+	table.insert(_decimalEditBoxes, editBox_wp04_column07:getText())
+	table.insert(_decimalEditBoxes, editBox_wp05_column07:getText())
+	table.insert(_decimalEditBoxes, editBox_wp06_column07:getText())
+	table.insert(_decimalEditBoxes, editBox_wp07_column07:getText())
+	table.insert(_decimalEditBoxes, editBox_wp08_column07:getText())
+	table.insert(_decimalEditBoxes, editBox_wp09_column07:getText())
+	table.insert(_decimalEditBoxes, editBox_wp10_column07:getText())
 		
-	table.insert(_decimalEditBoxes, editBox_wp01_rd:getText())
-	table.insert(_decimalEditBoxes, editBox_wp02_rd:getText())
-	table.insert(_decimalEditBoxes, editBox_wp03_rd:getText())
-	table.insert(_decimalEditBoxes, editBox_wp04_rd:getText())
-	table.insert(_decimalEditBoxes, editBox_wp05_rd:getText())
-	table.insert(_decimalEditBoxes, editBox_wp06_rd:getText())
-	table.insert(_decimalEditBoxes, editBox_wp07_rd:getText())
-	table.insert(_decimalEditBoxes, editBox_wp08_rd:getText())
-	table.insert(_decimalEditBoxes, editBox_wp09_rd:getText())
-	table.insert(_decimalEditBoxes, editBox_wp10_rd:getText())
+	table.insert(_decimalEditBoxes, editBox_wp01_column08:getText())
+	table.insert(_decimalEditBoxes, editBox_wp02_column08:getText())
+	table.insert(_decimalEditBoxes, editBox_wp03_column08:getText())
+	table.insert(_decimalEditBoxes, editBox_wp04_column08:getText())
+	table.insert(_decimalEditBoxes, editBox_wp05_column08:getText())
+	table.insert(_decimalEditBoxes, editBox_wp06_column08:getText())
+	table.insert(_decimalEditBoxes, editBox_wp07_column08:getText())
+	table.insert(_decimalEditBoxes, editBox_wp08_column08:getText())
+	table.insert(_decimalEditBoxes, editBox_wp09_column08:getText())
+	table.insert(_decimalEditBoxes, editBox_wp10_column08:getText())
 		
-	table.insert(_decimalEditBoxes, editBox_wp01_rho:getText())
-	table.insert(_decimalEditBoxes, editBox_wp02_rho:getText())
-	table.insert(_decimalEditBoxes, editBox_wp03_rho:getText())
-	table.insert(_decimalEditBoxes, editBox_wp04_rho:getText())
-	table.insert(_decimalEditBoxes, editBox_wp05_rho:getText())
-	table.insert(_decimalEditBoxes, editBox_wp06_rho:getText())
-	table.insert(_decimalEditBoxes, editBox_wp07_rho:getText())
-	table.insert(_decimalEditBoxes, editBox_wp08_rho:getText())
-	table.insert(_decimalEditBoxes, editBox_wp09_rho:getText())
-	table.insert(_decimalEditBoxes, editBox_wp10_rho:getText())
+	table.insert(_decimalEditBoxes, editBox_wp01_column09:getText())
+	table.insert(_decimalEditBoxes, editBox_wp02_column09:getText())
+	table.insert(_decimalEditBoxes, editBox_wp03_column09:getText())
+	table.insert(_decimalEditBoxes, editBox_wp04_column09:getText())
+	table.insert(_decimalEditBoxes, editBox_wp05_column09:getText())
+	table.insert(_decimalEditBoxes, editBox_wp06_column09:getText())
+	table.insert(_decimalEditBoxes, editBox_wp07_column09:getText())
+	table.insert(_decimalEditBoxes, editBox_wp08_column09:getText())
+	table.insert(_decimalEditBoxes, editBox_wp09_column09:getText())
+	table.insert(_decimalEditBoxes, editBox_wp10_column09:getText())
 		
-	table.insert(_decimalEditBoxes, editBox_wp01_theta:getText())
-	table.insert(_decimalEditBoxes, editBox_wp02_theta:getText())
-	table.insert(_decimalEditBoxes, editBox_wp03_theta:getText())
-	table.insert(_decimalEditBoxes, editBox_wp04_theta:getText())
-	table.insert(_decimalEditBoxes, editBox_wp05_theta:getText())
-	table.insert(_decimalEditBoxes, editBox_wp06_theta:getText())
-	table.insert(_decimalEditBoxes, editBox_wp07_theta:getText())
-	table.insert(_decimalEditBoxes, editBox_wp08_theta:getText())
-	table.insert(_decimalEditBoxes, editBox_wp09_theta:getText())
-	table.insert(_decimalEditBoxes, editBox_wp10_theta:getText())
+	table.insert(_decimalEditBoxes, editBox_wp01_column10:getText())
+	table.insert(_decimalEditBoxes, editBox_wp02_column10:getText())
+	table.insert(_decimalEditBoxes, editBox_wp03_column10:getText())
+	table.insert(_decimalEditBoxes, editBox_wp04_column10:getText())
+	table.insert(_decimalEditBoxes, editBox_wp05_column10:getText())
+	table.insert(_decimalEditBoxes, editBox_wp06_column10:getText())
+	table.insert(_decimalEditBoxes, editBox_wp07_column10:getText())
+	table.insert(_decimalEditBoxes, editBox_wp08_column10:getText())
+	table.insert(_decimalEditBoxes, editBox_wp09_column10:getText())
+	table.insert(_decimalEditBoxes, editBox_wp10_column10:getText())
 		
-	table.insert(_decimalEditBoxes, editBox_wp01_dalt:getText())
-	table.insert(_decimalEditBoxes, editBox_wp02_dalt:getText())
-	table.insert(_decimalEditBoxes, editBox_wp03_dalt:getText())
-	table.insert(_decimalEditBoxes, editBox_wp04_dalt:getText())
-	table.insert(_decimalEditBoxes, editBox_wp05_dalt:getText())
-	table.insert(_decimalEditBoxes, editBox_wp06_dalt:getText())
-	table.insert(_decimalEditBoxes, editBox_wp07_dalt:getText())
-	table.insert(_decimalEditBoxes, editBox_wp08_dalt:getText())
-	table.insert(_decimalEditBoxes, editBox_wp09_dalt:getText())
-	table.insert(_decimalEditBoxes, editBox_wp10_dalt:getText())
+	table.insert(_decimalEditBoxes, editBox_wp01_column11:getText())
+	table.insert(_decimalEditBoxes, editBox_wp02_column11:getText())
+	table.insert(_decimalEditBoxes, editBox_wp03_column11:getText())
+	table.insert(_decimalEditBoxes, editBox_wp04_column11:getText())
+	table.insert(_decimalEditBoxes, editBox_wp05_column11:getText())
+	table.insert(_decimalEditBoxes, editBox_wp06_column11:getText())
+	table.insert(_decimalEditBoxes, editBox_wp07_column11:getText())
+	table.insert(_decimalEditBoxes, editBox_wp08_column11:getText())
+	table.insert(_decimalEditBoxes, editBox_wp09_column11:getText())
+	table.insert(_decimalEditBoxes, editBox_wp10_column11:getText())
 		
-	table.insert(_decimalEditBoxes, editBox_wp01_dnorth:getText())
-	table.insert(_decimalEditBoxes, editBox_wp02_dnorth:getText())
-	table.insert(_decimalEditBoxes, editBox_wp03_dnorth:getText())
-	table.insert(_decimalEditBoxes, editBox_wp04_dnorth:getText())
-	table.insert(_decimalEditBoxes, editBox_wp05_dnorth:getText())
-	table.insert(_decimalEditBoxes, editBox_wp06_dnorth:getText())
-	table.insert(_decimalEditBoxes, editBox_wp07_dnorth:getText())
-	table.insert(_decimalEditBoxes, editBox_wp08_dnorth:getText())
-	table.insert(_decimalEditBoxes, editBox_wp09_dnorth:getText())
-	table.insert(_decimalEditBoxes, editBox_wp10_dnorth:getText())
+	table.insert(_decimalEditBoxes, editBox_wp01_column12:getText())
+	table.insert(_decimalEditBoxes, editBox_wp02_column12:getText())
+	table.insert(_decimalEditBoxes, editBox_wp03_column12:getText())
+	table.insert(_decimalEditBoxes, editBox_wp04_column12:getText())
+	table.insert(_decimalEditBoxes, editBox_wp05_column12:getText())
+	table.insert(_decimalEditBoxes, editBox_wp06_column12:getText())
+	table.insert(_decimalEditBoxes, editBox_wp07_column12:getText())
+	table.insert(_decimalEditBoxes, editBox_wp08_column12:getText())
+	table.insert(_decimalEditBoxes, editBox_wp09_column12:getText())
+	table.insert(_decimalEditBoxes, editBox_wp10_column12:getText())
 		
 		
-	table.insert(_decimalEditBoxes, editBox_wp01_deast:getText())
-	table.insert(_decimalEditBoxes, editBox_wp02_deast:getText())
-	table.insert(_decimalEditBoxes, editBox_wp03_deast:getText())
-	table.insert(_decimalEditBoxes, editBox_wp04_deast:getText())
-	table.insert(_decimalEditBoxes, editBox_wp05_deast:getText())
-	table.insert(_decimalEditBoxes, editBox_wp06_deast:getText())
-	table.insert(_decimalEditBoxes, editBox_wp07_deast:getText())
-	table.insert(_decimalEditBoxes, editBox_wp08_deast:getText())
-	table.insert(_decimalEditBoxes, editBox_wp09_deast:getText())
-	table.insert(_decimalEditBoxes, editBox_wp10_deast:getText())
+	table.insert(_decimalEditBoxes, editBox_wp01_column13:getText())
+	table.insert(_decimalEditBoxes, editBox_wp02_column13:getText())
+	table.insert(_decimalEditBoxes, editBox_wp03_column13:getText())
+	table.insert(_decimalEditBoxes, editBox_wp04_column13:getText())
+	table.insert(_decimalEditBoxes, editBox_wp05_column13:getText())
+	table.insert(_decimalEditBoxes, editBox_wp06_column13:getText())
+	table.insert(_decimalEditBoxes, editBox_wp07_column13:getText())
+	table.insert(_decimalEditBoxes, editBox_wp08_column13:getText())
+	table.insert(_decimalEditBoxes, editBox_wp09_column13:getText())
+	table.insert(_decimalEditBoxes, editBox_wp10_column13:getText())
 
 	for _i,_k in pairs(_decimalEditBoxes) do -- try to understand this more. It works though.
 		local output = _k
@@ -2560,6 +2597,7 @@ end
     end
 
     local function createDMPSWindow()
+		
         if window ~= nil then
             return
         end
@@ -2585,12 +2623,26 @@ end
         --prevButton = panel.DMPSPrevButton
         --nextButton = panel.DMPSNextButton
 		
-		-- DMPS panels
+		-- DMPS lable panels
 		label_telemetry_elevation = panel.label_telemetry_elevation
-		label_telemetry_coordinates_lat = panel.label_telemetry_coordinates_lat
-		label_telemetry_coordinates_long = panel.label_telemetry_coordinates_long
+		label_telemetry_coordinatesLat = panel.label_telemetry_coordinatesLat
+		label_telemetry_coordinatesLong = panel.label_telemetry_coordinatesLong
 		label_telemetry_aircraft = panel.label_telemetry_aircraft
 		label_crosshairCheckbox = panel.label_crosshairCheckbox
+		
+		
+		label_area2_column02_title = panel.label_area2_column02_title
+		label_area2_column03_title = panel.label_area2_column03_title
+		label_area2_column04_title = panel.label_area2_column04_title
+		label_area2_column05_title = panel.label_area2_column05_title
+		label_area2_column06_title = panel.label_area2_column06_title
+		label_area2_column07_title = panel.label_area2_column07_title
+		label_area2_column08_title = panel.label_area2_column08_title
+		label_area2_column09_title = panel.label_area2_column09_title
+		label_area2_column10_title = panel.label_area2_column10_title
+		label_area2_column11_title = panel.label_area2_column11_title
+		label_area2_column12_title = panel.label_area2_column12_title
+		label_area2_column13_title = panel.label_area2_column13_title
 		
 		-- Radio button panels
 		radiobutton_waypoint01 = panel.radiobutton_waypoint01
@@ -2618,7 +2670,7 @@ end
 		end
 		comboList_aircraft:selectItem(comboList_aircraft:getItem(0))
 	
-		log("DMPS line 914")
+		
 		comboList_terrain = panel.comboList_terrain
 		_listTerrain = {}
 		table.insert(_listTerrain, "Caucasus")
@@ -2638,143 +2690,143 @@ end
 		editBox_date = panel.editBox_date
 		editBox_output = panel.editBox_output
 		
-		editBox_wp01_name = panel.editBox_wp01_name
-		editBox_wp02_name = panel.editBox_wp02_name
-		editBox_wp03_name = panel.editBox_wp03_name
-		editBox_wp04_name = panel.editBox_wp04_name
-		editBox_wp05_name = panel.editBox_wp05_name
-		editBox_wp06_name = panel.editBox_wp06_name
-		editBox_wp07_name = panel.editBox_wp07_name
-		editBox_wp08_name = panel.editBox_wp08_name
-		editBox_wp09_name = panel.editBox_wp09_name
-		editBox_wp10_name = panel.editBox_wp10_name
+		editBox_wp01_column02 = panel.editBox_wp01_column02
+		editBox_wp02_column02 = panel.editBox_wp02_column02
+		editBox_wp03_column02 = panel.editBox_wp03_column02
+		editBox_wp04_column02 = panel.editBox_wp04_column02
+		editBox_wp05_column02 = panel.editBox_wp05_column02
+		editBox_wp06_column02 = panel.editBox_wp06_column02
+		editBox_wp07_column02 = panel.editBox_wp07_column02
+		editBox_wp08_column02 = panel.editBox_wp08_column02
+		editBox_wp09_column02 = panel.editBox_wp09_column02
+		editBox_wp10_column02 = panel.editBox_wp10_column02
 		
-		editBox_wp01_lat = panel.editBox_wp01_lat
-		editBox_wp02_lat = panel.editBox_wp02_lat
-		editBox_wp03_lat = panel.editBox_wp03_lat
-		editBox_wp04_lat = panel.editBox_wp04_lat
-		editBox_wp05_lat = panel.editBox_wp05_lat
-		editBox_wp06_lat = panel.editBox_wp06_lat
-		editBox_wp07_lat = panel.editBox_wp07_lat
-		editBox_wp08_lat = panel.editBox_wp08_lat
-		editBox_wp09_lat = panel.editBox_wp09_lat
-		editBox_wp10_lat = panel.editBox_wp10_lat
+		editBox_wp01_column03 = panel.editBox_wp01_column03
+		editBox_wp02_column03 = panel.editBox_wp02_column03
+		editBox_wp03_column03 = panel.editBox_wp03_column03
+		editBox_wp04_column03 = panel.editBox_wp04_column03
+		editBox_wp05_column03 = panel.editBox_wp05_column03
+		editBox_wp06_column03 = panel.editBox_wp06_column03
+		editBox_wp07_column03 = panel.editBox_wp07_column03
+		editBox_wp08_column03 = panel.editBox_wp08_column03
+		editBox_wp09_column03 = panel.editBox_wp09_column03
+		editBox_wp10_column03 = panel.editBox_wp10_column03
 	
-		editBox_wp01_long = panel.editBox_wp01_long
-		editBox_wp02_long = panel.editBox_wp02_long
-		editBox_wp03_long = panel.editBox_wp03_long
-		editBox_wp04_long = panel.editBox_wp04_long
-		editBox_wp05_long = panel.editBox_wp05_long
-		editBox_wp06_long = panel.editBox_wp06_long
-		editBox_wp07_long = panel.editBox_wp07_long
-		editBox_wp08_long = panel.editBox_wp08_long
-		editBox_wp09_long = panel.editBox_wp09_long
-		editBox_wp10_long = panel.editBox_wp10_long
+		editBox_wp01_column04 = panel.editBox_wp01_column04
+		editBox_wp02_column04 = panel.editBox_wp02_column04
+		editBox_wp03_column04 = panel.editBox_wp03_column04
+		editBox_wp04_column04 = panel.editBox_wp04_column04
+		editBox_wp05_column04 = panel.editBox_wp05_column04
+		editBox_wp06_column04 = panel.editBox_wp06_column04
+		editBox_wp07_column04 = panel.editBox_wp07_column04
+		editBox_wp08_column04 = panel.editBox_wp08_column04
+		editBox_wp09_column04 = panel.editBox_wp09_column04
+		editBox_wp10_column04 = panel.editBox_wp10_column04
 		
-		editBox_wp01_alt = panel.editBox_wp01_alt
-		editBox_wp02_alt = panel.editBox_wp02_alt
-		editBox_wp03_alt = panel.editBox_wp03_alt
-		editBox_wp04_alt = panel.editBox_wp04_alt
-		editBox_wp05_alt = panel.editBox_wp05_alt
-		editBox_wp06_alt = panel.editBox_wp06_alt
-		editBox_wp07_alt = panel.editBox_wp07_alt
-		editBox_wp08_alt = panel.editBox_wp08_alt
-		editBox_wp09_alt = panel.editBox_wp09_alt
-		editBox_wp10_alt = panel.editBox_wp10_alt
+		editBox_wp01_column05 = panel.editBox_wp01_column05
+		editBox_wp02_column05 = panel.editBox_wp02_column05
+		editBox_wp03_column05 = panel.editBox_wp03_column05
+		editBox_wp04_column05 = panel.editBox_wp04_column05
+		editBox_wp05_column05 = panel.editBox_wp05_column05
+		editBox_wp06_column05 = panel.editBox_wp06_column05
+		editBox_wp07_column05 = panel.editBox_wp07_column05
+		editBox_wp08_column05 = panel.editBox_wp08_column05
+		editBox_wp09_column05 = panel.editBox_wp09_column05
+		editBox_wp10_column05 = panel.editBox_wp10_column05
 		
-		editBox_wp01_cp = panel.editBox_wp01_cp
-		editBox_wp02_cp = panel.editBox_wp02_cp
-		editBox_wp03_cp = panel.editBox_wp03_cp
-		editBox_wp04_cp = panel.editBox_wp04_cp
-		editBox_wp05_cp = panel.editBox_wp05_cp
-		editBox_wp06_cp = panel.editBox_wp06_cp
-		editBox_wp07_cp = panel.editBox_wp07_cp
-		editBox_wp08_cp = panel.editBox_wp08_cp
-		editBox_wp09_cp = panel.editBox_wp09_cp
-		editBox_wp10_cp = panel.editBox_wp10_cp
+		editBox_wp01_column06 = panel.editBox_wp01_column06
+		editBox_wp02_column06 = panel.editBox_wp02_column06
+		editBox_wp03_column06 = panel.editBox_wp03_column06
+		editBox_wp04_column06 = panel.editBox_wp04_column06
+		editBox_wp05_column06 = panel.editBox_wp05_column06
+		editBox_wp06_column06 = panel.editBox_wp06_column06
+		editBox_wp07_column06 = panel.editBox_wp07_column06
+		editBox_wp08_column06 = panel.editBox_wp08_column06
+		editBox_wp09_column06 = panel.editBox_wp09_column06
+		editBox_wp10_column06 = panel.editBox_wp10_column06
 		
-		editBox_wp01_pd = panel.editBox_wp01_pd
-		editBox_wp02_pd = panel.editBox_wp02_pd
-		editBox_wp03_pd = panel.editBox_wp03_pd
-		editBox_wp04_pd = panel.editBox_wp04_pd
-		editBox_wp05_pd = panel.editBox_wp05_pd
-		editBox_wp06_pd = panel.editBox_wp06_pd
-		editBox_wp07_pd = panel.editBox_wp07_pd
-		editBox_wp08_pd = panel.editBox_wp08_pd
-		editBox_wp09_pd = panel.editBox_wp09_pd
-		editBox_wp10_pd = panel.editBox_wp10_pd
+		editBox_wp01_column07 = panel.editBox_wp01_column07
+		editBox_wp02_column07 = panel.editBox_wp02_column07
+		editBox_wp03_column07 = panel.editBox_wp03_column07
+		editBox_wp04_column07 = panel.editBox_wp04_column07
+		editBox_wp05_column07 = panel.editBox_wp05_column07
+		editBox_wp06_column07 = panel.editBox_wp06_column07
+		editBox_wp07_column07 = panel.editBox_wp07_column07
+		editBox_wp08_column07 = panel.editBox_wp08_column07
+		editBox_wp09_column07 = panel.editBox_wp09_column07
+		editBox_wp10_column07 = panel.editBox_wp10_column07
 		
-		editBox_wp01_rd = panel.editBox_wp01_rd
-		editBox_wp02_rd = panel.editBox_wp02_rd
-		editBox_wp03_rd = panel.editBox_wp03_rd
-		editBox_wp04_rd = panel.editBox_wp04_rd
-		editBox_wp05_rd = panel.editBox_wp05_rd
-		editBox_wp06_rd = panel.editBox_wp06_rd
-		editBox_wp07_rd = panel.editBox_wp07_rd
-		editBox_wp08_rd = panel.editBox_wp08_rd
-		editBox_wp09_rd = panel.editBox_wp09_rd
-		editBox_wp10_rd = panel.editBox_wp10_rd
+		editBox_wp01_column08 = panel.editBox_wp01_column08
+		editBox_wp02_column08 = panel.editBox_wp02_column08
+		editBox_wp03_column08 = panel.editBox_wp03_column08
+		editBox_wp04_column08 = panel.editBox_wp04_column08
+		editBox_wp05_column08 = panel.editBox_wp05_column08
+		editBox_wp06_column08 = panel.editBox_wp06_column08
+		editBox_wp07_column08 = panel.editBox_wp07_column08
+		editBox_wp08_column08 = panel.editBox_wp08_column08
+		editBox_wp09_column08 = panel.editBox_wp09_column08
+		editBox_wp10_column08 = panel.editBox_wp10_column08
 		
-		editBox_wp01_rho = panel.editBox_wp01_rho
-		editBox_wp02_rho = panel.editBox_wp02_rho
-		editBox_wp03_rho = panel.editBox_wp03_rho
-		editBox_wp04_rho = panel.editBox_wp04_rho
-		editBox_wp05_rho = panel.editBox_wp05_rho
-		editBox_wp06_rho = panel.editBox_wp06_rho
-		editBox_wp07_rho = panel.editBox_wp07_rho
-		editBox_wp08_rho = panel.editBox_wp08_rho
-		editBox_wp09_rho = panel.editBox_wp09_rho
-		editBox_wp10_rho = panel.editBox_wp10_rho
+		editBox_wp01_column09 = panel.editBox_wp01_column09
+		editBox_wp02_column09 = panel.editBox_wp02_column09
+		editBox_wp03_column09 = panel.editBox_wp03_column09
+		editBox_wp04_column09 = panel.editBox_wp04_column09
+		editBox_wp05_column09 = panel.editBox_wp05_column09
+		editBox_wp06_column09 = panel.editBox_wp06_column09
+		editBox_wp07_column09 = panel.editBox_wp07_column09
+		editBox_wp08_column09 = panel.editBox_wp08_column09
+		editBox_wp09_column09 = panel.editBox_wp09_column09
+		editBox_wp10_column09 = panel.editBox_wp10_column09
 		
-		editBox_wp01_theta = panel.editBox_wp01_theta
-		editBox_wp02_theta = panel.editBox_wp02_theta
-		editBox_wp03_theta = panel.editBox_wp03_theta
-		editBox_wp04_theta = panel.editBox_wp04_theta
-		editBox_wp05_theta = panel.editBox_wp05_theta
-		editBox_wp06_theta = panel.editBox_wp06_theta
-		editBox_wp07_theta = panel.editBox_wp07_theta
-		editBox_wp08_theta = panel.editBox_wp08_theta
-		editBox_wp09_theta = panel.editBox_wp09_theta
-		editBox_wp10_theta = panel.editBox_wp10_theta
+		editBox_wp01_column10 = panel.editBox_wp01_column10
+		editBox_wp02_column10 = panel.editBox_wp02_column10
+		editBox_wp03_column10 = panel.editBox_wp03_column10
+		editBox_wp04_column10 = panel.editBox_wp04_column10
+		editBox_wp05_column10 = panel.editBox_wp05_column10
+		editBox_wp06_column10 = panel.editBox_wp06_column10
+		editBox_wp07_column10 = panel.editBox_wp07_column10
+		editBox_wp08_column10 = panel.editBox_wp08_column10
+		editBox_wp09_column10 = panel.editBox_wp09_column10
+		editBox_wp10_column10 = panel.editBox_wp10_column10
 		
-		editBox_wp01_dalt = panel.editBox_wp01_dalt
-		editBox_wp02_dalt = panel.editBox_wp02_dalt
-		editBox_wp03_dalt = panel.editBox_wp03_dalt
-		editBox_wp04_dalt = panel.editBox_wp04_dalt
-		editBox_wp05_dalt = panel.editBox_wp05_dalt
-		editBox_wp06_dalt = panel.editBox_wp06_dalt
-		editBox_wp07_dalt = panel.editBox_wp07_dalt
-		editBox_wp08_dalt = panel.editBox_wp08_dalt
-		editBox_wp09_dalt = panel.editBox_wp09_dalt
-		editBox_wp10_dalt = panel.editBox_wp10_dalt
+		editBox_wp01_column11 = panel.editBox_wp01_column11
+		editBox_wp02_column11 = panel.editBox_wp02_column11
+		editBox_wp03_column11 = panel.editBox_wp03_column11
+		editBox_wp04_column11 = panel.editBox_wp04_column11
+		editBox_wp05_column11 = panel.editBox_wp05_column11
+		editBox_wp06_column11 = panel.editBox_wp06_column11
+		editBox_wp07_column11 = panel.editBox_wp07_column11
+		editBox_wp08_column11 = panel.editBox_wp08_column11
+		editBox_wp09_column11 = panel.editBox_wp09_column11
+		editBox_wp10_column11 = panel.editBox_wp10_column11
 		
-		editBox_wp01_dnorth = panel.editBox_wp01_dnorth
-		editBox_wp02_dnorth = panel.editBox_wp02_dnorth
-		editBox_wp03_dnorth = panel.editBox_wp03_dnorth
-		editBox_wp04_dnorth = panel.editBox_wp04_dnorth
-		editBox_wp05_dnorth = panel.editBox_wp05_dnorth
-		editBox_wp06_dnorth = panel.editBox_wp06_dnorth
-		editBox_wp07_dnorth = panel.editBox_wp07_dnorth
-		editBox_wp08_dnorth = panel.editBox_wp08_dnorth
-		editBox_wp09_dnorth = panel.editBox_wp09_dnorth
-		editBox_wp10_dnorth = panel.editBox_wp10_dnorth
+		editBox_wp01_column12 = panel.editBox_wp01_column12
+		editBox_wp02_column12 = panel.editBox_wp02_column12
+		editBox_wp03_column12 = panel.editBox_wp03_column12
+		editBox_wp04_column12 = panel.editBox_wp04_column12
+		editBox_wp05_column12 = panel.editBox_wp05_column12
+		editBox_wp06_column12 = panel.editBox_wp06_column12
+		editBox_wp07_column12 = panel.editBox_wp07_column12
+		editBox_wp08_column12 = panel.editBox_wp08_column12
+		editBox_wp09_column12 = panel.editBox_wp09_column12
+		editBox_wp10_column12 = panel.editBox_wp10_column12
 		
-		editBox_wp01_deast = panel.editBox_wp01_deast
-		editBox_wp02_deast = panel.editBox_wp02_deast
-		editBox_wp03_deast = panel.editBox_wp03_deast
-		editBox_wp04_deast = panel.editBox_wp04_deast
-		editBox_wp05_deast = panel.editBox_wp05_deast
-		editBox_wp06_deast = panel.editBox_wp06_deast
-		editBox_wp07_deast = panel.editBox_wp07_deast
-		editBox_wp08_deast = panel.editBox_wp08_deast
-		editBox_wp09_deast = panel.editBox_wp09_deast
-		editBox_wp10_deast = panel.editBox_wp10_deast
+		editBox_wp01_column13 = panel.editBox_wp01_column13
+		editBox_wp02_column13 = panel.editBox_wp02_column13
+		editBox_wp03_column13 = panel.editBox_wp03_column13
+		editBox_wp04_column13 = panel.editBox_wp04_column13
+		editBox_wp05_column13 = panel.editBox_wp05_column13
+		editBox_wp06_column13 = panel.editBox_wp06_column13
+		editBox_wp07_column13 = panel.editBox_wp07_column13
+		editBox_wp08_column13 = panel.editBox_wp08_column13
+		editBox_wp09_column13 = panel.editBox_wp09_column13
+		editBox_wp10_column13 = panel.editBox_wp10_column13
 	
         -- setup textarea
         --local skin = textarea:getSkin()
         --skin.skinData.states.released[1].text.fontSize = config.fontSize
         --textarea:setSkin(skin)
-
+		
         panel:addFocusCallback(
             function(self)
                 if self:getFocused() then
@@ -2806,6 +2858,7 @@ end
                 nextPage()
             end
         )--]]
+		
         crosshairCheckbox:addChangeCallback(
             function(self)
                 local checked = self:getState()
@@ -2813,13 +2866,31 @@ end
                 crosshairWindow:setVisible(checked)
             end
         )
+		
         insertCoordsBtn:addMouseDownCallback(
             function(self)
                 insertCoordinates()
             end
         )
 		
+		
+		comboList_aircraft:addChangeCallback(
+            function(self)
+				log('Aircraft selected: ' .. comboList_aircraft:getText())
+				--editBox_output:setText(comboList_aircraft:getText())
+				--aircraftSelectedChanged()
+            end
+        )
+		
+		
+		comboList_terrain:addChangeCallback(
+            function(self)
+				log('Terrain selected: ' .. comboList_terrain:getText())
+            end
+        )
+		
 		button_clearAllData:addMouseDownCallback(clearAllData)
+		
 	--[[
 		button_clearAllData:addMouseDownCallback(
             function(self)
@@ -2839,7 +2910,7 @@ end
             config.windowSize.h
         )
         handleResize(window)
-
+	
         window:addHotKeyCallback(
             config.hotkey,
             function()
@@ -2850,6 +2921,13 @@ end
                 end
             end
         )
+	
+		
+		window:addHotKeyCallback(config.getCoordHotkey, function()
+			--editBox_output:setText('hotkeypressed')
+			insertCoordinates()
+			end)
+		
         window:addSizeCallback(handleResize)
         window:addPositionCallback(handleMove)
 
@@ -2860,8 +2938,11 @@ end
         hide()
 		show()
 		
+		--label_area2_column02_title:setText('tst')
+		
         log("DMPS window created")
     end
+
 
 	
 	
