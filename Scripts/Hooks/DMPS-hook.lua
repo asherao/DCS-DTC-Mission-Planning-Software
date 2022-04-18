@@ -8,18 +8,13 @@ Consider altitude output (meters or feet?)
 
 Future updates:
 Consider combining the standalone and app luas
-Make a keybind to capture coordinates
 Regex and validate DTC inputs
-make log entries for aircraft selected
-make log entries for terrain selected
 add crosshair label click detection
+consider that different aircraft may not be able to export to all maps
 
 Change Log:
-Added second Hotkey
-added module and aircraft change detection
-added comumn header changing ability
-added aircraftSelectedChanged
-Updated variables to be less module specific
+See Github
+https://github.com/asherao/DCS-DTC-Mission-Planning-Software/tree/master/Scripts/Hooks
 --]]
 
 local function loadDMPS()
@@ -43,7 +38,7 @@ local function loadDMPS()
     local config = nil
 	local finalExportString
 	local programName = "DMPS (DCS-DTC Mission Planning System)"
-	local versionNumber = "v0.3.0"
+	local versionNumber = "v0.4.0"
 	local author = "by Bailey"
 	local windowTitle = programName .. " " .. versionNumber .. " " .. author
 	
@@ -80,27 +75,56 @@ local function loadDMPS()
         end
     end
 	
-	function aircraftSelectedChanged()
+	-- TODO: this
+	--[[function aircraftSelectedChanged()
 		-- when the user changes the selected aircraft, read the aircraft that they had selected
 		local selectedAircraft = comboList_aircraft:getText()
-		log('Aircraft selected: ' .. selectedAircraft)
+		--log('Aircraft selected: ' .. selectedAircraft)
 		
 		-- clear all of the editBoxes
 		clearAllData()
-		--[[
+		
 		-- change the labels to fit the categories for that aircraft
 		if selectedAircraft == 'M-2000C' then
 		-- do this
-		la
+		log('Preparing ' .. selectedAircraft)
+		prepareDtc_M2000C()
 		elseif selectedAircraft == 'AV8B' then
-		-- do that
+		elseif selectedAircraft == 'A-10C' then
+		elseif selectedAircraft == 'A-10C2' then
+		elseif selectedAircraft == 'AH-64D_BLK_II' then
+		elseif selectedAircraft == 'AV8BNA' then
+		elseif selectedAircraft == 'F-16C_50' then
+		elseif selectedAircraft == 'F-5E-3' then
+		elseif selectedAircraft == 'F-86F Sabre' then
+		elseif selectedAircraft == 'F-14A-95-GR' then
+		elseif selectedAircraft == 'F-14A-135-GR' then
+		elseif selectedAircraft == 'F-14B' then
+		elseif selectedAircraft == 'FA-18_hornet' then
+		elseif selectedAircraft == 'JF-17' then
+		elseif selectedAircraft == 'Ka-50' then
+		elseif selectedAircraft == 'Mi-24P' then
+		elseif selectedAircraft == 'Mi-8MT' then
+		elseif selectedAircraft == 'MosquitoFBMkVI' then
+		elseif selectedAircraft == 'P-51D' then
+		elseif selectedAircraft == 'SA342M' then
+		elseif selectedAircraft == 'SA342L' then
+		elseif selectedAircraft == 'SA342Mistral' then
+		elseif selectedAircraft == 'SA342Minigun' then
+		elseif selectedAircraft == 'SpitfireLFMkIX' then
+		elseif selectedAircraft == 'SpitfireLFMkIXCW' then
+		elseif selectedAircraft == 'TF-51D' then
+		elseif selectedAircraft == 'UH-1H' then
 		end
-		--]]
+		
 		-- change the number of boxes available for that aircraft
 		
 		-- in the outbox tell the user that they selected a different aircraft
-		
-		
+	end
+	--]]
+	
+	function prepareDtc_M2000C()
+		log('Preparing DTC for the M-2000C')
 	end
 	
     local function loadPage(page)
@@ -269,7 +293,7 @@ local function loadDMPS()
             DCS.unlockKeyboardInput(releaseKeyboardKeys)
             keyboardLocked = false
         end
-		window:setText(windowTitle .. "  |  Toggle with " ..  config.hotkey)
+		window:setText(windowTitle .. "  |  Toggle with " ..  config.hotkey .. ' |  Capture with ' .. config.getCoordHotkey)
     end
 
     local function lockKeyboardInput()
@@ -471,7 +495,7 @@ local function loadDMPS()
 	end
 	
 	local function clearAllData()
-		
+		log('clearAllData() called')
 		if checkbox_clearAllData:getState() then
 		
 			-- using one line to test
@@ -1702,7 +1726,6 @@ local function loadDMPS()
 		-- The likely future map names
 		-- Marianas
 		-- Persian Gulf
-		-- Syria
 		
 		finalExportString = ('terrain = "' ..  comboList_terrain:getText() .. '"\n' .. 
 							'aircraft = "' ..  comboList_aircraft:getText() .. '"\n' .. 
@@ -2662,7 +2685,7 @@ end
 		table.insert(_listAircraft, "M-2000C")
 		--table.insert(_listAircraft, "AH-64D")
 		--table.insert(_listAircraft, "F/A-18C")
-		--table.insert(_listAircraft, "AV-8B")
+		--table.insert(_listAircraft, "AV-8BNA")
 		
 		for _i,_k in pairs(_listAircraft) do -- try to understand this more. It works though.
 			local item = ListBoxItem.new(_k)
@@ -2675,7 +2698,7 @@ end
 		_listTerrain = {}
 		table.insert(_listTerrain, "Caucasus")
 		--table.insert(_listTerrain, "Persian Gulf")
-		--table.insert(_listTerrain, "Syria")
+		table.insert(_listTerrain, "Syria")
 		--table.insert(_listTerrain, "Channel")
 		
 		for _i,_k in pairs(_listTerrain) do -- try to understand this more. It works though.
@@ -2878,7 +2901,7 @@ end
             function(self)
 				log('Aircraft selected: ' .. comboList_aircraft:getText())
 				--editBox_output:setText(comboList_aircraft:getText())
-				--aircraftSelectedChanged()
+				aircraftSelectedChanged()
             end
         )
 		
@@ -2934,7 +2957,7 @@ end
         window:setVisible(true)
         nextPage()
 		
-		window:setText(windowTitle .. "  |  Toggle with " ..  config.hotkey)
+		window:setText(windowTitle .. "  |  Toggle with " ..  config.hotkey .. '  |  Capture with ' .. config.getCoordHotkey)
         hide()
 		show()
 		
