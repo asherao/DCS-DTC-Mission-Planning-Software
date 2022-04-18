@@ -31,7 +31,7 @@ DMPS Integrated App launces when DCS starts. It can be toggled with the hotkey `
 
 
 ## How to use DMPS
-**New DTCs are available after aircraft respawn**
+**New DTCs are available after aircraft respawn or re-arm**  
 1. Start DMPS by either double clicking DMPS.exe (DMPS Standalone) or by starting DCS (DMPS Integrated App).
 2. Select your aircraft. If your aircraft is not in the list, it is not supported by DMPS.
 3. Select the map for the DTC. If your map is not on the list, it is not supported by DMPS.
@@ -55,8 +55,9 @@ DMPS Integrated App launces when DCS starts. It can be toggled with the hotkey `
 2. In the DTC Name box, type the filename of a DTC. If the name you typed does not exist, options may be shown to you. If necessary, retype a valid name.
 3. Click the Import button. The DTC information will be loaded into DMPS.
 
-**New DTCs are available after aircraft respawn**  
+**New DTCs are available after aircraft respawn or re-arm**  
 This can be achieved by one of these methods:
+- Re-arm the aircraft
 - In single player use the `RShift+R` keybind to restart the mission.
 - In Multiplayer go to a Spectator slot and then getting back into the aircraft.
 - Restart DCS
