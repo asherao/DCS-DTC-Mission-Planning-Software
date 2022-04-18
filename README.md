@@ -4,7 +4,7 @@ Showcase video: https://youtu.be/C1SH7A-Tvgk
 [![DMPS](https://cdn.discordapp.com/attachments/894076351139708929/965625876500873267/dmps_youtube.jpg)](https://youtu.be/C1SH7A-Tvgk)
 
 "It is pronounced 'dimps'".  
-DMPS provides a GUI (Graphical User Interface) for DTC creation, for modules that support text-based DTC editing. At the time of this readme, the only module to support such a feature is the M-2000C by Razbam. Hopefully more can be added in the future. DMPS can be used in VR or Flatscreen, in Single Player or Multiplayer, and passes MP Integrity check. This is a proof of concept with the hope that it grows into something buck bigger for DCS.
+DMPS provides a GUI (Graphical User Interface) for DTC creation, for modules that support text-based DTC editing. At the time of this readme, the only module to support such a feature is the M-2000C by Razbam. Hopefully more can be added in the future. DMPS can be used in VR or Flatscreen, in Single Player or Multiplayer, and passes MP Integrity check. This is a proof of concept with the hope that it grows into something much bigger for DCS.
 
 DMPS can be used in two ways. Either standalone or in-game via the integrated app. You can use one, either, or both methods whenever you like. Both support DTC export and import (work in progress). There are pros and cons for each. DMPS Standalone can be used at any time, with or without a DCS Install. It has the ability to allow you to create waypoints by grabbing then from your current centered view of the F10 map. DMPS Integrated App is only available while in-game, which may be optimal for VR users, for example.
 
