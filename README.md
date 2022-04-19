@@ -103,9 +103,18 @@ Different aircraft have different properties for their waypoints. You can learn 
 - Thank you for reading the readme
 
 ## Future Project Goals
-- [x] More Maps
 - [ ] More Aircraft
+  - [x] M-2000C
+  - [ ] Explore Viggen DTC
+  - [ ] Explore Apache DTC
+- [ ] Export format checks (to catch user mistakes)
+- [ ] More Maps
+  - [x] Cuacasus
+  - [x] Syria
+  - [ ] Marianas
+  - [ ] The Channel
+  - [ ] Persian Gulf
+  - [ ] Normandy
 - [x] DMPS Integrated App "Get DCS Coords"
 - [x] DMPS Integrated App Import (v0.3.0)
-- [ ] Export format checks (to catch user mistakes)
 - [x] Keybind for capturing coordinates
