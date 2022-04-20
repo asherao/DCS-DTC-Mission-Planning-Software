@@ -4,13 +4,18 @@
 - Thank you aronCiucu for DCSTheWay https://github.com/aronCiucu/DCSTheWay  
 
 TODO:
+Make showing and hiding elements based on the aircraft combolist, including inital loading
+Make framework for sending commands to DCS (apache)
 Consider altitude output (meters or feet?)
+Consider making the dtc import display thje native coord format of the aircraft
+  for visual validation after the dtc was loaded into the aircraft
+
 
 Future updates:
 Consider combining the standalone and app luas
-Regex and validate DTC inputs
-add crosshair label click detection
-consider that different aircraft may not be able to export to all maps
+Regex and validate DTC user inputs
+Add crosshair label click detection
+Consider that different aircraft may not be able to export to all maps
 
 Change Log:
 See Github
@@ -122,6 +127,491 @@ local function loadDMPS()
 		-- in the outbox tell the user that they selected a different aircraft
 	end
 	--]]
+	
+	function aircraftSelectedChangedah64d()
+		
+		-- dont clear all of the editBoxes and data! (or maybe do...)
+		--clearAllData()
+		
+			log('Preparing ' .. comboList_aircraft:getText() .. ' in DTC Area 2.')
+			
+			-- change the number of boxes available for that aircraft
+			-- in the outbox tell the user that they selected a different aircraft
+			
+			--outputBoxLog("AH-64D DTC loading...")
+			-- start hiding everything!
+			hideArea2Stuff()
+			
+			-- show and change the things that are applicable
+			-- change the labels to fit the categories for that aircraft
+			
+			-- Header labels
+			label_area2_column02_title:setText('Name')
+			label_area2_column03_title:setText('Lat')
+			label_area2_column04_title:setText('Long')
+			label_area2_column05_title:setText('Alt (ft)')
+			label_area2_column06_title:setText('Type') -- WP, HZ, CM, TG
+			label_area2_column07_title:setText('Ident') -- 0 to 2 alphanumeric
+			label_area2_column08_title:setText('') -- unused
+			label_area2_column09_title:setText('') -- unused
+			label_area2_column10_title:setText('') -- unused
+			label_area2_column11_title:setText('') -- unused
+			label_area2_column12_title:setText('') -- unused
+			label_area2_column13_title:setText('Free') -- 0 to 3 alphanumeric
+		
+			-- show editboxes
+			show_editBox_column02()
+			show_editBox_column03()
+			show_editBox_column04()
+			show_editBox_column05()
+			show_editBox_column13()
+			
+			-- make Type combolist
+			comboList_wp01_column06 = panel.comboList_wp01_column06
+			comboList_wp02_column06 = panel.comboList_wp02_column06
+			comboList_wp03_column06 = panel.comboList_wp03_column06
+			comboList_wp04_column06 = panel.comboList_wp04_column06
+			comboList_wp05_column06 = panel.comboList_wp05_column06
+			comboList_wp06_column06 = panel.comboList_wp06_column06
+			comboList_wp07_column06 = panel.comboList_wp07_column06
+			comboList_wp08_column06 = panel.comboList_wp08_column06
+			comboList_wp09_column06 = panel.comboList_wp09_column06
+			comboList_wp10_column06 = panel.comboList_wp10_column06
+			
+			comboList_area2_column06 = {}
+			table.insert(comboList_area2_column06, "WP")
+			table.insert(comboList_area2_column06, "HZ")
+			table.insert(comboList_area2_column06, "CM")
+			table.insert(comboList_area2_column06, "TG")
+			
+			for _i,_k in pairs(comboList_area2_column06) do
+				local item = ListBoxItem.new(_k)
+				comboList_wp01_column06:insertItem(item)
+				comboList_wp02_column06:insertItem(item)
+				comboList_wp03_column06:insertItem(item)
+				comboList_wp04_column06:insertItem(item)
+				comboList_wp05_column06:insertItem(item)
+				comboList_wp06_column06:insertItem(item)
+				comboList_wp07_column06:insertItem(item)
+				comboList_wp08_column06:insertItem(item)
+				comboList_wp09_column06:insertItem(item)
+				comboList_wp10_column06:insertItem(item)
+			end
+			
+            comboList_wp01_column06:selectItem(comboList_wp01_column06:getItem(0))
+			comboList_wp02_column06:selectItem(comboList_wp02_column06:getItem(0))
+			comboList_wp03_column06:selectItem(comboList_wp03_column06:getItem(0))
+			comboList_wp04_column06:selectItem(comboList_wp04_column06:getItem(0))
+			comboList_wp05_column06:selectItem(comboList_wp05_column06:getItem(0))
+			comboList_wp06_column06:selectItem(comboList_wp06_column06:getItem(0))
+			comboList_wp07_column06:selectItem(comboList_wp07_column06:getItem(0))
+			comboList_wp08_column06:selectItem(comboList_wp08_column06:getItem(0))
+			comboList_wp09_column06:selectItem(comboList_wp09_column06:getItem(0))
+			comboList_wp10_column06:selectItem(comboList_wp10_column06:getItem(0))
+			
+			
+			-- Ident section
+			
+			waypointsList = {}
+            table.insert(waypointsList, "CC Communications Check Point")
+			table.insert(waypointsList, "WP Waypoint")
+			table.insert(waypointsList, "SP Start Point")
+			table.insert(waypointsList, "LZ Landing Zone")
+			table.insert(waypointsList, "PP Passage Point")
+			table.insert(waypointsList, "RP Release Point")
+			
+			
+			comboList_wp01_column07 = panel.comboList_wp01_column07
+			comboList_wp02_column07 = panel.comboList_wp02_column07
+			comboList_wp03_column07 = panel.comboList_wp03_column07
+			comboList_wp04_column07 = panel.comboList_wp04_column07
+			comboList_wp05_column07 = panel.comboList_wp05_column07
+			comboList_wp06_column07 = panel.comboList_wp06_column07
+			comboList_wp07_column07 = panel.comboList_wp07_column07
+			comboList_wp08_column07 = panel.comboList_wp08_column07
+			comboList_wp09_column07 = panel.comboList_wp09_column07
+			comboList_wp10_column07 = panel.comboList_wp10_column07
+			
+			for _i,_k in pairs(waypointsList) do
+				local item = ListBoxItem.new(_k)
+				comboList_wp01_column07:insertItem(item)
+				comboList_wp02_column07:insertItem(item)
+				comboList_wp03_column07:insertItem(item)
+				comboList_wp04_column07:insertItem(item)
+				comboList_wp05_column07:insertItem(item)
+				comboList_wp06_column07:insertItem(item)
+				comboList_wp07_column07:insertItem(item)
+				comboList_wp08_column07:insertItem(item)
+				comboList_wp09_column07:insertItem(item)
+				comboList_wp10_column07:insertItem(item)
+			end
+			
+            comboList_wp01_column07:selectItem(comboList_wp01_column07:getItem(0))
+			comboList_wp02_column07:selectItem(comboList_wp02_column07:getItem(0))
+			comboList_wp03_column07:selectItem(comboList_wp03_column07:getItem(0))
+			comboList_wp04_column07:selectItem(comboList_wp04_column07:getItem(0))
+			comboList_wp05_column07:selectItem(comboList_wp05_column07:getItem(0))
+			comboList_wp06_column07:selectItem(comboList_wp06_column07:getItem(0))
+			comboList_wp07_column07:selectItem(comboList_wp07_column07:getItem(0))
+			comboList_wp08_column07:selectItem(comboList_wp08_column07:getItem(0))
+			comboList_wp09_column07:selectItem(comboList_wp09_column07:getItem(0))
+			comboList_wp10_column07:selectItem(comboList_wp10_column07:getItem(0))
+			
+			-- Set column properties
+			editBox_wp01_column13:setAcceptDecimalPoint(false)
+			editBox_wp01_column12:setAcceptDecimalPoint(false)
+			editBox_wp01_column13:setAcceptDecimalPoint(false)
+			editBox_wp01_column10:setAcceptDecimalPoint(false)
+			editBox_wp01_column09:setAcceptDecimalPoint(false)
+			editBox_wp01_column08:setAcceptDecimalPoint(false)
+			editBox_wp01_column07:setAcceptDecimalPoint(false)
+			editBox_wp01_column06:setAcceptDecimalPoint(false)
+			editBox_wp01_column05:setAcceptDecimalPoint(false)
+			editBox_wp01_column04:setAcceptDecimalPoint(false)
+			editBox_wp01_column03:setAcceptDecimalPoint(false)
+			editBox_wp01_column02:setAcceptDecimalPoint(false)
+			
+			editBox_wp01_column13:setNumeric(false)
+			editBox_wp01_column12:setNumeric(false)
+			editBox_wp01_column13:setNumeric(false)
+			editBox_wp01_column10:setNumeric(false)
+			editBox_wp01_column09:setNumeric(false)
+			editBox_wp01_column08:setNumeric(false)
+			editBox_wp01_column07:setNumeric(false)
+			editBox_wp01_column06:setNumeric(false)
+			editBox_wp01_column05:setNumeric(false)
+			editBox_wp01_column04:setNumeric(false)
+			editBox_wp01_column03:setNumeric(false)
+			editBox_wp01_column02:setNumeric(false)
+			
+			show_comboList_column06()
+			show_comboList_column07()
+			-- Done
+			--outputBoxLog("AH-64D DTC loaded...")
+		
+	end
+	
+	function aircraftSelectedChangedm2000c()
+	
+	end
+	
+	function show_comboList_column07()
+	        comboList_wp01_column07:setVisible(true)
+			comboList_wp02_column07:setVisible(true)
+			comboList_wp03_column07:setVisible(true)
+			comboList_wp04_column07:setVisible(true)
+			comboList_wp05_column07:setVisible(true)
+			comboList_wp06_column07:setVisible(true)
+			comboList_wp07_column07:setVisible(true)
+			comboList_wp08_column07:setVisible(true)
+			comboList_wp09_column07:setVisible(true)
+			comboList_wp10_column07:setVisible(true)
+	end
+	
+	function show_comboList_column06()
+	        comboList_wp01_column06:setVisible(true)
+			comboList_wp02_column06:setVisible(true)
+			comboList_wp03_column06:setVisible(true)
+			comboList_wp04_column06:setVisible(true)
+			comboList_wp05_column06:setVisible(true)
+			comboList_wp06_column06:setVisible(true)
+			comboList_wp07_column06:setVisible(true)
+			comboList_wp08_column06:setVisible(true)
+			comboList_wp09_column06:setVisible(true)
+			comboList_wp10_column06:setVisible(true)
+	end
+	
+	function show_editBox_column02()
+		editBox_wp01_column02:setVisible(true)
+		editBox_wp02_column02:setVisible(true)
+		editBox_wp03_column02:setVisible(true)
+		editBox_wp04_column02:setVisible(true)
+		editBox_wp05_column02:setVisible(true)
+		editBox_wp06_column02:setVisible(true)
+		editBox_wp07_column02:setVisible(true)
+		editBox_wp08_column02:setVisible(true)
+		editBox_wp09_column02:setVisible(true)
+		editBox_wp10_column02:setVisible(true)
+	end
+
+	function show_editBox_column03()	
+		editBox_wp01_column03:setVisible(true)
+		editBox_wp02_column03:setVisible(true)
+		editBox_wp03_column03:setVisible(true)
+		editBox_wp04_column03:setVisible(true)
+		editBox_wp05_column03:setVisible(true)
+		editBox_wp06_column03:setVisible(true)
+		editBox_wp07_column03:setVisible(true)
+		editBox_wp08_column03:setVisible(true)
+		editBox_wp09_column03:setVisible(true)
+		editBox_wp10_column03:setVisible(true)
+	end		
+		
+	function show_editBox_column04()
+		editBox_wp01_column04:setVisible(true)
+		editBox_wp02_column04:setVisible(true)
+		editBox_wp03_column04:setVisible(true)
+		editBox_wp04_column04:setVisible(true)
+		editBox_wp05_column04:setVisible(true)
+		editBox_wp06_column04:setVisible(true)
+		editBox_wp07_column04:setVisible(true)
+		editBox_wp08_column04:setVisible(true)
+		editBox_wp09_column04:setVisible(true)
+		editBox_wp10_column04:setVisible(true)
+	end		
+		
+	function show_editBox_column05()		
+		editBox_wp01_column05:setVisible(true)
+		editBox_wp02_column05:setVisible(true)
+		editBox_wp03_column05:setVisible(true)
+		editBox_wp04_column05:setVisible(true)
+		editBox_wp05_column05:setVisible(true)
+		editBox_wp06_column05:setVisible(true)
+		editBox_wp07_column05:setVisible(true)
+		editBox_wp08_column05:setVisible(true)
+		editBox_wp09_column05:setVisible(true)
+		editBox_wp10_column05:setVisible(true)
+	end		
+		
+	function show_editBox_column06()		
+		editBox_wp01_column06:setVisible(true)
+		editBox_wp02_column06:setVisible(true)
+		editBox_wp03_column06:setVisible(true)
+		editBox_wp04_column06:setVisible(true)
+		editBox_wp05_column06:setVisible(true)
+		editBox_wp06_column06:setVisible(true)
+		editBox_wp07_column06:setVisible(true)
+		editBox_wp08_column06:setVisible(true)
+		editBox_wp09_column06:setVisible(true)
+		editBox_wp10_column06:setVisible(true)
+	end		
+		
+	function show_editBox_column07()		
+		editBox_wp01_column07:setVisible(true)
+		editBox_wp02_column07:setVisible(true)
+		editBox_wp03_column07:setVisible(true)
+		editBox_wp04_column07:setVisible(true)
+		editBox_wp05_column07:setVisible(true)
+		editBox_wp06_column07:setVisible(true)
+		editBox_wp07_column07:setVisible(true)
+		editBox_wp08_column07:setVisible(true)
+		editBox_wp09_column07:setVisible(true)
+		editBox_wp10_column07:setVisible(true)
+	end		
+		
+	function show_editBox_column08()		
+		editBox_wp01_column08:setVisible(true)
+		editBox_wp02_column08:setVisible(true)
+		editBox_wp03_column08:setVisible(true)
+		editBox_wp04_column08:setVisible(true)
+		editBox_wp05_column08:setVisible(true)
+		editBox_wp06_column08:setVisible(true)
+		editBox_wp07_column08:setVisible(true)
+		editBox_wp08_column08:setVisible(true)
+		editBox_wp09_column08:setVisible(true)
+		editBox_wp10_column08:setVisible(true)
+	end		
+		
+	function show_editBox_column09()		
+		editBox_wp01_column09:setVisible(true)
+		editBox_wp02_column09:setVisible(true)
+		editBox_wp03_column09:setVisible(true)
+		editBox_wp04_column09:setVisible(true)
+		editBox_wp05_column09:setVisible(true)
+		editBox_wp06_column09:setVisible(true)
+		editBox_wp07_column09:setVisible(true)
+		editBox_wp08_column09:setVisible(true)
+		editBox_wp09_column09:setVisible(true)
+		editBox_wp10_column09:setVisible(true)
+	end		
+		
+	function show_editBox_column10()		
+		editBox_wp01_column10:setVisible(true)
+		editBox_wp02_column10:setVisible(true)
+		editBox_wp03_column10:setVisible(true)
+		editBox_wp04_column10:setVisible(true)
+		editBox_wp05_column10:setVisible(true)
+		editBox_wp06_column10:setVisible(true)
+		editBox_wp07_column10:setVisible(true)
+		editBox_wp08_column10:setVisible(true)
+		editBox_wp09_column10:setVisible(true)
+		editBox_wp10_column10:setVisible(true)
+	end		
+		
+	function show_editBox_column11()		
+		editBox_wp01_column11:setVisible(true)
+		editBox_wp02_column11:setVisible(true)
+		editBox_wp03_column11:setVisible(true)
+		editBox_wp04_column11:setVisible(true)
+		editBox_wp05_column11:setVisible(true)
+		editBox_wp06_column11:setVisible(true)
+		editBox_wp07_column11:setVisible(true)
+		editBox_wp08_column11:setVisible(true)
+		editBox_wp09_column11:setVisible(true)
+		editBox_wp10_column11:setVisible(true)
+	end		
+		
+	function show_editBox_column12()		
+		editBox_wp01_column12:setVisible(true)
+		editBox_wp02_column12:setVisible(true)
+		editBox_wp03_column12:setVisible(true)
+		editBox_wp04_column12:setVisible(true)
+		editBox_wp05_column12:setVisible(true)
+		editBox_wp06_column12:setVisible(true)
+		editBox_wp07_column12:setVisible(true)
+		editBox_wp08_column12:setVisible(true)
+		editBox_wp09_column12:setVisible(true)
+		editBox_wp10_column12:setVisible(true)
+	end		
+		
+	function show_editBox_column13()		
+		editBox_wp01_column13:setVisible(true)
+		editBox_wp02_column13:setVisible(true)
+		editBox_wp03_column13:setVisible(true)
+		editBox_wp04_column13:setVisible(true)
+		editBox_wp05_column13:setVisible(true)
+		editBox_wp06_column13:setVisible(true)
+		editBox_wp07_column13:setVisible(true)
+		editBox_wp08_column13:setVisible(true)
+		editBox_wp09_column13:setVisible(true)
+		editBox_wp10_column13:setVisible(true)
+	end	
+	
+	function hideArea2Stuff()
+		log('Hiding everything')
+		editBox_wp01_column02:setVisible(false)
+		editBox_wp02_column02:setVisible(false)
+		editBox_wp03_column02:setVisible(false)
+		editBox_wp04_column02:setVisible(false)
+		editBox_wp05_column02:setVisible(false)
+		editBox_wp06_column02:setVisible(false)
+		editBox_wp07_column02:setVisible(false)
+		editBox_wp08_column02:setVisible(false)
+		editBox_wp09_column02:setVisible(false)
+		editBox_wp10_column02:setVisible(false)
+		
+		editBox_wp01_column03:setVisible(false)
+		editBox_wp02_column03:setVisible(false)
+		editBox_wp03_column03:setVisible(false)
+		editBox_wp04_column03:setVisible(false)
+		editBox_wp05_column03:setVisible(false)
+		editBox_wp06_column03:setVisible(false)
+		editBox_wp07_column03:setVisible(false)
+		editBox_wp08_column03:setVisible(false)
+		editBox_wp09_column03:setVisible(false)
+		editBox_wp10_column03:setVisible(false)
+		
+		editBox_wp01_column04:setVisible(false)
+		editBox_wp02_column04:setVisible(false)
+		editBox_wp03_column04:setVisible(false)
+		editBox_wp04_column04:setVisible(false)
+		editBox_wp05_column04:setVisible(false)
+		editBox_wp06_column04:setVisible(false)
+		editBox_wp07_column04:setVisible(false)
+		editBox_wp08_column04:setVisible(false)
+		editBox_wp09_column04:setVisible(false)
+		editBox_wp10_column04:setVisible(false)
+		
+		editBox_wp01_column05:setVisible(false)
+		editBox_wp02_column05:setVisible(false)
+		editBox_wp03_column05:setVisible(false)
+		editBox_wp04_column05:setVisible(false)
+		editBox_wp05_column05:setVisible(false)
+		editBox_wp06_column05:setVisible(false)
+		editBox_wp07_column05:setVisible(false)
+		editBox_wp08_column05:setVisible(false)
+		editBox_wp09_column05:setVisible(false)
+		editBox_wp10_column05:setVisible(false)
+		
+		editBox_wp01_column06:setVisible(false)
+		editBox_wp02_column06:setVisible(false)
+		editBox_wp03_column06:setVisible(false)
+		editBox_wp04_column06:setVisible(false)
+		editBox_wp05_column06:setVisible(false)
+		editBox_wp06_column06:setVisible(false)
+		editBox_wp07_column06:setVisible(false)
+		editBox_wp08_column06:setVisible(false)
+		editBox_wp09_column06:setVisible(false)
+		editBox_wp10_column06:setVisible(false)
+		
+		editBox_wp01_column07:setVisible(false)
+		editBox_wp02_column07:setVisible(false)
+		editBox_wp03_column07:setVisible(false)
+		editBox_wp04_column07:setVisible(false)
+		editBox_wp05_column07:setVisible(false)
+		editBox_wp06_column07:setVisible(false)
+		editBox_wp07_column07:setVisible(false)
+		editBox_wp08_column07:setVisible(false)
+		editBox_wp09_column07:setVisible(false)
+		editBox_wp10_column07:setVisible(false)
+		
+		editBox_wp01_column08:setVisible(false)
+		editBox_wp02_column08:setVisible(false)
+		editBox_wp03_column08:setVisible(false)
+		editBox_wp04_column08:setVisible(false)
+		editBox_wp05_column08:setVisible(false)
+		editBox_wp06_column08:setVisible(false)
+		editBox_wp07_column08:setVisible(false)
+		editBox_wp08_column08:setVisible(false)
+		editBox_wp09_column08:setVisible(false)
+		editBox_wp10_column08:setVisible(false)
+		
+		editBox_wp01_column09:setVisible(false)
+		editBox_wp02_column09:setVisible(false)
+		editBox_wp03_column09:setVisible(false)
+		editBox_wp04_column09:setVisible(false)
+		editBox_wp05_column09:setVisible(false)
+		editBox_wp06_column09:setVisible(false)
+		editBox_wp07_column09:setVisible(false)
+		editBox_wp08_column09:setVisible(false)
+		editBox_wp09_column09:setVisible(false)
+		editBox_wp10_column09:setVisible(false)
+		
+		editBox_wp01_column10:setVisible(false)
+		editBox_wp02_column10:setVisible(false)
+		editBox_wp03_column10:setVisible(false)
+		editBox_wp04_column10:setVisible(false)
+		editBox_wp05_column10:setVisible(false)
+		editBox_wp06_column10:setVisible(false)
+		editBox_wp07_column10:setVisible(false)
+		editBox_wp08_column10:setVisible(false)
+		editBox_wp09_column10:setVisible(false)
+		editBox_wp10_column10:setVisible(false)
+		
+		editBox_wp01_column11:setVisible(false)
+		editBox_wp02_column11:setVisible(false)
+		editBox_wp03_column11:setVisible(false)
+		editBox_wp04_column11:setVisible(false)
+		editBox_wp05_column11:setVisible(false)
+		editBox_wp06_column11:setVisible(false)
+		editBox_wp07_column11:setVisible(false)
+		editBox_wp08_column11:setVisible(false)
+		editBox_wp09_column11:setVisible(false)
+		editBox_wp10_column11:setVisible(false)
+		
+		editBox_wp01_column12:setVisible(false)
+		editBox_wp02_column12:setVisible(false)
+		editBox_wp03_column12:setVisible(false)
+		editBox_wp04_column12:setVisible(false)
+		editBox_wp05_column12:setVisible(false)
+		editBox_wp06_column12:setVisible(false)
+		editBox_wp07_column12:setVisible(false)
+		editBox_wp08_column12:setVisible(false)
+		editBox_wp09_column12:setVisible(false)
+		editBox_wp10_column12:setVisible(false)
+		
+		editBox_wp01_column13:setVisible(false)
+		editBox_wp02_column13:setVisible(false)
+		editBox_wp03_column13:setVisible(false)
+		editBox_wp04_column13:setVisible(false)
+		editBox_wp05_column13:setVisible(false)
+		editBox_wp06_column13:setVisible(false)
+		editBox_wp07_column13:setVisible(false)
+		editBox_wp08_column13:setVisible(false)
+		editBox_wp09_column13:setVisible(false)
+		editBox_wp10_column13:setVisible(false)
+	
+	end
 	
 	function prepareDtc_M2000C()
 		log('Preparing DTC for the M-2000C')
@@ -495,10 +985,57 @@ local function loadDMPS()
 	end
 	
 	local function clearAllData()
+	
+	-- test for hiding the panel. success.
+	--panel:setVisible(false) -- works
+	--window.m2000c:setVisible(false) -- works
+	--log('window.m2000c:setVisible(false)')
+	
+	--window.m2000c.label_aircraft:setText("Hellow") -- works
+	
+	
+	--window.ah64d:setVisible(true)
+	--log('window.ah64d:setVisible(true)')
+	
+	--window.ah64d.label_aircraft:setText("Hellow")
+	--window.ah64d.label_aircraft:setVisible(true)
+	--log('window.ah64d.label_aircraft:setVisible(true)')
+	--[[
+	-- test for auto inputs. multi-entry success with dcsTheWay installed
+	local host, port = "127.0.0.1", 42070
+	local socket = require("socket")
+	local tcp = assert(socket.tcp())
+	
+	tcp:connect(host, port);
+	--note the newline below
+	--tcp:send("hello world\n");
+	--local sendInformation = 'GetDevice(63):performClickableAction(3013,1)'
+	local sendInformation = ('[{"code":"3029","delay":"0","addDepress":"true","activate":"1","device":"43"},{"code":"3013","delay":"0","addDepress":"true","activate":"1","device":"43"},{"code":"3023","delay":"0","addDepress":"true","activate":"1","device":"43"},{"code":"3024","delay":"10","addDepress":"true","activate":"1","device":"43"},{"code":"3006","delay":"10","addDepress":"true","activate":"1","device":"29"},{"code":"3006","delay":"10","addDepress":"true","activate":"1","device":"29"},{"code":"3001","delay":"10","addDepress":"true","activate":"1","device":"29"},{"code":"3020","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3036","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3033","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3037","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3043","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3038","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3038","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3011","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3043","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3036","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3036","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3036","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3035","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3035","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3041","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3006","delay":"10","addDepress":"true","activate":"1","device":"29"},{"code":"3006","delay":"10","addDepress":"true","activate":"1","device":"29"}]' .. '\n');
+	
+	outputBoxLog(sendInformation)
+	tcp:send(sendInformation)
+	
+	--tcp:send('[{"code":"3029","delay":"0","addDepress":"true","activate":"1","device":"43"},{"code":"3013","delay":"0","addDepress":"true","activate":"1","device":"43"},{"code":"3023","delay":"0","addDepress":"true","activate":"1","device":"43"},{"code":"3024","delay":"10","addDepress":"true","activate":"1","device":"43"},{"code":"3006","delay":"10","addDepress":"true","activate":"1","device":"29"},{"code":"3006","delay":"10","addDepress":"true","activate":"1","device":"29"},{"code":"3001","delay":"10","addDepress":"true","activate":"1","device":"29"},{"code":"3020","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3036","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3033","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3037","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3043","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3038","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3038","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3011","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3043","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3036","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3036","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3036","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3035","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3035","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3041","delay":"3","addDepress":"true","activate":"1","device":"29"},{"code":"3006","delay":"10","addDepress":"true","activate":"1","device":"29"},{"code":"3006","delay":"10","addDepress":"true","activate":"1","device":"29"}]' .. '\n');
+	--]]
+	
+	
+	--[[
+	while true do
+		local s, status, partial = tcp:receive()
+		print(s or partial)
+		if status == "closed" then break end
+	end
+	--]]
+	--tcp:close()
+	
+	
+	-- test range complete
+	
+	
 		log('clearAllData() called')
 		if checkbox_clearAllData:getState() then
 		
-			-- using one line to test
+			-- using one line to test. works
 			--editBox_wp01_column03:setText("")
 			
 			-- clears all edit boxes
@@ -2683,7 +3220,7 @@ end
 		comboList_aircraft = panel.comboList_aircraft
 		_listAircraft = {}
 		table.insert(_listAircraft, "M-2000C")
-		--table.insert(_listAircraft, "AH-64D")
+		--table.insert(_listAircraft, "AH-64D") -- TODO: Uncomment this to resume apache work
 		--table.insert(_listAircraft, "F/A-18C")
 		--table.insert(_listAircraft, "AV-8BNA")
 		
@@ -2901,7 +3438,16 @@ end
             function(self)
 				log('Aircraft selected: ' .. comboList_aircraft:getText())
 				--editBox_output:setText(comboList_aircraft:getText())
-				aircraftSelectedChanged()
+				-- hide everything here
+				
+				
+				if comboList_aircraft:getText() == 'M-2000C' then
+					log('Changing to ' .. comboList_aircraft:getText() .. ' DTC')
+					aircraftSelectedChangedm2000c()
+				elseif comboList_aircraft:getText() == 'AH-64D' then
+					log('Changing to ' .. comboList_aircraft:getText() .. ' DTC')
+					aircraftSelectedChangedah64d()	
+				end
             end
         )
 		
