@@ -17,14 +17,74 @@ Regex and validate DTC user inputs
 Add crosshair label click detection
 Consider that different aircraft may not be able to export to all maps
 
+
 Change Log:
-See Github
-https://github.com/asherao/DCS-DTC-Mission-Planning-Software/tree/master/Scripts/Hooks
+See Github https://github.com/asherao/DCS-DTC-Mission-Planning-Software/tree/master/Scripts/Hooks
+automatically populate lat and long based on F10 waypoint name
 --]]
 
 local function loadDMPS()
-    package.path = package.path .. ";.\\Scripts\\?.lua;.\\Scripts\\UI\\?.lua;"
+    --package.path = package.path .. ";.\\Scripts\\?.lua;.\\Scripts\\UI\\?.lua;"
 
+	local logFile = io.open(lfs.writedir() .. [[Logs\DMPS.log]], "w")
+	local function log(str)
+        if not str then
+            return
+        end
+
+        if logFile then
+            logFile:write("[" .. os.date("%H:%M:%S") .. "] " .. str .. "\r\n")
+            logFile:flush()
+        end
+    end
+	
+	---[[ This works to load the towns files
+	package.path = package.path .. ";.\\Scripts\\?.lua;.\\Scripts\\UI\\?.lua;.\\Mods\\terrains\\?.lua;"
+    
+	-- https://github.com/DCS-gRPC/rust-server/blob/882d36b19d0646b4d8b9e7d1e51a4df9202b4a8e/lua/DCS-gRPC/grpc-mission.lua#L35-L41=
+	
+	local townsTable_caucasus = {}
+    ---[[ This works to load the towns files
+    local ok, mapCaucasus = pcall(require, "Caucasus.map.towns") -- status, err
+    if ok then
+      -- Do stuff with mapCaucasus 
+	  townsTable_caucasus = towns
+    else
+      log("Error loading Caucasus.map.towns "  .. mapCaucasus ) -- If the load failed then mapCaucasus contains the error
+    end
+	
+	local townsTable_syria = {}
+    local ok, mapSyria = pcall(require, "Syria.map.towns")
+    if ok then
+      -- Do stuff with mapSyria 
+	  townsTable_syria = towns
+    else
+      log("Error loading Syria.map.towns " .. mapSyria) -- If the load failed then mapsyria contains the error
+    end
+	
+	local townsTable_marianaIslands = {}
+    local ok, mapMarianaIslands = pcall(require, "MarianaIslands.map.towns")
+    if ok then
+      -- Do stuff with mapSyria 
+	  townsTable_marianaIslands = towns
+    else
+      log("Error loading MarianaIslands.map.towns " .. MarianaIslands) -- If the load failed then mapsyria contains the error
+    end
+	
+	local townsTable_persianGulf = {}
+    local ok, mapPersianGulf = pcall(require, "PersianGulf.map.towns")
+    if ok then
+      -- Do stuff with mapPersianGulf 
+	  townsTable_persianGulf = towns
+    else
+      log("Error loading PersianGulf.map.towns " .. mapPersianGulf) -- If the load failed then mapPersianGulf contains the error
+    end
+	--]]
+	
+	
+	
+	townsTable = nil -- table is no longer needed
+	
     local lfs = require("lfs")
     local U = require("me_utilities")
     local Skin = require("Skin")
@@ -39,11 +99,11 @@ local function loadDMPS()
     local windowSkinHidden = Skin.windowSkinChatMin()
     local panel = nil
     --local textarea = nil
-    local logFile = io.open(lfs.writedir() .. [[Logs\DMPS.log]], "w")
+    
     local config = nil
 	local finalExportString
 	local programName = "DMPS (DCS-DTC Mission Planning System)"
-	local versionNumber = "v0.4.0"
+	local versionNumber = "v0.4.1"
 	local author = "by Bailey"
 	local windowTitle = programName .. " " .. versionNumber .. " " .. author
 	
@@ -69,16 +129,7 @@ local function loadDMPS()
     -- Crosshair resources
     local crosshairWindow = nil
 
-    local function log(str)
-        if not str then
-            return
-        end
-
-        if logFile then
-            logFile:write("[" .. os.date("%H:%M:%S") .. "] " .. str .. "\r\n")
-            logFile:flush()
-        end
-    end
+    
 	
 	-- TODO: this
 	--[[function aircraftSelectedChanged()
@@ -3155,6 +3206,374 @@ end
 		
         log("Crosshair window created")
     end
+	
+	function editBox_wp01_column02_changed() -- TODO: replicate this across all name editBoxes
+		if comboList_terrain:getText() == "Caucasus" then
+			for k,v in pairs(townsTable_caucasus) do -- _i is the key and _v is the value.
+				if editBox_wp01_column02:getText() == k then
+					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Syria" then
+			for k,v in pairs(townsTable_syria) do -- _i is the key and _v is the value.
+				if editBox_wp01_column02:getText() == k then
+					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Mariana Islands" then
+			for k,v in pairs(townsTable_marianaIslands) do -- _i is the key and _v is the value.
+				if editBox_wp01_column02:getText() == k then
+					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Persian Gulf" then
+			for k,v in pairs(townsTable_persianGulf) do -- _i is the key and _v is the value.
+				if editBox_wp01_column02:getText() == k then
+					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		end
+	end
+	
+	function editBox_wp02_column02_changed() -- TODO: replicate this across all name editBoxes
+		if comboList_terrain:getText() == "Caucasus" then
+			for k,v in pairs(townsTable_caucasus) do -- _i is the key and _v is the value.
+				if editBox_wp02_column02:getText() == k then
+					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Syria" then
+			for k,v in pairs(townsTable_syria) do -- _i is the key and _v is the value.
+				if editBox_wp02_column02:getText() == k then
+					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Mariana Islands" then
+			for k,v in pairs(townsTable_marianaIslands) do -- _i is the key and _v is the value.
+				if editBox_wp02_column02:getText() == k then
+					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Persian Gulf" then
+			for k,v in pairs(townsTable_persianGulf) do -- _i is the key and _v is the value.
+				if editBox_wp02_column02:getText() == k then
+					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		end
+	end
+	
+	function editBox_wp03_column02_changed() -- TODO: replicate this across all name editBoxes
+		if comboList_terrain:getText() == "Caucasus" then
+			for k,v in pairs(townsTable_caucasus) do -- _i is the key and _v is the value.
+				if editBox_wp03_column02:getText() == k then
+					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Syria" then
+			for k,v in pairs(townsTable_syria) do -- _i is the key and _v is the value.
+				if editBox_wp03_column02:getText() == k then
+					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Mariana Islands" then
+			for k,v in pairs(townsTable_marianaIslands) do -- _i is the key and _v is the value.
+				if editBox_wp03_column02:getText() == k then
+					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Persian Gulf" then
+			for k,v in pairs(townsTable_persianGulf) do -- _i is the key and _v is the value.
+				if editBox_wp03_column02:getText() == k then
+					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		end
+	end
+	
+	function editBox_wp04_column02_changed() -- TODO: replicate this across all name editBoxes
+		if comboList_terrain:getText() == "Caucasus" then
+			for k,v in pairs(townsTable_caucasus) do -- _i is the key and _v is the value.
+				if editBox_wp04_column02:getText() == k then
+					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Syria" then
+			for k,v in pairs(townsTable_syria) do -- _i is the key and _v is the value.
+				if editBox_wp04_column02:getText() == k then
+					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Mariana Islands" then
+			for k,v in pairs(townsTable_marianaIslands) do -- _i is the key and _v is the value.
+				if editBox_wp04_column02:getText() == k then
+					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Persian Gulf" then
+			for k,v in pairs(townsTable_persianGulf) do -- _i is the key and _v is the value.
+				if editBox_wp04_column02:getText() == k then
+					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		end
+	end
+	
+	function editBox_wp05_column02_changed() -- TODO: replicate this across all name editBoxes
+		if comboList_terrain:getText() == "Caucasus" then
+			for k,v in pairs(townsTable_caucasus) do -- _i is the key and _v is the value.
+				if editBox_wp05_column02:getText() == k then
+					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Syria" then
+			for k,v in pairs(townsTable_syria) do -- _i is the key and _v is the value.
+				if editBox_wp05_column02:getText() == k then
+					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Mariana Islands" then
+			for k,v in pairs(townsTable_marianaIslands) do -- _i is the key and _v is the value.
+				if editBox_wp05_column02:getText() == k then
+					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Persian Gulf" then
+			for k,v in pairs(townsTable_persianGulf) do -- _i is the key and _v is the value.
+				if editBox_wp05_column02:getText() == k then
+					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		end
+	end
+	
+	
+	function editBox_wp06_column02_changed() -- TODO: replicate this across all name editBoxes
+		if comboList_terrain:getText() == "Caucasus" then
+			for k,v in pairs(townsTable_caucasus) do -- _i is the key and _v is the value.
+				if editBox_wp06_column02:getText() == k then
+					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Syria" then
+			for k,v in pairs(townsTable_syria) do -- _i is the key and _v is the value.
+				if editBox_wp06_column02:getText() == k then
+					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Mariana Islands" then
+			for k,v in pairs(townsTable_marianaIslands) do -- _i is the key and _v is the value.
+				if editBox_wp06_column02:getText() == k then
+					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Persian Gulf" then
+			for k,v in pairs(townsTable_persianGulf) do -- _i is the key and _v is the value.
+				if editBox_wp06_column02:getText() == k then
+					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		end
+	end
+	
+	function editBox_wp07_column02_changed() -- TODO: replicate this across all name editBoxes
+		if comboList_terrain:getText() == "Caucasus" then
+			for k,v in pairs(townsTable_caucasus) do -- _i is the key and _v is the value.
+				if editBox_wp07_column02:getText() == k then
+					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Syria" then
+			for k,v in pairs(townsTable_syria) do -- _i is the key and _v is the value.
+				if editBox_wp07_column02:getText() == k then
+					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Mariana Islands" then
+			for k,v in pairs(townsTable_marianaIslands) do -- _i is the key and _v is the value.
+				if editBox_wp07_column02:getText() == k then
+					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Persian Gulf" then
+			for k,v in pairs(townsTable_persianGulf) do -- _i is the key and _v is the value.
+				if editBox_wp07_column02:getText() == k then
+					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		end
+	end
+	
+	function editBox_wp08_column02_changed() -- TODO: replicate this across all name editBoxes
+		if comboList_terrain:getText() == "Caucasus" then
+			for k,v in pairs(townsTable_caucasus) do -- _i is the key and _v is the value.
+				if editBox_wp08_column02:getText() == k then
+					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Syria" then
+			for k,v in pairs(townsTable_syria) do -- _i is the key and _v is the value.
+				if editBox_wp08_column02:getText() == k then
+					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Mariana Islands" then
+			for k,v in pairs(townsTable_marianaIslands) do -- _i is the key and _v is the value.
+				if editBox_wp08_column02:getText() == k then
+					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Persian Gulf" then
+			for k,v in pairs(townsTable_persianGulf) do -- _i is the key and _v is the value.
+				if editBox_wp08_column02:getText() == k then
+					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		end
+	end
+	
+	function editBox_wp09_column02_changed() -- TODO: replicate this across all name editBoxes
+		if comboList_terrain:getText() == "Caucasus" then
+			for k,v in pairs(townsTable_caucasus) do -- _i is the key and _v is the value.
+				if editBox_wp09_column02:getText() == k then
+					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Syria" then
+			for k,v in pairs(townsTable_syria) do -- _i is the key and _v is the value.
+				if editBox_wp09_column02:getText() == k then
+					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Mariana Islands" then
+			for k,v in pairs(townsTable_marianaIslands) do -- _i is the key and _v is the value.
+				if editBox_wp09_column02:getText() == k then
+					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Persian Gulf" then
+			for k,v in pairs(townsTable_persianGulf) do -- _i is the key and _v is the value.
+				if editBox_wp09_column02:getText() == k then
+					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		end
+	end
+	
+	function editBox_wp10_column02_changed() -- TODO: replicate this across all name editBoxes
+		if comboList_terrain:getText() == "Caucasus" then
+			for k,v in pairs(townsTable_caucasus) do -- _i is the key and _v is the value.
+				if editBox_wp10_column02:getText() == k then
+					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Syria" then
+			for k,v in pairs(townsTable_syria) do -- _i is the key and _v is the value.
+				if editBox_wp10_column02:getText() == k then
+					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Mariana Islands" then
+			for k,v in pairs(townsTable_marianaIslands) do -- _i is the key and _v is the value.
+				if editBox_wp10_column02:getText() == k then
+					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Persian Gulf" then
+			for k,v in pairs(townsTable_persianGulf) do -- _i is the key and _v is the value.
+				if editBox_wp10_column02:getText() == k then
+					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		end
+	end
+	
+	
+	
+	
+	
+	
+	
 
     local function createDMPSWindow()
 		
@@ -3419,6 +3838,31 @@ end
             end
         )--]]
 		
+		-- TODO: replicate this for all name editBoxes
+		editBox_wp01_column02:addChangeCallback(editBox_wp01_column02_changed)
+		editBox_wp02_column02:addChangeCallback(editBox_wp02_column02_changed)
+		editBox_wp03_column02:addChangeCallback(editBox_wp03_column02_changed)
+		editBox_wp04_column02:addChangeCallback(editBox_wp04_column02_changed)
+		editBox_wp05_column02:addChangeCallback(editBox_wp05_column02_changed)
+		editBox_wp06_column02:addChangeCallback(editBox_wp06_column02_changed)
+		editBox_wp07_column02:addChangeCallback(editBox_wp07_column02_changed)
+		editBox_wp08_column02:addChangeCallback(editBox_wp08_column02_changed)
+		editBox_wp09_column02:addChangeCallback(editBox_wp09_column02_changed)
+		editBox_wp10_column02:addChangeCallback(editBox_wp10_column02_changed)
+		
+		--[[This is a fuction that works as both a focus and de-focus calls. keep for possible use
+		editBox_wp02_column02:addFocusCallback(
+            function(self)
+                if self:getFocused() then
+                    log('focused')
+                else
+                    -- handle unfocused (aka blur)
+					log('un-focused')
+                end
+            end
+        )
+		--]]
+		
         crosshairCheckbox:addChangeCallback(
             function(self)
                 local checked = self:getState()
@@ -3510,6 +3954,9 @@ end
 		--label_area2_column02_title:setText('tst')
 		
         log("DMPS window created")
+		
+		-- test area
+		-- test area end
     end
 
 
