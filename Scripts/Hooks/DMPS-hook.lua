@@ -4,11 +4,10 @@
 - Thank you aronCiucu for DCSTheWay https://github.com/aronCiucu/DCSTheWay  
 
 TODO:
-Make showing and hiding elements based on the aircraft combolist, including inital loading
-Make framework for sending commands to DCS (apache)
-Consider altitude output (meters or feet?)
-Consider making the dtc import display thje native coord format of the aircraft
-  for visual validation after the dtc was loaded into the aircraft
+Make a system that either warns or prevents dtc file overwrites
+Have the option to import the beacons.lua file C:\...\DCS World OpenBeta\Mods\terrains\Caucasus\Beacons.lua
+  Make a checkbox to turn this feature ON
+Import airports (airbases) via the airbases.lua file
 
 
 Future updates:
@@ -16,16 +15,29 @@ Consider combining the standalone and app luas
 Regex and validate DTC user inputs
 Add crosshair label click detection
 Consider that different aircraft may not be able to export to all maps
-
-
+Make showing and hiding elements based on the aircraft combolist, including inital loading
+Make framework for sending commands to DCS (apache)
+Consider altitude output (meters or feet?)
+Consider making the dtc import display thje native coord format of the aircraft
+  for visual validation after the dtc was loaded into the aircraft
+  
+  
 Change Log:
 See Github https://github.com/asherao/DCS-DTC-Mission-Planning-Software/tree/master/Scripts/Hooks
-automatically populate lat and long based on F10 waypoint name
+
+Enabled Persian Gulf
+Enabled Marianas Islands
+Enabled Nevada
+Enabled Normandy
+Enabled The Channel
+All maps enabled for export
+
+
 --]]
 
 local function loadDMPS()
     --package.path = package.path .. ";.\\Scripts\\?.lua;.\\Scripts\\UI\\?.lua;"
-
+	
 	local logFile = io.open(lfs.writedir() .. [[Logs\DMPS.log]], "w")
 	local function log(str)
         if not str then
@@ -40,15 +52,23 @@ local function loadDMPS()
 	
 	---[[ This works to load the towns files
 	package.path = package.path .. ";.\\Scripts\\?.lua;.\\Scripts\\UI\\?.lua;.\\Mods\\terrains\\?.lua;"
-    
-	-- https://github.com/DCS-gRPC/rust-server/blob/882d36b19d0646b4d8b9e7d1e51a4df9202b4a8e/lua/DCS-gRPC/grpc-mission.lua#L35-L41=
 	
+
+	dofile(lfs.writedir() .. [[Scripts\DCS-DMPS\resources\airbases.lua]]) 
+	-- TODO: add the airports from airports not included
+	log('Airbases loaded from resouce file')
+	--log(airbases_caucasus.Gelendzhik.latitude) -- debug: it works
+    
+	---------------------
+	-- Load Towns Data --
+	---------------------
+	-- https://github.com/DCS-gRPC/rust-server/blob/882d36b19d0646b4d8b9e7d1e51a4df9202b4a8e/lua/DCS-gRPC/grpc-mission.lua#L35-L41=
 	local townsTable_caucasus = {}
-    ---[[ This works to load the towns files
     local ok, mapCaucasus = pcall(require, "Caucasus.map.towns") -- status, err
     if ok then
       -- Do stuff with mapCaucasus 
 	  townsTable_caucasus = towns
+	  log('Caucasus towns loaded')
     else
       log("Error loading Caucasus.map.towns "  .. mapCaucasus ) -- If the load failed then mapCaucasus contains the error
     end
@@ -58,6 +78,7 @@ local function loadDMPS()
     if ok then
       -- Do stuff with mapSyria 
 	  townsTable_syria = towns
+	  log('Syria towns loaded')
     else
       log("Error loading Syria.map.towns " .. mapSyria) -- If the load failed then mapsyria contains the error
     end
@@ -67,6 +88,7 @@ local function loadDMPS()
     if ok then
       -- Do stuff with mapSyria 
 	  townsTable_marianaIslands = towns
+	  log('Mariana Islands towns loaded')
     else
       log("Error loading MarianaIslands.map.towns " .. MarianaIslands) -- If the load failed then mapsyria contains the error
     end
@@ -76,14 +98,53 @@ local function loadDMPS()
     if ok then
       -- Do stuff with mapPersianGulf 
 	  townsTable_persianGulf = towns
+	  log('Persian Gulf towns loaded')
     else
       log("Error loading PersianGulf.map.towns " .. mapPersianGulf) -- If the load failed then mapPersianGulf contains the error
     end
-	--]]
 	
+	local townsTable_nevada = {}
+    local ok, mapNevada = pcall(require, "Nevada.map.towns")
+    if ok then
+      -- Do stuff with mapNevada 
+	  townsTable_nevada = towns
+	  log('Nevada towns loaded')
+    else
+      log("Error loading Nevada.map.towns " .. mapNevada) -- If the load failed then mapNevada contains the error
+    end
 	
+	local townsTable_theChannel = {}
+    local ok, mapTheChannel = pcall(require, "TheChannel.map.towns")
+    if ok then
+      -- Do stuff with mapTheChannel 
+	  townsTable_theChannel = towns
+	  log('The Channel towns loaded')
+    else
+      log("Error loading TheChannel.map.towns " .. mapTheChannel) -- If the load failed then mapTheChannel contains the error
+    end
+	
+	local townsTable_normandy = {}
+    local ok, mapnormandy = pcall(require, "normandy.map.towns")
+    if ok then
+      -- Do stuff with mapnormandy 
+	  townsTable_normandy = towns
+	  log('Normandy towns loaded')
+    else
+      log("Error loading normandy.map.towns " .. mapnormandy) -- If the load failed then mapnormandy contains the error
+    end
 	
 	townsTable = nil -- table is no longer needed
+	
+	-- https://www.tutorialspoint.com/concatenation-of-tables-in-lua-programming
+	-- combines two tables
+	function TableConcat(t1,t2)
+		for i=1,#t2 do
+			t1[#t1+1] = t2[i]
+		end
+		return t1
+	end
+	
+	-- TODO: Code the combination of the town file with the airbase file to make 1 single navigation file
 	
     local lfs = require("lfs")
     local U = require("me_utilities")
@@ -3203,11 +3264,12 @@ end
         local y = screenHeigt/2 - 4
         crosshairWindow:setBounds(math.floor(x), math.floor(y), 8, 8)
 		
-		
         log("Crosshair window created")
     end
 	
-	function editBox_wp01_column02_changed() -- TODO: replicate this across all name editBoxes
+	
+	
+	function editBox_wp01_column02_changed()
 		if comboList_terrain:getText() == "Caucasus" then
 			for k,v in pairs(townsTable_caucasus) do -- _i is the key and _v is the value.
 				if editBox_wp01_column02:getText() == k then
@@ -3240,6 +3302,30 @@ end
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
+		elseif comboList_terrain:getText() == "Nevada" then
+			for k,v in pairs(townsTable_nevada) do -- _i is the key and _v is the value.
+				if editBox_wp01_column02:getText() == k then
+					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "The Channel" then
+			for k,v in pairs(townsTable_theChannel) do -- _i is the key and _v is the value.
+				if editBox_wp01_column02:getText() == k then
+					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Normandy" then
+			for k,v in pairs(townsTable_normandy) do -- _i is the key and _v is the value.
+				if editBox_wp01_column02:getText() == k then
+					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end	
 		end
 	end
 	
@@ -3276,6 +3362,30 @@ end
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
+		elseif comboList_terrain:getText() == "Nevada" then
+			for k,v in pairs(townsTable_nevada) do -- _i is the key and _v is the value.
+				if editBox_wp02_column02:getText() == k then
+					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "The Channel" then
+			for k,v in pairs(townsTable_theChannel) do -- _i is the key and _v is the value.
+				if editBox_wp02_column02:getText() == k then
+					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Normandy" then
+			for k,v in pairs(townsTable_normandy) do -- _i is the key and _v is the value.
+				if editBox_wp02_column02:getText() == k then
+					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end	
 		end
 	end
 	
@@ -3312,6 +3422,30 @@ end
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
+		elseif comboList_terrain:getText() == "Nevada" then
+			for k,v in pairs(townsTable_nevada) do -- _i is the key and _v is the value.
+				if editBox_wp03_column02:getText() == k then
+					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "The Channel" then
+			for k,v in pairs(townsTable_theChannel) do -- _i is the key and _v is the value.
+				if editBox_wp03_column02:getText() == k then
+					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Normandy" then
+			for k,v in pairs(townsTable_normandy) do -- _i is the key and _v is the value.
+				if editBox_wp03_column02:getText() == k then
+					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end	
 		end
 	end
 	
@@ -3348,6 +3482,30 @@ end
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
+		elseif comboList_terrain:getText() == "Nevada" then
+			for k,v in pairs(townsTable_nevada) do -- _i is the key and _v is the value.
+				if editBox_wp04_column02:getText() == k then
+					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "The Channel" then
+			for k,v in pairs(townsTable_theChannel) do -- _i is the key and _v is the value.
+				if editBox_wp04_column02:getText() == k then
+					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Normandy" then
+			for k,v in pairs(townsTable_normandy) do -- _i is the key and _v is the value.
+				if editBox_wp04_column02:getText() == k then
+					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end	
 		end
 	end
 	
@@ -3384,9 +3542,32 @@ end
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
+		elseif comboList_terrain:getText() == "Nevada" then
+			for k,v in pairs(townsTable_nevada) do -- _i is the key and _v is the value.
+				if editBox_wp05_column02:getText() == k then
+					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "The Channel" then
+			for k,v in pairs(townsTable_theChannel) do -- _i is the key and _v is the value.
+				if editBox_wp05_column02:getText() == k then
+					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Normandy" then
+			for k,v in pairs(townsTable_normandy) do -- _i is the key and _v is the value.
+				if editBox_wp05_column02:getText() == k then
+					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end	
 		end
 	end
-	
 	
 	function editBox_wp06_column02_changed() -- TODO: replicate this across all name editBoxes
 		if comboList_terrain:getText() == "Caucasus" then
@@ -3421,6 +3602,30 @@ end
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
+		elseif comboList_terrain:getText() == "Nevada" then
+			for k,v in pairs(townsTable_nevada) do -- _i is the key and _v is the value.
+				if editBox_wp06_column02:getText() == k then
+					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "The Channel" then
+			for k,v in pairs(townsTable_theChannel) do -- _i is the key and _v is the value.
+				if editBox_wp06_column02:getText() == k then
+					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Normandy" then
+			for k,v in pairs(townsTable_normandy) do -- _i is the key and _v is the value.
+				if editBox_wp06_column02:getText() == k then
+					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end	
 		end
 	end
 	
@@ -3457,6 +3662,30 @@ end
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
+		elseif comboList_terrain:getText() == "Nevada" then
+			for k,v in pairs(townsTable_nevada) do -- _i is the key and _v is the value.
+				if editBox_wp07_column02:getText() == k then
+					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "The Channel" then
+			for k,v in pairs(townsTable_theChannel) do -- _i is the key and _v is the value.
+				if editBox_wp07_column02:getText() == k then
+					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Normandy" then
+			for k,v in pairs(townsTable_normandy) do -- _i is the key and _v is the value.
+				if editBox_wp07_column02:getText() == k then
+					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end	
 		end
 	end
 	
@@ -3493,6 +3722,30 @@ end
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
+		elseif comboList_terrain:getText() == "Nevada" then
+			for k,v in pairs(townsTable_nevada) do -- _i is the key and _v is the value.
+				if editBox_wp08_column02:getText() == k then
+					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "The Channel" then
+			for k,v in pairs(townsTable_theChannel) do -- _i is the key and _v is the value.
+				if editBox_wp08_column02:getText() == k then
+					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Normandy" then
+			for k,v in pairs(townsTable_normandy) do -- _i is the key and _v is the value.
+				if editBox_wp08_column02:getText() == k then
+					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end	
 		end
 	end
 	
@@ -3529,6 +3782,30 @@ end
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
+		elseif comboList_terrain:getText() == "Nevada" then
+			for k,v in pairs(townsTable_nevada) do -- _i is the key and _v is the value.
+				if editBox_wp09_column02:getText() == k then
+					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "The Channel" then
+			for k,v in pairs(townsTable_theChannel) do -- _i is the key and _v is the value.
+				if editBox_wp09_column02:getText() == k then
+					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Normandy" then
+			for k,v in pairs(townsTable_normandy) do -- _i is the key and _v is the value.
+				if editBox_wp09_column02:getText() == k then
+					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end	
 		end
 	end
 	
@@ -3565,14 +3842,32 @@ end
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
+		elseif comboList_terrain:getText() == "Nevada" then
+			for k,v in pairs(townsTable_nevada) do -- _i is the key and _v is the value.
+				if editBox_wp10_column02:getText() == k then
+					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "The Channel" then
+			for k,v in pairs(townsTable_theChannel) do -- _i is the key and _v is the value.
+				if editBox_wp10_column02:getText() == k then
+					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end
+		elseif comboList_terrain:getText() == "Normandy" then
+			for k,v in pairs(townsTable_normandy) do -- _i is the key and _v is the value.
+				if editBox_wp10_column02:getText() == k then
+					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
+					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					outputBoxLog('Auto-detected: ' .. k)
+				end
+			end	
 		end
 	end
-	
-	
-	
-	
-	
-	
 	
 
     local function createDMPSWindow()
@@ -3653,9 +3948,12 @@ end
 		comboList_terrain = panel.comboList_terrain
 		_listTerrain = {}
 		table.insert(_listTerrain, "Caucasus")
-		--table.insert(_listTerrain, "Persian Gulf")
+		table.insert(_listTerrain, "MarianaIslands")
+		table.insert(_listTerrain, "PersianGulf")
 		table.insert(_listTerrain, "Syria")
-		--table.insert(_listTerrain, "Channel")
+		table.insert(_listTerrain, "TheChannel")
+		table.insert(_listTerrain, "Nevada")
+		table.insert(_listTerrain, "Normandy")
 		
 		for _i,_k in pairs(_listTerrain) do -- try to understand this more. It works though.
 			local item = ListBoxItem.new(_k)
