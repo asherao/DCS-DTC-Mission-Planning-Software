@@ -65,6 +65,7 @@ This can be achieved by one of these methods:
 ## Tips and Tricks
 - **If you are having some issues upgrading from v0.3.0 to v0.4.0, delete your `C:\Users\...\Saved Games\DCS\Config\DMPS.config` file and restart DCS.**
 - You can change the keybinds via the config folder located at `C:\Users\...\Saved Games\DCS\Config\DMPS.config`. You can bind the keybind hotkey to your controller or HOTAS using a 3rd party program like Voice Attack (https://voiceattack.com/).
+- You can type in the name of a city or location on the F10 map into the waypoint _Name_. The lat and long cooordinates will automatically fill in. 
 - When using DMPS Integrated app with the F10 Map, the in-game coordinate location is "frozen" when the mouse is over the DMPS App. Use this to your advantage and position the App and your F10 Map view in a location where the coordinates will "freeze" where you want them to, allowing you to reference them while typing them in.
 - In DMPS Standalone you can combine DTCs by first populating the desired fields and then importing another. The imported fields will take precedence per field. This is useful for situations in which you have a DTC with a few often used waypoints.
 - Garbage in, garbage out... Enter information accurately.
@@ -115,6 +116,7 @@ Different aircraft have different properties for their waypoints. You can learn 
   - [ ] The Channel
   - [ ] Persian Gulf
   - [ ] Normandy
+- [x] Waypoint auto-fill lat/long by F10 Map Name
 - [x] DMPS Integrated App "Get DCS Coords"
 - [x] DMPS Integrated App Import (v0.3.0)
 - [x] Keybind for capturing coordinates
