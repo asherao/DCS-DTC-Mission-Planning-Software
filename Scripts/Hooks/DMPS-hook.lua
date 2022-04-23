@@ -4,6 +4,7 @@
 - Thank you aronCiucu for DCSTheWay https://github.com/aronCiucu/DCSTheWay  
 
 TODO:
+change the towns loaded log to "Town file loaded: MapName"
 Make a system that either warns or prevents dtc file overwrites
 Have the option to import the beacons.lua file C:\...\DCS World OpenBeta\Mods\terrains\Caucasus\Beacons.lua
   Make a checkbox to turn this feature ON
@@ -20,17 +21,15 @@ Make framework for sending commands to DCS (apache)
 Consider altitude output (meters or feet?)
 Consider making the dtc import display thje native coord format of the aircraft
   for visual validation after the dtc was loaded into the aircraft
+When the player spawns in a map, chagne the Airbase editBox to the map name
   
   
 Change Log:
 See Github https://github.com/asherao/DCS-DTC-Mission-Planning-Software/tree/master/Scripts/Hooks
 
-Enabled Persian Gulf
-Enabled Marianas Islands
-Enabled Nevada
-Enabled Normandy
-Enabled The Channel
-All maps enabled for export
+All DCS maps enabled for export
+All Cities and significant F10 Map areas added to DTC database
+All DCS Airports added to DTC database
 
 
 --]]
@@ -135,16 +134,39 @@ local function loadDMPS()
 	
 	townsTable = nil -- table is no longer needed
 	
-	-- https://www.tutorialspoint.com/concatenation-of-tables-in-lua-programming
-	-- combines two tables
-	function TableConcat(t1,t2)
-		for i=1,#t2 do
-			t1[#t1+1] = t2[i]
-		end
-		return t1
+	-- https://stackoverflow.com/questions/9168058/how-to-dump-a-table-to-console
+	function dump(o)
+   if type(o) == 'table' then
+      local s = '{ '
+      for k,v in pairs(o) do
+         if type(k) ~= 'number' then k = '"'..k..'"' end
+         s = s .. '['..k..'] = ' .. dump(v) .. ','
+      end
+      return s .. '} '
+   else
+      return tostring(o)
+   end
 	end
 	
-	-- TODO: Code the combination of the town file with the airbase file to make 1 single navigation file
+	-- https://stackoverflow.com/questions/1283388/how-to-merge-two-tables-overwriting-the-elements-which-are-in-both
+	function TableConcat(table_1, table_2)
+		for k,v in pairs(table_1) do 
+			table_2[k] = v 
+		end
+		return table_2
+	end
+	
+	navPoints_caucasus = TableConcat(townsTable_caucasus,airbases_caucasus)
+	navPoints_syria = TableConcat(townsTable_syria,airbases_syria)
+	navPoints_marianaIslands = TableConcat(townsTable_marianaIslands,airbases_marianaIslands)
+	navPoints_persianGulf = TableConcat(townsTable_persianGulf,airbases_persianGulf)
+	navPoints_nevada = TableConcat(townsTable_nevada,airbases_nevada)
+	navPoints_theChannel = TableConcat(townsTable_theChannel,airbases_theChannel)
+	navPoints_normandy = TableConcat(townsTable_normandy,airbases_normandy)
+
+	--log(navPoints_normandy.Krymsk.latitude) -- debug
+	
+	--log(dump(navPoints_caucasus)) -- debug
 	
     local lfs = require("lfs")
     local U = require("me_utilities")
@@ -164,7 +186,7 @@ local function loadDMPS()
     local config = nil
 	local finalExportString
 	local programName = "DMPS (DCS-DTC Mission Planning System)"
-	local versionNumber = "v0.4.1"
+	local versionNumber = "v0.4.2"
 	local author = "by Bailey"
 	local windowTitle = programName .. " " .. versionNumber .. " " .. author
 	
@@ -3271,7 +3293,7 @@ end
 	
 	function editBox_wp01_column02_changed()
 		if comboList_terrain:getText() == "Caucasus" then
-			for k,v in pairs(townsTable_caucasus) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_caucasus) do -- _i is the key and _v is the value.
 				if editBox_wp01_column02:getText() == k then
 					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3279,23 +3301,23 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Syria" then
-			for k,v in pairs(townsTable_syria) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_syria) do -- _i is the key and _v is the value.
 				if editBox_wp01_column02:getText() == k then
 					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "Mariana Islands" then
-			for k,v in pairs(townsTable_marianaIslands) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "MarianaIslands" then
+			for k,v in pairs(navPoints_marianaIslands) do -- _i is the key and _v is the value.
 				if editBox_wp01_column02:getText() == k then
 					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "Persian Gulf" then
-			for k,v in pairs(townsTable_persianGulf) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "PersianGulf" then
+			for k,v in pairs(navPoints_persianGulf) do -- _i is the key and _v is the value.
 				if editBox_wp01_column02:getText() == k then
 					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3303,15 +3325,15 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Nevada" then
-			for k,v in pairs(townsTable_nevada) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_nevada) do -- _i is the key and _v is the value.
 				if editBox_wp01_column02:getText() == k then
 					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "The Channel" then
-			for k,v in pairs(townsTable_theChannel) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "TheChannel" then
+			for k,v in pairs(navPoints_theChannel) do -- _i is the key and _v is the value.
 				if editBox_wp01_column02:getText() == k then
 					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3319,7 +3341,7 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Normandy" then
-			for k,v in pairs(townsTable_normandy) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_normandy) do -- _i is the key and _v is the value.
 				if editBox_wp01_column02:getText() == k then
 					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3331,7 +3353,7 @@ end
 	
 	function editBox_wp02_column02_changed() -- TODO: replicate this across all name editBoxes
 		if comboList_terrain:getText() == "Caucasus" then
-			for k,v in pairs(townsTable_caucasus) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_caucasus) do -- _i is the key and _v is the value.
 				if editBox_wp02_column02:getText() == k then
 					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3339,23 +3361,23 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Syria" then
-			for k,v in pairs(townsTable_syria) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_syria) do -- _i is the key and _v is the value.
 				if editBox_wp02_column02:getText() == k then
 					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "Mariana Islands" then
-			for k,v in pairs(townsTable_marianaIslands) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "MarianaIslands" then
+			for k,v in pairs(navPoints_marianaIslands) do -- _i is the key and _v is the value.
 				if editBox_wp02_column02:getText() == k then
 					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "Persian Gulf" then
-			for k,v in pairs(townsTable_persianGulf) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "PersianGulf" then
+			for k,v in pairs(navPoints_persianGulf) do -- _i is the key and _v is the value.
 				if editBox_wp02_column02:getText() == k then
 					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3363,15 +3385,15 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Nevada" then
-			for k,v in pairs(townsTable_nevada) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_nevada) do -- _i is the key and _v is the value.
 				if editBox_wp02_column02:getText() == k then
 					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "The Channel" then
-			for k,v in pairs(townsTable_theChannel) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "TheChannel" then
+			for k,v in pairs(navPoints_theChannel) do -- _i is the key and _v is the value.
 				if editBox_wp02_column02:getText() == k then
 					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3379,7 +3401,7 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Normandy" then
-			for k,v in pairs(townsTable_normandy) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_normandy) do -- _i is the key and _v is the value.
 				if editBox_wp02_column02:getText() == k then
 					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3391,7 +3413,7 @@ end
 	
 	function editBox_wp03_column02_changed() -- TODO: replicate this across all name editBoxes
 		if comboList_terrain:getText() == "Caucasus" then
-			for k,v in pairs(townsTable_caucasus) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_caucasus) do -- _i is the key and _v is the value.
 				if editBox_wp03_column02:getText() == k then
 					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3399,23 +3421,23 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Syria" then
-			for k,v in pairs(townsTable_syria) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_syria) do -- _i is the key and _v is the value.
 				if editBox_wp03_column02:getText() == k then
 					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "Mariana Islands" then
-			for k,v in pairs(townsTable_marianaIslands) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "MarianaIslands" then
+			for k,v in pairs(navPoints_marianaIslands) do -- _i is the key and _v is the value.
 				if editBox_wp03_column02:getText() == k then
 					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "Persian Gulf" then
-			for k,v in pairs(townsTable_persianGulf) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "PersianGulf" then
+			for k,v in pairs(navPoints_persianGulf) do -- _i is the key and _v is the value.
 				if editBox_wp03_column02:getText() == k then
 					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3423,15 +3445,15 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Nevada" then
-			for k,v in pairs(townsTable_nevada) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_nevada) do -- _i is the key and _v is the value.
 				if editBox_wp03_column02:getText() == k then
 					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "The Channel" then
-			for k,v in pairs(townsTable_theChannel) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "TheChannel" then
+			for k,v in pairs(navPoints_theChannel) do -- _i is the key and _v is the value.
 				if editBox_wp03_column02:getText() == k then
 					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3439,7 +3461,7 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Normandy" then
-			for k,v in pairs(townsTable_normandy) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_normandy) do -- _i is the key and _v is the value.
 				if editBox_wp03_column02:getText() == k then
 					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3451,7 +3473,7 @@ end
 	
 	function editBox_wp04_column02_changed() -- TODO: replicate this across all name editBoxes
 		if comboList_terrain:getText() == "Caucasus" then
-			for k,v in pairs(townsTable_caucasus) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_caucasus) do -- _i is the key and _v is the value.
 				if editBox_wp04_column02:getText() == k then
 					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3459,23 +3481,23 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Syria" then
-			for k,v in pairs(townsTable_syria) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_syria) do -- _i is the key and _v is the value.
 				if editBox_wp04_column02:getText() == k then
 					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "Mariana Islands" then
-			for k,v in pairs(townsTable_marianaIslands) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "MarianaIslands" then
+			for k,v in pairs(navPoints_marianaIslands) do -- _i is the key and _v is the value.
 				if editBox_wp04_column02:getText() == k then
 					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "Persian Gulf" then
-			for k,v in pairs(townsTable_persianGulf) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "PersianGulf" then
+			for k,v in pairs(navPoints_persianGulf) do -- _i is the key and _v is the value.
 				if editBox_wp04_column02:getText() == k then
 					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3483,15 +3505,15 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Nevada" then
-			for k,v in pairs(townsTable_nevada) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_nevada) do -- _i is the key and _v is the value.
 				if editBox_wp04_column02:getText() == k then
 					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "The Channel" then
-			for k,v in pairs(townsTable_theChannel) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "TheChannel" then
+			for k,v in pairs(navPoints_theChannel) do -- _i is the key and _v is the value.
 				if editBox_wp04_column02:getText() == k then
 					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3499,7 +3521,7 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Normandy" then
-			for k,v in pairs(townsTable_normandy) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_normandy) do -- _i is the key and _v is the value.
 				if editBox_wp04_column02:getText() == k then
 					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3511,7 +3533,7 @@ end
 	
 	function editBox_wp05_column02_changed() -- TODO: replicate this across all name editBoxes
 		if comboList_terrain:getText() == "Caucasus" then
-			for k,v in pairs(townsTable_caucasus) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_caucasus) do -- _i is the key and _v is the value.
 				if editBox_wp05_column02:getText() == k then
 					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3519,23 +3541,23 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Syria" then
-			for k,v in pairs(townsTable_syria) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_syria) do -- _i is the key and _v is the value.
 				if editBox_wp05_column02:getText() == k then
 					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "Mariana Islands" then
-			for k,v in pairs(townsTable_marianaIslands) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "MarianaIslands" then
+			for k,v in pairs(navPoints_marianaIslands) do -- _i is the key and _v is the value.
 				if editBox_wp05_column02:getText() == k then
 					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "Persian Gulf" then
-			for k,v in pairs(townsTable_persianGulf) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "PersianGulf" then
+			for k,v in pairs(navPoints_persianGulf) do -- _i is the key and _v is the value.
 				if editBox_wp05_column02:getText() == k then
 					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3543,15 +3565,15 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Nevada" then
-			for k,v in pairs(townsTable_nevada) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_nevada) do -- _i is the key and _v is the value.
 				if editBox_wp05_column02:getText() == k then
 					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "The Channel" then
-			for k,v in pairs(townsTable_theChannel) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "TheChannel" then
+			for k,v in pairs(navPoints_theChannel) do -- _i is the key and _v is the value.
 				if editBox_wp05_column02:getText() == k then
 					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3559,7 +3581,7 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Normandy" then
-			for k,v in pairs(townsTable_normandy) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_normandy) do -- _i is the key and _v is the value.
 				if editBox_wp05_column02:getText() == k then
 					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3571,7 +3593,7 @@ end
 	
 	function editBox_wp06_column02_changed() -- TODO: replicate this across all name editBoxes
 		if comboList_terrain:getText() == "Caucasus" then
-			for k,v in pairs(townsTable_caucasus) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_caucasus) do -- _i is the key and _v is the value.
 				if editBox_wp06_column02:getText() == k then
 					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3579,23 +3601,23 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Syria" then
-			for k,v in pairs(townsTable_syria) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_syria) do -- _i is the key and _v is the value.
 				if editBox_wp06_column02:getText() == k then
 					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "Mariana Islands" then
-			for k,v in pairs(townsTable_marianaIslands) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "MarianaIslands" then
+			for k,v in pairs(navPoints_marianaIslands) do -- _i is the key and _v is the value.
 				if editBox_wp06_column02:getText() == k then
 					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "Persian Gulf" then
-			for k,v in pairs(townsTable_persianGulf) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "PersianGulf" then
+			for k,v in pairs(navPoints_persianGulf) do -- _i is the key and _v is the value.
 				if editBox_wp06_column02:getText() == k then
 					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3603,15 +3625,15 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Nevada" then
-			for k,v in pairs(townsTable_nevada) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_nevada) do -- _i is the key and _v is the value.
 				if editBox_wp06_column02:getText() == k then
 					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "The Channel" then
-			for k,v in pairs(townsTable_theChannel) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "TheChannel" then
+			for k,v in pairs(navPoints_theChannel) do -- _i is the key and _v is the value.
 				if editBox_wp06_column02:getText() == k then
 					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3619,7 +3641,7 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Normandy" then
-			for k,v in pairs(townsTable_normandy) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_normandy) do -- _i is the key and _v is the value.
 				if editBox_wp06_column02:getText() == k then
 					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3631,7 +3653,7 @@ end
 	
 	function editBox_wp07_column02_changed() -- TODO: replicate this across all name editBoxes
 		if comboList_terrain:getText() == "Caucasus" then
-			for k,v in pairs(townsTable_caucasus) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_caucasus) do -- _i is the key and _v is the value.
 				if editBox_wp07_column02:getText() == k then
 					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3639,23 +3661,23 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Syria" then
-			for k,v in pairs(townsTable_syria) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_syria) do -- _i is the key and _v is the value.
 				if editBox_wp07_column02:getText() == k then
 					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "Mariana Islands" then
-			for k,v in pairs(townsTable_marianaIslands) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "MarianaIslands" then
+			for k,v in pairs(navPoints_marianaIslands) do -- _i is the key and _v is the value.
 				if editBox_wp07_column02:getText() == k then
 					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "Persian Gulf" then
-			for k,v in pairs(townsTable_persianGulf) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "PersianGulf" then
+			for k,v in pairs(navPoints_persianGulf) do -- _i is the key and _v is the value.
 				if editBox_wp07_column02:getText() == k then
 					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3663,15 +3685,15 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Nevada" then
-			for k,v in pairs(townsTable_nevada) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_nevada) do -- _i is the key and _v is the value.
 				if editBox_wp07_column02:getText() == k then
 					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "The Channel" then
-			for k,v in pairs(townsTable_theChannel) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "TheChannel" then
+			for k,v in pairs(navPoints_theChannel) do -- _i is the key and _v is the value.
 				if editBox_wp07_column02:getText() == k then
 					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3679,7 +3701,7 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Normandy" then
-			for k,v in pairs(townsTable_normandy) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_normandy) do -- _i is the key and _v is the value.
 				if editBox_wp07_column02:getText() == k then
 					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3691,7 +3713,7 @@ end
 	
 	function editBox_wp08_column02_changed() -- TODO: replicate this across all name editBoxes
 		if comboList_terrain:getText() == "Caucasus" then
-			for k,v in pairs(townsTable_caucasus) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_caucasus) do -- _i is the key and _v is the value.
 				if editBox_wp08_column02:getText() == k then
 					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3699,23 +3721,23 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Syria" then
-			for k,v in pairs(townsTable_syria) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_syria) do -- _i is the key and _v is the value.
 				if editBox_wp08_column02:getText() == k then
 					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "Mariana Islands" then
-			for k,v in pairs(townsTable_marianaIslands) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "MarianaIslands" then
+			for k,v in pairs(navPoints_marianaIslands) do -- _i is the key and _v is the value.
 				if editBox_wp08_column02:getText() == k then
 					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "Persian Gulf" then
-			for k,v in pairs(townsTable_persianGulf) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "PersianGulf" then
+			for k,v in pairs(navPoints_persianGulf) do -- _i is the key and _v is the value.
 				if editBox_wp08_column02:getText() == k then
 					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3723,15 +3745,15 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Nevada" then
-			for k,v in pairs(townsTable_nevada) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_nevada) do -- _i is the key and _v is the value.
 				if editBox_wp08_column02:getText() == k then
 					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "The Channel" then
-			for k,v in pairs(townsTable_theChannel) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "TheChannel" then
+			for k,v in pairs(navPoints_theChannel) do -- _i is the key and _v is the value.
 				if editBox_wp08_column02:getText() == k then
 					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3739,7 +3761,7 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Normandy" then
-			for k,v in pairs(townsTable_normandy) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_normandy) do -- _i is the key and _v is the value.
 				if editBox_wp08_column02:getText() == k then
 					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3751,7 +3773,7 @@ end
 	
 	function editBox_wp09_column02_changed() -- TODO: replicate this across all name editBoxes
 		if comboList_terrain:getText() == "Caucasus" then
-			for k,v in pairs(townsTable_caucasus) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_caucasus) do -- _i is the key and _v is the value.
 				if editBox_wp09_column02:getText() == k then
 					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3759,23 +3781,23 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Syria" then
-			for k,v in pairs(townsTable_syria) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_syria) do -- _i is the key and _v is the value.
 				if editBox_wp09_column02:getText() == k then
 					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "Mariana Islands" then
-			for k,v in pairs(townsTable_marianaIslands) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "MarianaIslands" then
+			for k,v in pairs(navPoints_marianaIslands) do -- _i is the key and _v is the value.
 				if editBox_wp09_column02:getText() == k then
 					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "Persian Gulf" then
-			for k,v in pairs(townsTable_persianGulf) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "PersianGulf" then
+			for k,v in pairs(navPoints_persianGulf) do -- _i is the key and _v is the value.
 				if editBox_wp09_column02:getText() == k then
 					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3783,15 +3805,15 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Nevada" then
-			for k,v in pairs(townsTable_nevada) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_nevada) do -- _i is the key and _v is the value.
 				if editBox_wp09_column02:getText() == k then
 					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "The Channel" then
-			for k,v in pairs(townsTable_theChannel) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "TheChannel" then
+			for k,v in pairs(navPoints_theChannel) do -- _i is the key and _v is the value.
 				if editBox_wp09_column02:getText() == k then
 					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3799,7 +3821,7 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Normandy" then
-			for k,v in pairs(townsTable_normandy) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_normandy) do -- _i is the key and _v is the value.
 				if editBox_wp09_column02:getText() == k then
 					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3811,7 +3833,7 @@ end
 	
 	function editBox_wp10_column02_changed() -- TODO: replicate this across all name editBoxes
 		if comboList_terrain:getText() == "Caucasus" then
-			for k,v in pairs(townsTable_caucasus) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_caucasus) do -- _i is the key and _v is the value.
 				if editBox_wp10_column02:getText() == k then
 					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3819,23 +3841,23 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Syria" then
-			for k,v in pairs(townsTable_syria) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_syria) do -- _i is the key and _v is the value.
 				if editBox_wp10_column02:getText() == k then
 					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "Mariana Islands" then
-			for k,v in pairs(townsTable_marianaIslands) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "MarianaIslands" then
+			for k,v in pairs(navPoints_marianaIslands) do -- _i is the key and _v is the value.
 				if editBox_wp10_column02:getText() == k then
 					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "Persian Gulf" then
-			for k,v in pairs(townsTable_persianGulf) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "PersianGulf" then
+			for k,v in pairs(navPoints_persianGulf) do -- _i is the key and _v is the value.
 				if editBox_wp10_column02:getText() == k then
 					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3843,15 +3865,15 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Nevada" then
-			for k,v in pairs(townsTable_nevada) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_nevada) do -- _i is the key and _v is the value.
 				if editBox_wp10_column02:getText() == k then
 					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
-		elseif comboList_terrain:getText() == "The Channel" then
-			for k,v in pairs(townsTable_theChannel) do -- _i is the key and _v is the value.
+		elseif comboList_terrain:getText() == "TheChannel" then
+			for k,v in pairs(navPoints_theChannel) do -- _i is the key and _v is the value.
 				if editBox_wp10_column02:getText() == k then
 					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
@@ -3859,7 +3881,7 @@ end
 				end
 			end
 		elseif comboList_terrain:getText() == "Normandy" then
-			for k,v in pairs(townsTable_normandy) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_normandy) do -- _i is the key and _v is the value.
 				if editBox_wp10_column02:getText() == k then
 					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
 					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
