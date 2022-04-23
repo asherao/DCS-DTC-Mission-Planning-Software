@@ -65,7 +65,7 @@ This can be achieved by one of these methods:
 ## Tips and Tricks
 - **If you are having some issues upgrading from v0.3.0 to v0.4.0, delete your `C:\Users\...\Saved Games\DCS\Config\DMPS.config` file and restart DCS.**
 - You can change the keybinds via the config folder located at `C:\Users\...\Saved Games\DCS\Config\DMPS.config`. You can bind the keybind hotkey to your controller or HOTAS using a 3rd party program like Voice Attack (https://voiceattack.com/).
-- You can type in the name of a city or location on the F10 map into the waypoint _Name_. The lat and long cooordinates will automatically fill in. 
+- You can type in the name of an airport, city or significant location on the F10 map into the waypoint _Name_. The lat and long cooordinates will automatically fill in. If you want to type in Navaid Identifiers, enable the switch left of the waypoint _Name_.
 - When using DMPS Integrated app with the F10 Map, the in-game coordinate location is "frozen" when the mouse is over the DMPS App. Use this to your advantage and position the App and your F10 Map view in a location where the coordinates will "freeze" where you want them to, allowing you to reference them while typing them in.
 - In DMPS Standalone you can combine DTCs by first populating the desired fields and then importing another. The imported fields will take precedence per field. This is useful for situations in which you have a DTC with a few often used waypoints.
 - Garbage in, garbage out... Enter information accurately.
@@ -82,21 +82,25 @@ Different aircraft have different properties for their waypoints. You can learn 
 |Latitude|The latitude segment of the waypoint. There are three acceptable formats. XDD:MM:SS(.ssss), XDD:MM(.mmmm), and XDD(.dddd). Parentheses are optional extra precision digits of arbitrary length|
 |Longitude|The longitude segment of the waypoint. Same rules as Latitude.|
 |Altitude|The altitude/elevation of the waypoint. Numbers only.|
-|CP|Unknown. Numbers only.|
-|PD|Unknown. Numbers only.|
-|RD|Unknown. Numbers only.|
-|RHO|Unknown. Numbers only.|
-|THETA|Unknown. Numbers only.|
-|dAlt|Unknown. Numbers only.|
-|dNorth|Unknown. Numbers only.|
-|dEast|Unknown. Numbers only.|
+|CP|Cap Piste = (True) Runway Heading. Numbers only.|
+|PD|Pente Désirée = Desired Glideslope. Numbers only.|
+|RD|Route Désirée = Desired Inbound course (towards the waypoint). Numbers only.|
+|RHO| Used for Polar BADs, defines the distance from the BUT to the BAD (the offset distance). Numbers only.|
+|THETA|Polar BADs, defines the bearing from the BUT to the BAD. Numbers only.|
+|dAlt|deltaL/L BADs, defines the altitude delta between  the BUT and BAD. Numbers only.|
+|dNorth|defines the BAD by the distance N/S from the BUT to the BAD. Numbers only.|
+|dEast|defines the BAD by the distance E/W from the BUT to the BAD. Numbers only.|  
+
+_Thank you TheSkipjack95_
 
 # Acknowledgements
-- Thank you rkusa for DCS-Scratchpad https://github.com/rkusa/dcs-scratchpad/blob/main/Scripts/Hooks/scratchpad-hook.lua  
-- Thank you Noisy for DCS-Stopwatch https://forum.dcs.world/topic/256390-stopwatch-overlay-for-vr-like-srs-or-scratchpad/#comment-4521467  
-- Thank you aronCiucu for DCSTheWay https://github.com/aronCiucu/DCSTheWay  
-- Thank you Lazyboot for finding out and sharing that **re-arming will refresh M-2000C DTCs.**  
-- Thank you to the Razbam team who implemented the unique and accessible aircraft DTC method. Hopefully it can be used by the devs of many more modules.  
+- Thank you
+  - rkusa for DCS-Scratchpad https://github.com/rkusa/dcs-scratchpad/blob/main/Scripts/Hooks/scratchpad-hook.lua  
+  - Noisy for DCS-Stopwatch https://forum.dcs.world/topic/256390-stopwatch-overlay-for-vr-like-srs-or-scratchpad/#comment-4521467  
+  - aronCiucu for DCSTheWay https://github.com/aronCiucu/DCSTheWay  
+  - Lazyboot for finding out and sharing that **re-arming will refresh M-2000C DTCs.**  
+  - Razbam team who implemented the unique and accessible aircraft DTC method. Hopefully it can be used by the devs of many more modules.
+  - Hoggit for answering my many, many lua questions.
 - If you are feeling charitable, please feel free to donate. All donations go to supporting the creation of even more free apps and mods for DCS, just like this one! https://www.paypal.com/paypalme/asherao  
 - Join Bailey's VoiceAttack Discord Here https://discord.gg/PbYgC5e  
 - See more of my mods here https://www.digitalcombatsimulator.com/en/files/filter/user-is-baileywa/apply/?PER_PAGE=100  
@@ -109,14 +113,14 @@ Different aircraft have different properties for their waypoints. You can learn 
   - [ ] Explore Viggen DTC
   - [ ] Explore Apache DTC
 - [ ] Export format checks (to catch user mistakes)
-- [ ] More Maps
+- [x] All Maps
   - [x] Cuacasus
   - [x] Syria
-  - [ ] Marianas
-  - [ ] The Channel
-  - [ ] Persian Gulf
-  - [ ] Normandy
-- [x] Waypoint auto-fill lat/long by F10 Map Name
+  - [x] Marianas
+  - [x] The Channel
+  - [x] Persian Gulf
+  - [x] Normandy
+- [x] Waypoint auto-fill lat/long by F10 Map Name (Cities, Navaids, Airports, significant locaitons)
 - [x] DMPS Integrated App "Get DCS Coords"
 - [x] DMPS Integrated App Import (v0.3.0)
 - [x] Keybind for capturing coordinates
