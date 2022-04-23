@@ -4,11 +4,7 @@
 - Thank you aronCiucu for DCSTheWay https://github.com/aronCiucu/DCSTheWay  
 
 TODO:
-change the towns loaded log to "Town file loaded: MapName"
-Make a system that either warns or prevents dtc file overwrites
-Have the option to import the beacons.lua file C:\...\DCS World OpenBeta\Mods\terrains\Caucasus\Beacons.lua
-  Make a checkbox to turn this feature ON
-Import airports (airbases) via the airbases.lua file
+Make a system that either warns or prevents dtc file overwrites on export
 
 
 Future updates:
@@ -19,19 +15,14 @@ Consider that different aircraft may not be able to export to all maps
 Make showing and hiding elements based on the aircraft combolist, including inital loading
 Make framework for sending commands to DCS (apache)
 Consider altitude output (meters or feet?)
-Consider making the dtc import display thje native coord format of the aircraft
-  for visual validation after the dtc was loaded into the aircraft
-When the player spawns in a map, chagne the Airbase editBox to the map name
+Consider making the dtc import display the native coord format of the aircraft
+  For visual validation after the dtc was loaded into the aircraft
+When the player spawns in a map, change the Terrain editBox to the map name
+Add a "User custom points" option in a lua file if the users wants their own points database
   
   
 Change Log:
 See Github https://github.com/asherao/DCS-DTC-Mission-Planning-Software/tree/master/Scripts/Hooks
-
-All DCS maps enabled for export
-All Cities and significant F10 Map areas added to DTC database
-All DCS Airports added to DTC database
-
-
 --]]
 
 local function loadDMPS()
@@ -53,21 +44,63 @@ local function loadDMPS()
 	package.path = package.path .. ";.\\Scripts\\?.lua;.\\Scripts\\UI\\?.lua;.\\Mods\\terrains\\?.lua;"
 	
 
-	dofile(lfs.writedir() .. [[Scripts\DCS-DMPS\resources\airbases.lua]]) 
-	-- TODO: add the airports from airports not included
-	log('Airbases loaded from resouce file')
+	dofile(lfs.writedir() .. [[Scripts\DCS-DMPS\resources\airbases.lua]])
+	log('Airbases loaded from resource file')
 	--log(airbases_caucasus.Gelendzhik.latitude) -- debug: it works
     
-	---------------------
-	-- Load Towns Data --
-	---------------------
+	navPoints_caucasus = {}
+	navPoints_marianaIslands = {}
+	navPoints_nevada = {}
+	navPoints_normandy = {}
+	navPoints_persianGulf = {}
+	navPoints_syria = {}
+	navPoints_theChannel = {}
+	
+	beaconPoints_caucasus = {}
+	beaconPoints_marianaIslands = {}
+	beaconPoints_nevada = {}
+	beaconPoints_normandy = {}
+	beaconPoints_persianGulf = {}
+	beaconPoints_syria = {}
+	beaconPoints_theChannel = {}
+	
+	
+	function TableConcat(table_1, table_2)
+		for k,v in pairs(table_1) do 
+			table_2[k] = v 
+		end
+		return table_2
+	end
+	
+	-- https://stackoverflow.com/questions/9168058/how-to-dump-a-table-to-console
+	function dump(o)
+		if type(o) == 'table' then
+			local s = '{ '
+			for k,v in pairs(o) do
+				if type(k) ~= 'number' then k = '"'..k..'"' end
+				s = s .. '['..k..'] = ' .. dump(v) .. ','
+			end
+			return s .. '} '
+		else
+			return tostring(o)
+		end
+	end
+	-------------------------
+	-- Load Nav Point Data --
+	-------------------------
+	
 	-- https://github.com/DCS-gRPC/rust-server/blob/882d36b19d0646b4d8b9e7d1e51a4df9202b4a8e/lua/DCS-gRPC/grpc-mission.lua#L35-L41=
 	local townsTable_caucasus = {}
     local ok, mapCaucasus = pcall(require, "Caucasus.map.towns") -- status, err
     if ok then
       -- Do stuff with mapCaucasus 
 	  townsTable_caucasus = towns
-	  log('Caucasus towns loaded')
+	  log('Town Database loaded: Caucasus')
+	  navPoints_caucasus = TableConcat(townsTable_caucasus,airbases_caucasus)
+	  log('Airbase Database loaded: Caucasus')
+	  beaconPoints_caucasus = require("Caucasus.Beacons")
+	  beaconPoints_caucasus = beacons
+	  log('Beacon Database loaded: Caucasus')
     else
       log("Error loading Caucasus.map.towns "  .. mapCaucasus ) -- If the load failed then mapCaucasus contains the error
     end
@@ -77,7 +110,12 @@ local function loadDMPS()
     if ok then
       -- Do stuff with mapSyria 
 	  townsTable_syria = towns
-	  log('Syria towns loaded')
+	  log('Town Database loaded: Syria')
+	  navPoints_syria = TableConcat(townsTable_syria,airbases_syria)
+	  log('Airbase Database loaded: Syria')
+	  beaconPoints_syria = require("Syria.Beacons")
+	  beaconPoints_syria = beacons
+	  log('Beacon Database loaded: Syria')
     else
       log("Error loading Syria.map.towns " .. mapSyria) -- If the load failed then mapsyria contains the error
     end
@@ -87,7 +125,12 @@ local function loadDMPS()
     if ok then
       -- Do stuff with mapSyria 
 	  townsTable_marianaIslands = towns
-	  log('Mariana Islands towns loaded')
+	  log('Town Database loaded: Mariana Islands')
+	  navPoints_marianaIslands = TableConcat(townsTable_marianaIslands,airbases_marianaIslands)
+	  log('Airbase Database loaded: Mariana Islands')
+	  beaconPoints_marianaIslands = require("MarianaIslands.Beacons")
+	  beaconPoints_marianaIslands = beacons
+	  log('Beacon Database loaded: Mariana Islands')
     else
       log("Error loading MarianaIslands.map.towns " .. MarianaIslands) -- If the load failed then mapsyria contains the error
     end
@@ -97,7 +140,12 @@ local function loadDMPS()
     if ok then
       -- Do stuff with mapPersianGulf 
 	  townsTable_persianGulf = towns
-	  log('Persian Gulf towns loaded')
+	  log('Town Database loaded: Persian Gulf')
+	  navPoints_persianGulf = TableConcat(townsTable_persianGulf,airbases_persianGulf)
+	  log('Airbase Database loaded: Persian Gulf')
+	  beaconPoints_persianGulf = require("PersianGulf.Beacons")
+	  beaconPoints_persianGulf = beacons
+	  log('Beacon Database loaded: Persian Gulf')
     else
       log("Error loading PersianGulf.map.towns " .. mapPersianGulf) -- If the load failed then mapPersianGulf contains the error
     end
@@ -107,7 +155,12 @@ local function loadDMPS()
     if ok then
       -- Do stuff with mapNevada 
 	  townsTable_nevada = towns
-	  log('Nevada towns loaded')
+	  log('Town Database loaded: Nevada')
+	  navPoints_nevada = TableConcat(townsTable_nevada,airbases_nevada)
+	  log('Airbase Database loaded: Nevada')
+	  beaconPoints_nevada = require("Nevada.Beacons")
+	  beaconPoints_nevada = beacons
+	  log('Beacon Database loaded: Nevada')
     else
       log("Error loading Nevada.map.towns " .. mapNevada) -- If the load failed then mapNevada contains the error
     end
@@ -117,7 +170,12 @@ local function loadDMPS()
     if ok then
       -- Do stuff with mapTheChannel 
 	  townsTable_theChannel = towns
-	  log('The Channel towns loaded')
+	  log('Town Database loaded: The Channel')
+	  navPoints_theChannel = TableConcat(townsTable_theChannel,airbases_theChannel)
+	  log('Airbase Database loaded: The Channel')
+	  beaconPoints_theChannel = require("TheChannel.Beacons")
+	  beaconPoints_theChannel = beacons
+	  log('Beacon Database loaded: TheChannel')
     else
       log("Error loading TheChannel.map.towns " .. mapTheChannel) -- If the load failed then mapTheChannel contains the error
     end
@@ -127,43 +185,23 @@ local function loadDMPS()
     if ok then
       -- Do stuff with mapnormandy 
 	  townsTable_normandy = towns
-	  log('Normandy towns loaded')
+	  log('Town Database loaded: Normandy')
+	  navPoints_normandy = TableConcat(townsTable_normandy,airbases_normandy)
+	  log('Airbase Database loaded: Normandy')
+	  beaconPoints_normandy = require("normandy.Beacons")
+	  beaconPoints_normandy = beacons
+	  log('Beacon Database loaded: normandy')
     else
       log("Error loading normandy.map.towns " .. mapnormandy) -- If the load failed then mapnormandy contains the error
     end
 	
 	townsTable = nil -- table is no longer needed
+	beacons = nil -- table is no longer needed
 	
-	-- https://stackoverflow.com/questions/9168058/how-to-dump-a-table-to-console
-	function dump(o)
-   if type(o) == 'table' then
-      local s = '{ '
-      for k,v in pairs(o) do
-         if type(k) ~= 'number' then k = '"'..k..'"' end
-         s = s .. '['..k..'] = ' .. dump(v) .. ','
-      end
-      return s .. '} '
-   else
-      return tostring(o)
-   end
-	end
 	
 	-- https://stackoverflow.com/questions/1283388/how-to-merge-two-tables-overwriting-the-elements-which-are-in-both
-	function TableConcat(table_1, table_2)
-		for k,v in pairs(table_1) do 
-			table_2[k] = v 
-		end
-		return table_2
-	end
 	
-	navPoints_caucasus = TableConcat(townsTable_caucasus,airbases_caucasus)
-	navPoints_syria = TableConcat(townsTable_syria,airbases_syria)
-	navPoints_marianaIslands = TableConcat(townsTable_marianaIslands,airbases_marianaIslands)
-	navPoints_persianGulf = TableConcat(townsTable_persianGulf,airbases_persianGulf)
-	navPoints_nevada = TableConcat(townsTable_nevada,airbases_nevada)
-	navPoints_theChannel = TableConcat(townsTable_theChannel,airbases_theChannel)
-	navPoints_normandy = TableConcat(townsTable_normandy,airbases_normandy)
-
+	
 	--log(navPoints_normandy.Krymsk.latitude) -- debug
 	
 	--log(dump(navPoints_caucasus)) -- debug
@@ -212,7 +250,7 @@ local function loadDMPS()
     -- Crosshair resources
     local crosshairWindow = nil
 
-    
+
 	
 	-- TODO: this
 	--[[function aircraftSelectedChanged()
@@ -1162,9 +1200,7 @@ local function loadDMPS()
 	--]]
 	--tcp:close()
 	
-	
-	-- test range complete
-	
+	-- test range end
 	
 		log('clearAllData() called')
 		if checkbox_clearAllData:getState() then
@@ -1180,8 +1216,8 @@ local function loadDMPS()
 			editBox_dtcName:setText("DTC Name")
 			editBox_date:setText("DD/MM/YYYY")
 			
-			comboList_aircraft:selectItem(comboList_aircraft:getItem(0))
-			comboList_terrain:selectItem(comboList_terrain:getItem(0))
+			--comboList_aircraft:selectItem(comboList_aircraft:getItem(0))
+			--comboList_terrain:selectItem(comboList_terrain:getItem(0))
 			
 			editBox_output:setText("")
 			
@@ -3293,604 +3329,1206 @@ end
 	
 	function editBox_wp01_column02_changed()
 		if comboList_terrain:getText() == "Caucasus" then
-			for k,v in pairs(navPoints_caucasus) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_caucasus) do 
 				if editBox_wp01_column02:getText() == k then
-					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Syria" then
-			for k,v in pairs(navPoints_syria) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_syria) do 
 				if editBox_wp01_column02:getText() == k then
-					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "MarianaIslands" then
-			for k,v in pairs(navPoints_marianaIslands) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_marianaIslands) do 
 				if editBox_wp01_column02:getText() == k then
-					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "PersianGulf" then
-			for k,v in pairs(navPoints_persianGulf) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_persianGulf) do 
 				if editBox_wp01_column02:getText() == k then
-					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Nevada" then
-			for k,v in pairs(navPoints_nevada) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_nevada) do 
 				if editBox_wp01_column02:getText() == k then
-					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "TheChannel" then
-			for k,v in pairs(navPoints_theChannel) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_theChannel) do 
 				if editBox_wp01_column02:getText() == k then
-					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Normandy" then
-			for k,v in pairs(navPoints_normandy) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_normandy) do 
 				if editBox_wp01_column02:getText() == k then
-					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp01_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp01_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end	
 		end
+	
+		if checkBox_enhancedDatabase:getState(true) then -- if the enhanced is true, use beacon data
+			--log('Beacon Data check1: ' .. beaconPoints_caucasus[1].callsign) -- AP
+			--log('Beacon Data check2: ' .. beaconPoints_caucasus[1].positionGeo.latitude) -- 45.039907
+			--log('Beacon Data check3: ' .. beaconPoints_caucasus[1].positionGeo.longitude) -- 37.396435
+			if comboList_terrain:getText() == "Caucasus" then
+				for k,v in pairs(beaconPoints_caucasus) do
+					if editBox_wp01_column02:getText() == v.callsign then
+						editBox_wp01_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp01_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Syria" then
+				for k,v in pairs(beaconPoints_syria) do 
+					if editBox_wp01_column02:getText() == v.callsign then
+						editBox_wp01_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp01_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "MarianaIslands" then
+				for k,v in pairs(beaconPoints_marianaIslands) do 
+					if editBox_wp01_column02:getText() == v.callsign then
+						editBox_wp01_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp01_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "PersianGulf" then
+				for k,v in pairs(beaconPoints_persianGulf) do 
+					if editBox_wp01_column02:getText() == v.callsign then
+						editBox_wp01_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp01_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Nevada" then
+				for k,v in pairs(beaconPoints_nevada) do 
+					if editBox_wp01_column02:getText() == v.callsign then
+						editBox_wp01_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp01_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "TheChannel" then
+				for k,v in pairs(beaconPoints_theChannel) do 
+					if editBox_wp01_column02:getText() == v.callsign then
+						editBox_wp01_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp01_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Normandy" then
+				for k,v in pairs(beaconPoints_normandy) do 
+					if editBox_wp01_column02:getText() == v.callsign then
+						editBox_wp01_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp01_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			end
+		end
 	end
 	
-	function editBox_wp02_column02_changed() -- TODO: replicate this across all name editBoxes
+	function editBox_wp02_column02_changed()
 		if comboList_terrain:getText() == "Caucasus" then
-			for k,v in pairs(navPoints_caucasus) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_caucasus) do 
 				if editBox_wp02_column02:getText() == k then
-					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Syria" then
-			for k,v in pairs(navPoints_syria) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_syria) do 
 				if editBox_wp02_column02:getText() == k then
-					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "MarianaIslands" then
-			for k,v in pairs(navPoints_marianaIslands) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_marianaIslands) do 
 				if editBox_wp02_column02:getText() == k then
-					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "PersianGulf" then
-			for k,v in pairs(navPoints_persianGulf) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_persianGulf) do 
 				if editBox_wp02_column02:getText() == k then
-					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Nevada" then
-			for k,v in pairs(navPoints_nevada) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_nevada) do 
 				if editBox_wp02_column02:getText() == k then
-					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "TheChannel" then
-			for k,v in pairs(navPoints_theChannel) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_theChannel) do 
 				if editBox_wp02_column02:getText() == k then
-					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Normandy" then
-			for k,v in pairs(navPoints_normandy) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_normandy) do 
 				if editBox_wp02_column02:getText() == k then
-					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp02_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp02_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end	
 		end
+	
+		if checkBox_enhancedDatabase:getState(true) then -- if the enhanced is true, use beacon data
+			if comboList_terrain:getText() == "Caucasus" then
+				for k,v in pairs(beaconPoints_caucasus) do
+					if editBox_wp02_column02:getText() == v.callsign then
+						editBox_wp02_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp02_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Syria" then
+				for k,v in pairs(beaconPoints_syria) do 
+					if editBox_wp02_column02:getText() == v.callsign then
+						editBox_wp02_column03:setText(string.format("%3.4f", v.positionGeo.latitude))
+						editBox_wp02_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "MarianaIslands" then
+				for k,v in pairs(beaconPoints_marianaIslands) do 
+					if editBox_wp02_column02:getText() == v.callsign then
+						editBox_wp02_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp02_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "PersianGulf" then
+				for k,v in pairs(beaconPoints_persianGulf) do 
+					if editBox_wp02_column02:getText() == v.callsign then
+						editBox_wp02_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp02_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Nevada" then
+				for k,v in pairs(beaconPoints_nevada) do 
+					if editBox_wp02_column02:getText() == v.callsign then
+						editBox_wp02_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp02_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "TheChannel" then
+				for k,v in pairs(beaconPoints_theChannel) do 
+					if editBox_wp02_column02:getText() == v.callsign then
+						editBox_wp02_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp02_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Normandy" then
+				for k,v in pairs(beaconPoints_normandy) do 
+					if editBox_wp02_column02:getText() == v.callsign then
+						editBox_wp02_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp02_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			end
+		end
 	end
 	
-	function editBox_wp03_column02_changed() -- TODO: replicate this across all name editBoxes
+	function editBox_wp03_column02_changed()
 		if comboList_terrain:getText() == "Caucasus" then
-			for k,v in pairs(navPoints_caucasus) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_caucasus) do 
 				if editBox_wp03_column02:getText() == k then
-					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Syria" then
-			for k,v in pairs(navPoints_syria) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_syria) do 
 				if editBox_wp03_column02:getText() == k then
-					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "MarianaIslands" then
-			for k,v in pairs(navPoints_marianaIslands) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_marianaIslands) do 
 				if editBox_wp03_column02:getText() == k then
-					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "PersianGulf" then
-			for k,v in pairs(navPoints_persianGulf) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_persianGulf) do 
 				if editBox_wp03_column02:getText() == k then
-					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Nevada" then
-			for k,v in pairs(navPoints_nevada) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_nevada) do 
 				if editBox_wp03_column02:getText() == k then
-					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "TheChannel" then
-			for k,v in pairs(navPoints_theChannel) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_theChannel) do 
 				if editBox_wp03_column02:getText() == k then
-					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Normandy" then
-			for k,v in pairs(navPoints_normandy) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_normandy) do 
 				if editBox_wp03_column02:getText() == k then
-					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp03_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp03_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end	
 		end
+	
+		if checkBox_enhancedDatabase:getState(true) then -- if the enhanced is true, use beacon data
+			if comboList_terrain:getText() == "Caucasus" then
+				for k,v in pairs(beaconPoints_caucasus) do
+					if editBox_wp03_column02:getText() == v.callsign then
+						editBox_wp03_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp03_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Syria" then
+				for k,v in pairs(beaconPoints_syria) do 
+					if editBox_wp03_column02:getText() == v.callsign then
+						editBox_wp03_column03:setText(string.format("%3.4f", v.positionGeo.latitude))
+						editBox_wp03_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "MarianaIslands" then
+				for k,v in pairs(beaconPoints_marianaIslands) do 
+					if editBox_wp03_column02:getText() == v.callsign then
+						editBox_wp03_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp03_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "PersianGulf" then
+				for k,v in pairs(beaconPoints_persianGulf) do 
+					if editBox_wp03_column02:getText() == v.callsign then
+						editBox_wp03_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp03_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Nevada" then
+				for k,v in pairs(beaconPoints_nevada) do 
+					if editBox_wp03_column02:getText() == v.callsign then
+						editBox_wp03_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp03_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "TheChannel" then
+				for k,v in pairs(beaconPoints_theChannel) do 
+					if editBox_wp03_column02:getText() == v.callsign then
+						editBox_wp03_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp03_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Normandy" then
+				for k,v in pairs(beaconPoints_normandy) do 
+					if editBox_wp03_column02:getText() == v.callsign then
+						editBox_wp03_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp03_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			end
+		end
 	end
 	
-	function editBox_wp04_column02_changed() -- TODO: replicate this across all name editBoxes
+	function editBox_wp04_column02_changed()
 		if comboList_terrain:getText() == "Caucasus" then
-			for k,v in pairs(navPoints_caucasus) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_caucasus) do 
 				if editBox_wp04_column02:getText() == k then
-					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Syria" then
-			for k,v in pairs(navPoints_syria) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_syria) do 
 				if editBox_wp04_column02:getText() == k then
-					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "MarianaIslands" then
-			for k,v in pairs(navPoints_marianaIslands) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_marianaIslands) do 
 				if editBox_wp04_column02:getText() == k then
-					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "PersianGulf" then
-			for k,v in pairs(navPoints_persianGulf) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_persianGulf) do 
 				if editBox_wp04_column02:getText() == k then
-					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Nevada" then
-			for k,v in pairs(navPoints_nevada) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_nevada) do 
 				if editBox_wp04_column02:getText() == k then
-					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "TheChannel" then
-			for k,v in pairs(navPoints_theChannel) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_theChannel) do 
 				if editBox_wp04_column02:getText() == k then
-					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Normandy" then
-			for k,v in pairs(navPoints_normandy) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_normandy) do 
 				if editBox_wp04_column02:getText() == k then
-					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp04_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp04_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end	
 		end
+	
+		if checkBox_enhancedDatabase:getState(true) then -- if the enhanced is true, use beacon data
+			if comboList_terrain:getText() == "Caucasus" then
+				for k,v in pairs(beaconPoints_caucasus) do
+					if editBox_wp04_column02:getText() == v.callsign then
+						editBox_wp04_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp04_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Syria" then
+				for k,v in pairs(beaconPoints_syria) do 
+					if editBox_wp04_column02:getText() == v.callsign then
+						editBox_wp04_column03:setText(string.format("%3.4f", v.positionGeo.latitude))
+						editBox_wp04_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "MarianaIslands" then
+				for k,v in pairs(beaconPoints_marianaIslands) do 
+					if editBox_wp04_column02:getText() == v.callsign then
+						editBox_wp04_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp04_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "PersianGulf" then
+				for k,v in pairs(beaconPoints_persianGulf) do 
+					if editBox_wp04_column02:getText() == v.callsign then
+						editBox_wp04_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp04_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Nevada" then
+				for k,v in pairs(beaconPoints_nevada) do 
+					if editBox_wp04_column02:getText() == v.callsign then
+						editBox_wp04_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp04_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "TheChannel" then
+				for k,v in pairs(beaconPoints_theChannel) do 
+					if editBox_wp04_column02:getText() == v.callsign then
+						editBox_wp04_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp04_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Normandy" then
+				for k,v in pairs(beaconPoints_normandy) do 
+					if editBox_wp04_column02:getText() == v.callsign then
+						editBox_wp04_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp04_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			end
+		end
 	end
 	
-	function editBox_wp05_column02_changed() -- TODO: replicate this across all name editBoxes
+	function editBox_wp05_column02_changed()
 		if comboList_terrain:getText() == "Caucasus" then
-			for k,v in pairs(navPoints_caucasus) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_caucasus) do 
 				if editBox_wp05_column02:getText() == k then
-					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Syria" then
-			for k,v in pairs(navPoints_syria) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_syria) do 
 				if editBox_wp05_column02:getText() == k then
-					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "MarianaIslands" then
-			for k,v in pairs(navPoints_marianaIslands) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_marianaIslands) do 
 				if editBox_wp05_column02:getText() == k then
-					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "PersianGulf" then
-			for k,v in pairs(navPoints_persianGulf) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_persianGulf) do 
 				if editBox_wp05_column02:getText() == k then
-					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Nevada" then
-			for k,v in pairs(navPoints_nevada) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_nevada) do 
 				if editBox_wp05_column02:getText() == k then
-					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "TheChannel" then
-			for k,v in pairs(navPoints_theChannel) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_theChannel) do 
 				if editBox_wp05_column02:getText() == k then
-					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Normandy" then
-			for k,v in pairs(navPoints_normandy) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_normandy) do 
 				if editBox_wp05_column02:getText() == k then
-					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp05_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp05_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end	
 		end
+	
+		if checkBox_enhancedDatabase:getState(true) then -- if the enhanced is true, use beacon data
+			if comboList_terrain:getText() == "Caucasus" then
+				for k,v in pairs(beaconPoints_caucasus) do
+					if editBox_wp05_column02:getText() == v.callsign then
+						editBox_wp05_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp05_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Syria" then
+				for k,v in pairs(beaconPoints_syria) do 
+					if editBox_wp05_column02:getText() == v.callsign then
+						editBox_wp05_column03:setText(string.format("%3.4f", v.positionGeo.latitude))
+						editBox_wp05_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "MarianaIslands" then
+				for k,v in pairs(beaconPoints_marianaIslands) do 
+					if editBox_wp05_column02:getText() == v.callsign then
+						editBox_wp05_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp05_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "PersianGulf" then
+				for k,v in pairs(beaconPoints_persianGulf) do 
+					if editBox_wp05_column02:getText() == v.callsign then
+						editBox_wp05_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp05_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Nevada" then
+				for k,v in pairs(beaconPoints_nevada) do 
+					if editBox_wp05_column02:getText() == v.callsign then
+						editBox_wp05_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp05_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "TheChannel" then
+				for k,v in pairs(beaconPoints_theChannel) do 
+					if editBox_wp05_column02:getText() == v.callsign then
+						editBox_wp05_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp05_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Normandy" then
+				for k,v in pairs(beaconPoints_normandy) do 
+					if editBox_wp05_column02:getText() == v.callsign then
+						editBox_wp05_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp05_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			end
+		end
 	end
 	
-	function editBox_wp06_column02_changed() -- TODO: replicate this across all name editBoxes
+	function editBox_wp06_column02_changed()
 		if comboList_terrain:getText() == "Caucasus" then
-			for k,v in pairs(navPoints_caucasus) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_caucasus) do 
 				if editBox_wp06_column02:getText() == k then
-					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Syria" then
-			for k,v in pairs(navPoints_syria) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_syria) do 
 				if editBox_wp06_column02:getText() == k then
-					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "MarianaIslands" then
-			for k,v in pairs(navPoints_marianaIslands) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_marianaIslands) do 
 				if editBox_wp06_column02:getText() == k then
-					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "PersianGulf" then
-			for k,v in pairs(navPoints_persianGulf) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_persianGulf) do 
 				if editBox_wp06_column02:getText() == k then
-					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Nevada" then
-			for k,v in pairs(navPoints_nevada) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_nevada) do 
 				if editBox_wp06_column02:getText() == k then
-					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "TheChannel" then
-			for k,v in pairs(navPoints_theChannel) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_theChannel) do 
 				if editBox_wp06_column02:getText() == k then
-					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Normandy" then
-			for k,v in pairs(navPoints_normandy) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_normandy) do 
 				if editBox_wp06_column02:getText() == k then
-					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp06_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp06_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end	
 		end
+	
+		if checkBox_enhancedDatabase:getState(true) then -- if the enhanced is true, use beacon data
+			if comboList_terrain:getText() == "Caucasus" then
+				for k,v in pairs(beaconPoints_caucasus) do
+					if editBox_wp06_column02:getText() == v.callsign then
+						editBox_wp06_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp06_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Syria" then
+				for k,v in pairs(beaconPoints_syria) do 
+					if editBox_wp06_column02:getText() == v.callsign then
+						editBox_wp06_column03:setText(string.format("%3.4f", v.positionGeo.latitude))
+						editBox_wp06_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "MarianaIslands" then
+				for k,v in pairs(beaconPoints_marianaIslands) do 
+					if editBox_wp06_column02:getText() == v.callsign then
+						editBox_wp06_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp06_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "PersianGulf" then
+				for k,v in pairs(beaconPoints_persianGulf) do 
+					if editBox_wp06_column02:getText() == v.callsign then
+						editBox_wp06_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp06_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Nevada" then
+				for k,v in pairs(beaconPoints_nevada) do 
+					if editBox_wp06_column02:getText() == v.callsign then
+						editBox_wp06_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp06_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "TheChannel" then
+				for k,v in pairs(beaconPoints_theChannel) do 
+					if editBox_wp06_column02:getText() == v.callsign then
+						editBox_wp06_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp06_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Normandy" then
+				for k,v in pairs(beaconPoints_normandy) do 
+					if editBox_wp06_column02:getText() == v.callsign then
+						editBox_wp06_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp06_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			end
+		end
 	end
 	
-	function editBox_wp07_column02_changed() -- TODO: replicate this across all name editBoxes
+	function editBox_wp07_column02_changed()
 		if comboList_terrain:getText() == "Caucasus" then
-			for k,v in pairs(navPoints_caucasus) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_caucasus) do 
 				if editBox_wp07_column02:getText() == k then
-					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Syria" then
-			for k,v in pairs(navPoints_syria) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_syria) do 
 				if editBox_wp07_column02:getText() == k then
-					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "MarianaIslands" then
-			for k,v in pairs(navPoints_marianaIslands) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_marianaIslands) do 
 				if editBox_wp07_column02:getText() == k then
-					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "PersianGulf" then
-			for k,v in pairs(navPoints_persianGulf) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_persianGulf) do 
 				if editBox_wp07_column02:getText() == k then
-					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Nevada" then
-			for k,v in pairs(navPoints_nevada) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_nevada) do 
 				if editBox_wp07_column02:getText() == k then
-					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "TheChannel" then
-			for k,v in pairs(navPoints_theChannel) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_theChannel) do 
 				if editBox_wp07_column02:getText() == k then
-					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Normandy" then
-			for k,v in pairs(navPoints_normandy) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_normandy) do 
 				if editBox_wp07_column02:getText() == k then
-					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp07_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp07_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end	
 		end
+	
+		if checkBox_enhancedDatabase:getState(true) then -- if the enhanced is true, use beacon data
+			if comboList_terrain:getText() == "Caucasus" then
+				for k,v in pairs(beaconPoints_caucasus) do
+					if editBox_wp07_column02:getText() == v.callsign then
+						editBox_wp07_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp07_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Syria" then
+				for k,v in pairs(beaconPoints_syria) do 
+					if editBox_wp07_column02:getText() == v.callsign then
+						editBox_wp07_column03:setText(string.format("%3.4f", v.positionGeo.latitude))
+						editBox_wp07_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "MarianaIslands" then
+				for k,v in pairs(beaconPoints_marianaIslands) do 
+					if editBox_wp07_column02:getText() == v.callsign then
+						editBox_wp07_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp07_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "PersianGulf" then
+				for k,v in pairs(beaconPoints_persianGulf) do 
+					if editBox_wp07_column02:getText() == v.callsign then
+						editBox_wp07_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp07_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Nevada" then
+				for k,v in pairs(beaconPoints_nevada) do 
+					if editBox_wp07_column02:getText() == v.callsign then
+						editBox_wp07_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp07_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "TheChannel" then
+				for k,v in pairs(beaconPoints_theChannel) do 
+					if editBox_wp07_column02:getText() == v.callsign then
+						editBox_wp07_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp07_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Normandy" then
+				for k,v in pairs(beaconPoints_normandy) do 
+					if editBox_wp07_column02:getText() == v.callsign then
+						editBox_wp07_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp07_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			end
+		end
 	end
 	
-	function editBox_wp08_column02_changed() -- TODO: replicate this across all name editBoxes
+	function editBox_wp08_column02_changed()
 		if comboList_terrain:getText() == "Caucasus" then
-			for k,v in pairs(navPoints_caucasus) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_caucasus) do 
 				if editBox_wp08_column02:getText() == k then
-					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Syria" then
-			for k,v in pairs(navPoints_syria) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_syria) do 
 				if editBox_wp08_column02:getText() == k then
-					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "MarianaIslands" then
-			for k,v in pairs(navPoints_marianaIslands) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_marianaIslands) do 
 				if editBox_wp08_column02:getText() == k then
-					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "PersianGulf" then
-			for k,v in pairs(navPoints_persianGulf) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_persianGulf) do 
 				if editBox_wp08_column02:getText() == k then
-					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Nevada" then
-			for k,v in pairs(navPoints_nevada) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_nevada) do 
 				if editBox_wp08_column02:getText() == k then
-					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "TheChannel" then
-			for k,v in pairs(navPoints_theChannel) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_theChannel) do 
 				if editBox_wp08_column02:getText() == k then
-					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Normandy" then
-			for k,v in pairs(navPoints_normandy) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_normandy) do 
 				if editBox_wp08_column02:getText() == k then
-					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp08_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp08_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end	
 		end
+	
+		if checkBox_enhancedDatabase:getState(true) then -- if the enhanced is true, use beacon data
+			if comboList_terrain:getText() == "Caucasus" then
+				for k,v in pairs(beaconPoints_caucasus) do
+					if editBox_wp08_column02:getText() == v.callsign then
+						editBox_wp08_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp08_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Syria" then
+				for k,v in pairs(beaconPoints_syria) do 
+					if editBox_wp08_column02:getText() == v.callsign then
+						editBox_wp08_column03:setText(string.format("%3.4f", v.positionGeo.latitude))
+						editBox_wp08_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "MarianaIslands" then
+				for k,v in pairs(beaconPoints_marianaIslands) do 
+					if editBox_wp08_column02:getText() == v.callsign then
+						editBox_wp08_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp08_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "PersianGulf" then
+				for k,v in pairs(beaconPoints_persianGulf) do 
+					if editBox_wp08_column02:getText() == v.callsign then
+						editBox_wp08_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp08_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Nevada" then
+				for k,v in pairs(beaconPoints_nevada) do 
+					if editBox_wp08_column02:getText() == v.callsign then
+						editBox_wp08_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp08_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "TheChannel" then
+				for k,v in pairs(beaconPoints_theChannel) do 
+					if editBox_wp08_column02:getText() == v.callsign then
+						editBox_wp08_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp08_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Normandy" then
+				for k,v in pairs(beaconPoints_normandy) do 
+					if editBox_wp08_column02:getText() == v.callsign then
+						editBox_wp08_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp08_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			end
+		end
 	end
 	
-	function editBox_wp09_column02_changed() -- TODO: replicate this across all name editBoxes
+	function editBox_wp09_column02_changed()
 		if comboList_terrain:getText() == "Caucasus" then
-			for k,v in pairs(navPoints_caucasus) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_caucasus) do 
 				if editBox_wp09_column02:getText() == k then
-					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Syria" then
-			for k,v in pairs(navPoints_syria) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_syria) do 
 				if editBox_wp09_column02:getText() == k then
-					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "MarianaIslands" then
-			for k,v in pairs(navPoints_marianaIslands) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_marianaIslands) do 
 				if editBox_wp09_column02:getText() == k then
-					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "PersianGulf" then
-			for k,v in pairs(navPoints_persianGulf) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_persianGulf) do 
 				if editBox_wp09_column02:getText() == k then
-					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Nevada" then
-			for k,v in pairs(navPoints_nevada) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_nevada) do 
 				if editBox_wp09_column02:getText() == k then
-					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "TheChannel" then
-			for k,v in pairs(navPoints_theChannel) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_theChannel) do 
 				if editBox_wp09_column02:getText() == k then
-					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Normandy" then
-			for k,v in pairs(navPoints_normandy) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_normandy) do 
 				if editBox_wp09_column02:getText() == k then
-					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp09_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp09_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end	
 		end
+	
+		if checkBox_enhancedDatabase:getState(true) then -- if the enhanced is true, use beacon data
+			if comboList_terrain:getText() == "Caucasus" then
+				for k,v in pairs(beaconPoints_caucasus) do
+					if editBox_wp09_column02:getText() == v.callsign then
+						editBox_wp09_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp09_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Syria" then
+				for k,v in pairs(beaconPoints_syria) do 
+					if editBox_wp09_column02:getText() == v.callsign then
+						editBox_wp09_column03:setText(string.format("%3.4f", v.positionGeo.latitude))
+						editBox_wp09_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "MarianaIslands" then
+				for k,v in pairs(beaconPoints_marianaIslands) do 
+					if editBox_wp09_column02:getText() == v.callsign then
+						editBox_wp09_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp09_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "PersianGulf" then
+				for k,v in pairs(beaconPoints_persianGulf) do 
+					if editBox_wp09_column02:getText() == v.callsign then
+						editBox_wp09_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp09_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Nevada" then
+				for k,v in pairs(beaconPoints_nevada) do 
+					if editBox_wp09_column02:getText() == v.callsign then
+						editBox_wp09_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp09_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "TheChannel" then
+				for k,v in pairs(beaconPoints_theChannel) do 
+					if editBox_wp09_column02:getText() == v.callsign then
+						editBox_wp09_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp09_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Normandy" then
+				for k,v in pairs(beaconPoints_normandy) do 
+					if editBox_wp09_column02:getText() == v.callsign then
+						editBox_wp09_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp09_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			end
+		end
 	end
 	
-	function editBox_wp10_column02_changed() -- TODO: replicate this across all name editBoxes
+	function editBox_wp10_column02_changed()
 		if comboList_terrain:getText() == "Caucasus" then
-			for k,v in pairs(navPoints_caucasus) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_caucasus) do 
 				if editBox_wp10_column02:getText() == k then
-					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Syria" then
-			for k,v in pairs(navPoints_syria) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_syria) do 
 				if editBox_wp10_column02:getText() == k then
-					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "MarianaIslands" then
-			for k,v in pairs(navPoints_marianaIslands) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_marianaIslands) do 
 				if editBox_wp10_column02:getText() == k then
-					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "PersianGulf" then
-			for k,v in pairs(navPoints_persianGulf) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_persianGulf) do 
 				if editBox_wp10_column02:getText() == k then
-					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Nevada" then
-			for k,v in pairs(navPoints_nevada) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_nevada) do 
 				if editBox_wp10_column02:getText() == k then
-					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "TheChannel" then
-			for k,v in pairs(navPoints_theChannel) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_theChannel) do 
 				if editBox_wp10_column02:getText() == k then
-					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end
 		elseif comboList_terrain:getText() == "Normandy" then
-			for k,v in pairs(navPoints_normandy) do -- _i is the key and _v is the value.
+			for k,v in pairs(navPoints_normandy) do 
 				if editBox_wp10_column02:getText() == k then
-					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) -- this rounds
-					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) -- this rounds
+					editBox_wp10_column03:setText(string.format("%3.4f", v.latitude)) 
+					editBox_wp10_column04:setText(string.format("%3.4f", v.longitude)) 
 					outputBoxLog('Auto-detected: ' .. k)
 				end
 			end	
 		end
-	end
 	
+		if checkBox_enhancedDatabase:getState(true) then -- if the enhanced is true, use beacon data
+			if comboList_terrain:getText() == "Caucasus" then
+				for k,v in pairs(beaconPoints_caucasus) do
+					if editBox_wp10_column02:getText() == v.callsign then
+						editBox_wp10_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp10_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Syria" then
+				for k,v in pairs(beaconPoints_syria) do 
+					if editBox_wp10_column02:getText() == v.callsign then
+						editBox_wp10_column03:setText(string.format("%3.4f", v.positionGeo.latitude))
+						editBox_wp10_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "MarianaIslands" then
+				for k,v in pairs(beaconPoints_marianaIslands) do 
+					if editBox_wp10_column02:getText() == v.callsign then
+						editBox_wp10_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp10_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "PersianGulf" then
+				for k,v in pairs(beaconPoints_persianGulf) do 
+					if editBox_wp10_column02:getText() == v.callsign then
+						editBox_wp10_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp10_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Nevada" then
+				for k,v in pairs(beaconPoints_nevada) do 
+					if editBox_wp10_column02:getText() == v.callsign then
+						editBox_wp10_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp10_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "TheChannel" then
+				for k,v in pairs(beaconPoints_theChannel) do 
+					if editBox_wp10_column02:getText() == v.callsign then
+						editBox_wp10_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp10_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			elseif comboList_terrain:getText() == "Normandy" then
+				for k,v in pairs(beaconPoints_normandy) do 
+					if editBox_wp10_column02:getText() == v.callsign then
+						editBox_wp10_column03:setText(string.format("%3.4f", v.positionGeo.latitude)) 
+						editBox_wp10_column04:setText(string.format("%3.4f", v.positionGeo.longitude)) 
+						outputBoxLog('Auto-detected: ' .. v.callsign)
+					end
+				end
+			end
+		end
+	end	
 
     local function createDMPSWindow()
 		
@@ -3910,6 +4548,7 @@ end
         --textarea = panel.DMPSEditBox
 		-- buttons
         crosshairCheckbox = panel.DMPSCrosshairCheckBox
+		checkBox_enhancedDatabase = panel.checkBox_enhancedDatabase
 		checkbox_clearAllData = panel.checkbox_clearAllData
         insertCoordsBtn = panel.button_getDcsCoords
 		button_clearAllData = panel.button_clearAllData
@@ -4158,7 +4797,6 @@ end
             end
         )--]]
 		
-		-- TODO: replicate this for all name editBoxes
 		editBox_wp01_column02:addChangeCallback(editBox_wp01_column02_changed)
 		editBox_wp02_column02:addChangeCallback(editBox_wp02_column02_changed)
 		editBox_wp03_column02:addChangeCallback(editBox_wp03_column02_changed)
@@ -4274,13 +4912,9 @@ end
 		--label_area2_column02_title:setText('tst')
 		
         log("DMPS window created")
-		
-		-- test area
-		-- test area end
     end
 
 
-	
 	
     local handler = {}
     function handler.onSimulationFrame()
@@ -4297,6 +4931,7 @@ end
     function handler.onMissionLoadEnd()
         inMission = true
         updateCoordsMode()
+		--comboList_terrain:setText("RandomText") -- TODO: This works, but you have to somehow detect which map they are on
     end
 	
     function handler.onSimulationStop()
