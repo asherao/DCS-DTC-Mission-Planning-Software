@@ -85,8 +85,8 @@ Different aircraft have different properties for their waypoints. You can learn 
 |CP|Cap Piste = (True) Runway Heading. Numbers only.|
 |PD|Pente Désirée = Desired Glideslope. Numbers only.|
 |RD|Route Désirée = Desired Inbound course (towards the waypoint). Numbers only.|
-|RHO| Used for Polar BADs, defines the distance from the BUT to the BAD (the offset distance). Numbers only.|
-|THETA|Polar BADs, defines the bearing from the BUT to the BAD. Numbers only.|
+|Rho| Used for Polar BADs, defines the distance from the BUT to the BAD (the offset distance) in meters. Numbers only.|
+|Theta|Polar BADs, defines the bearing from the BUT to the BAD. Numbers only.|
 |dAlt|deltaL/L BADs, defines the altitude delta between  the BUT and BAD. Numbers only.|
 |dNorth|defines the BAD by the distance N/S from the BUT to the BAD. Numbers only.|
 |dEast|defines the BAD by the distance E/W from the BUT to the BAD. Numbers only.|  
