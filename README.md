@@ -72,6 +72,7 @@ This can be achieved by one of these methods:
 - The "Get DCS Coords" feature will work for flatscreen, VR, and windowed. DMPS Crosshair feature is only a visual overlay, designed to work accurately only when DCS occupies the entire primary screen. "Get DCS Coords" will get the coordinates at the center of your current F10 view. If you zoom in enough, your coordinates will be accurate, even without the Crosshair. Remember this for VR and when DCS is windowed and many not be centered on your monitor.
 - The DCS: M-2000C DTC is stil WIP. Use with care.
 - M-2000C: When the PP BUTs are 10 or less, only BUTS 11-20 will be filled. With PP BUTs more than 10 the DTC fill starting on BUT 1.
+- BAD Calculations. Select a populated WPT with the radio selection icon on the left. Aim the crosshair at the desired BAD location. Click the **Convert to Bad** button. Entry is in meters. Displays as nautical miles in-cockpit. DD(.dddd) calculation only.
 ## Definitions
 Different aircraft have different properties for their waypoints. You can learn about what they are and what they mean below.
 
