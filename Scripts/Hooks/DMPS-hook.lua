@@ -4,13 +4,19 @@
 - Thank you aronCiucu for DCSTheWay https://github.com/aronCiucu/DCSTheWay  
 
 TODO:
-Make a system that either warns or prevents dtc file overwrites on export
-
+  
+  
+BUG: 
+A blank space with Navdata+ is 43.2068 44.5911 on Caucasus
 
 Future updates:
+Add options for
+  automatically moving the radiobutton selection after
+    capturing a waypoint
+	after making a BAD
+Make a system that either warns or prevents dtc file overwrites on export
 Consider combining the standalone and app luas
 Regex and validate DTC user inputs
-Add crosshair label click detection
 Consider that different aircraft may not be able to export to all maps
 Make showing and hiding elements based on the aircraft combolist, including inital loading
 Make framework for sending commands to DCS (apache)
@@ -18,11 +24,14 @@ Consider altitude output (meters or feet?)
 Consider making the dtc import display the native coord format of the aircraft
   For visual validation after the dtc was loaded into the aircraft
 When the player spawns in a map, change the Terrain editBox to the map name
+  explore 'ExportScript.Tools.WriteToLog("Detected Map: "..Map)' for detection tips
 Add a "User custom points" option in a lua file if the users wants their own points database
   
   
 Change Log:
 See Github https://github.com/asherao/DCS-DTC-Mission-Planning-Software/tree/master/Scripts/Hooks
+fixed error on no marianaIslands installed
+adjusted logs
 --]]
 
 local function loadDMPS()
@@ -93,112 +102,118 @@ local function loadDMPS()
 	local townsTable_caucasus = {}
     local ok, mapCaucasus = pcall(require, "Caucasus.map.towns") -- status, err
     if ok then
-      -- Do stuff with mapCaucasus 
-	  townsTable_caucasus = towns
-	  log('Town Database loaded: Caucasus')
-	  navPoints_caucasus = TableConcat(townsTable_caucasus,airbases_caucasus)
-	  log('Airbase Database loaded: Caucasus')
-	  beaconPoints_caucasus = require("Caucasus.Beacons")
-	  beaconPoints_caucasus = beacons
-	  log('Beacon Database loaded: Caucasus')
+        -- Do stuff with mapCaucasus 
+	    townsTable_caucasus = towns
+	    log('Town Database loaded: Caucasus')
+	    navPoints_caucasus = TableConcat(townsTable_caucasus,airbases_caucasus)
+	    log('Airbase Database loaded: Caucasus')
+	    beaconPoints_caucasus = require("Caucasus.Beacons")
+	    beaconPoints_caucasus = beacons
+	    log('Beacon Database loaded: Caucasus')
     else
-      log("Error loading Caucasus.map.towns "  .. mapCaucasus ) -- If the load failed then mapCaucasus contains the error
+        log("Error loading Caucasus.map.towns")
+        --log("Error loading Caucasus.map.towns "  .. mapCaucasus ) -- If the load failed then mapCaucasus contains the error
     end
 	
 	local townsTable_syria = {}
     local ok, mapSyria = pcall(require, "Syria.map.towns")
     if ok then
-      -- Do stuff with mapSyria 
-	  townsTable_syria = towns
-	  log('Town Database loaded: Syria')
-	  navPoints_syria = TableConcat(townsTable_syria,airbases_syria)
-	  log('Airbase Database loaded: Syria')
-	  beaconPoints_syria = require("Syria.Beacons")
-	  beaconPoints_syria = beacons
-	  log('Beacon Database loaded: Syria')
+        -- Do stuff with mapSyria 
+	    townsTable_syria = towns
+	    log('Town Database loaded: Syria')
+	    navPoints_syria = TableConcat(townsTable_syria,airbases_syria)
+	    log('Airbase Database loaded: Syria')
+	    beaconPoints_syria = require("Syria.Beacons")
+	    beaconPoints_syria = beacons
+	    log('Beacon Database loaded: Syria')
     else
-      log("Error loading Syria.map.towns " .. mapSyria) -- If the load failed then mapsyria contains the error
+        log("Error loading Syria.map.towns")
+        --log("Error loading Syria.map.towns " .. mapSyria) -- If the load failed then mapsyria contains the error
     end
 	
 	local townsTable_marianaIslands = {}
     local ok, mapMarianaIslands = pcall(require, "MarianaIslands.map.towns")
     if ok then
-      -- Do stuff with mapSyria 
-	  townsTable_marianaIslands = towns
-	  log('Town Database loaded: Mariana Islands')
-	  navPoints_marianaIslands = TableConcat(townsTable_marianaIslands,airbases_marianaIslands)
-	  log('Airbase Database loaded: Mariana Islands')
-	  beaconPoints_marianaIslands = require("MarianaIslands.Beacons")
-	  beaconPoints_marianaIslands = beacons
-	  log('Beacon Database loaded: Mariana Islands')
+        -- Do stuff with mapSyria 
+	    townsTable_marianaIslands = towns
+	    log('Town Database loaded: Mariana Islands')
+	    navPoints_marianaIslands = TableConcat(townsTable_marianaIslands,airbases_marianaIslands)
+	    log('Airbase Database loaded: Mariana Islands')
+	    beaconPoints_marianaIslands = require("MarianaIslands.Beacons")
+	    beaconPoints_marianaIslands = beacons
+	    log('Beacon Database loaded: Mariana Islands')
     else
-      log("Error loading MarianaIslands.map.towns " .. MarianaIslands) -- If the load failed then mapsyria contains the error
+        log("Error loading MarianaIslands.map.towns")
+        --log("Error loading MarianaIslands.map.towns " .. mapMarianaIslands) -- If the load failed then mapsyria contains the error
     end
 	
 	local townsTable_persianGulf = {}
     local ok, mapPersianGulf = pcall(require, "PersianGulf.map.towns")
     if ok then
-      -- Do stuff with mapPersianGulf 
-	  townsTable_persianGulf = towns
-	  log('Town Database loaded: Persian Gulf')
-	  navPoints_persianGulf = TableConcat(townsTable_persianGulf,airbases_persianGulf)
-	  log('Airbase Database loaded: Persian Gulf')
-	  beaconPoints_persianGulf = require("PersianGulf.Beacons")
-	  beaconPoints_persianGulf = beacons
-	  log('Beacon Database loaded: Persian Gulf')
+        -- Do stuff with mapPersianGulf 
+	    townsTable_persianGulf = towns
+	    log('Town Database loaded: Persian Gulf')
+	    navPoints_persianGulf = TableConcat(townsTable_persianGulf,airbases_persianGulf)
+	    log('Airbase Database loaded: Persian Gulf')
+	    beaconPoints_persianGulf = require("PersianGulf.Beacons")
+	    beaconPoints_persianGulf = beacons
+	    log('Beacon Database loaded: Persian Gulf')
     else
-      log("Error loading PersianGulf.map.towns " .. mapPersianGulf) -- If the load failed then mapPersianGulf contains the error
+        log("Error loading PersianGulf.map.towns")
+        --log("Error loading PersianGulf.map.towns " .. mapPersianGulf) -- If the load failed then mapPersianGulf contains the error
     end
 	
 	local townsTable_nevada = {}
     local ok, mapNevada = pcall(require, "Nevada.map.towns")
     if ok then
-      -- Do stuff with mapNevada 
-	  townsTable_nevada = towns
-	  log('Town Database loaded: Nevada')
-	  navPoints_nevada = TableConcat(townsTable_nevada,airbases_nevada)
-	  log('Airbase Database loaded: Nevada')
-	  beaconPoints_nevada = require("Nevada.Beacons")
-	  beaconPoints_nevada = beacons
-	  log('Beacon Database loaded: Nevada')
+        -- Do stuff with mapNevada 
+	    townsTable_nevada = towns
+	    log('Town Database loaded: Nevada')
+	    navPoints_nevada = TableConcat(townsTable_nevada,airbases_nevada)
+	    log('Airbase Database loaded: Nevada')
+	    beaconPoints_nevada = require("Nevada.Beacons")
+	    beaconPoints_nevada = beacons
+	    log('Beacon Database loaded: Nevada')
     else
-      log("Error loading Nevada.map.towns " .. mapNevada) -- If the load failed then mapNevada contains the error
+        log("Error loading Nevada.map.towns")
+        --log("Error loading Nevada.map.towns " .. mapNevada) -- If the load failed then mapNevada contains the error
     end
 	
 	local townsTable_theChannel = {}
     local ok, mapTheChannel = pcall(require, "TheChannel.map.towns")
     if ok then
-      -- Do stuff with mapTheChannel 
-	  townsTable_theChannel = towns
-	  log('Town Database loaded: The Channel')
-	  navPoints_theChannel = TableConcat(townsTable_theChannel,airbases_theChannel)
-	  log('Airbase Database loaded: The Channel')
-	  beaconPoints_theChannel = require("TheChannel.Beacons")
-	  beaconPoints_theChannel = beacons
-	  log('Beacon Database loaded: TheChannel')
+        -- Do stuff with mapTheChannel 
+	    townsTable_theChannel = towns
+	    log('Town Database loaded: The Channel')
+	    navPoints_theChannel = TableConcat(townsTable_theChannel,airbases_theChannel)
+	    log('Airbase Database loaded: The Channel')
+	    beaconPoints_theChannel = require("TheChannel.Beacons")
+	    beaconPoints_theChannel = beacons
+	    log('Beacon Database loaded: TheChannel')
     else
-      log("Error loading TheChannel.map.towns " .. mapTheChannel) -- If the load failed then mapTheChannel contains the error
+        log("Error loading TheChannel.map.towns")
+        --log("Error loading TheChannel.map.towns " .. mapTheChannel) -- If the load failed then mapTheChannel contains the error
     end
 	
 	local townsTable_normandy = {}
     local ok, mapnormandy = pcall(require, "normandy.map.towns")
     if ok then
-      -- Do stuff with mapnormandy 
-	  townsTable_normandy = towns
-	  log('Town Database loaded: Normandy')
-	  navPoints_normandy = TableConcat(townsTable_normandy,airbases_normandy)
-	  log('Airbase Database loaded: Normandy')
-	  beaconPoints_normandy = require("normandy.Beacons")
-	  beaconPoints_normandy = beacons
-	  log('Beacon Database loaded: normandy')
+        -- Do stuff with mapnormandy 
+	    townsTable_normandy = towns
+	    log('Town Database loaded: Normandy')
+	    navPoints_normandy = TableConcat(townsTable_normandy,airbases_normandy)
+	    log('Airbase Database loaded: Normandy')
+	    beaconPoints_normandy = require("normandy.Beacons")
+	    beaconPoints_normandy = beacons
+	    log('Beacon Database loaded: normandy')
     else
-      log("Error loading normandy.map.towns " .. mapnormandy) -- If the load failed then mapnormandy contains the error
+        log("Error loading normandy.map.towns")
+        --log("Error loading normandy.map.towns " .. mapnormandy) -- If the load failed then mapnormandy contains the error
     end
 	
 	townsTable = nil -- table is no longer needed
 	beacons = nil -- table is no longer needed
-	
-	
+
 	-- https://stackoverflow.com/questions/1283388/how-to-merge-two-tables-overwriting-the-elements-which-are-in-both
 	
 	
@@ -224,7 +239,7 @@ local function loadDMPS()
     local config = nil
 	local finalExportString
 	local programName = "DMPS (DCS-DTC Mission Planning System)"
-	local versionNumber = "v0.4.2"
+	local versionNumber = "v0.4.3.1"
 	local author = "by Bailey"
 	local windowTitle = programName .. " " .. versionNumber .. " " .. author
 	
@@ -468,29 +483,29 @@ local function loadDMPS()
 	end
 	
 	function show_comboList_column07()
-	        comboList_wp01_column07:setVisible(true)
-			comboList_wp02_column07:setVisible(true)
-			comboList_wp03_column07:setVisible(true)
-			comboList_wp04_column07:setVisible(true)
-			comboList_wp05_column07:setVisible(true)
-			comboList_wp06_column07:setVisible(true)
-			comboList_wp07_column07:setVisible(true)
-			comboList_wp08_column07:setVisible(true)
-			comboList_wp09_column07:setVisible(true)
-			comboList_wp10_column07:setVisible(true)
+		comboList_wp01_column07:setVisible(true)
+		comboList_wp02_column07:setVisible(true)
+		comboList_wp03_column07:setVisible(true)
+		comboList_wp04_column07:setVisible(true)
+		comboList_wp05_column07:setVisible(true)
+		comboList_wp06_column07:setVisible(true)
+		comboList_wp07_column07:setVisible(true)
+		comboList_wp08_column07:setVisible(true)
+		comboList_wp09_column07:setVisible(true)
+		comboList_wp10_column07:setVisible(true)
 	end
 	
 	function show_comboList_column06()
-	        comboList_wp01_column06:setVisible(true)
-			comboList_wp02_column06:setVisible(true)
-			comboList_wp03_column06:setVisible(true)
-			comboList_wp04_column06:setVisible(true)
-			comboList_wp05_column06:setVisible(true)
-			comboList_wp06_column06:setVisible(true)
-			comboList_wp07_column06:setVisible(true)
-			comboList_wp08_column06:setVisible(true)
-			comboList_wp09_column06:setVisible(true)
-			comboList_wp10_column06:setVisible(true)
+		comboList_wp01_column06:setVisible(true)
+		comboList_wp02_column06:setVisible(true)
+		comboList_wp03_column06:setVisible(true)
+		comboList_wp04_column06:setVisible(true)
+		comboList_wp05_column06:setVisible(true)
+		comboList_wp06_column06:setVisible(true)
+		comboList_wp07_column06:setVisible(true)
+		comboList_wp08_column06:setVisible(true)
+		comboList_wp09_column06:setVisible(true)
+		comboList_wp10_column06:setVisible(true)
 	end
 	
 	function show_editBox_column02()
@@ -899,7 +914,7 @@ local function loadDMPS()
                 hotkey = "Ctrl+Shift+F1",
 				getCoordHotkey = "Ctrl+Shift+F2",
                 windowPosition = {x = 200, y = 200},
-                windowSize = {w = 895, h = 440}, -- default windowSize = {w = 350, h = 150}
+                windowSize = {w = 895, h = 485}, -- default windowSize = {w = 350, h = 150}
                 --fontSize = 14
             }
             saveConfiguration()
@@ -1016,10 +1031,35 @@ local function loadDMPS()
             return nil, false
         end
     end
-
-    local function insertCoordinates()
 	
-		
+	function nextRadioButton()
+	-- Logic for the radio button part of the coordinate entry
+		if radiobutton_wp01:getState(true) then
+			radiobutton_wp02:setState(true)
+		elseif radiobutton_wp02:getState(true) then
+			radiobutton_wp03:setState(true)
+		elseif radiobutton_wp03:getState(true) then
+			radiobutton_wp04:setState(true)
+		elseif radiobutton_wp04:getState(true) then
+			radiobutton_wp05:setState(true)
+		elseif radiobutton_wp05:getState(true) then
+			radiobutton_wp06:setState(true)
+		elseif radiobutton_wp06:getState(true) then
+			radiobutton_wp07:setState(true)
+		elseif radiobutton_wp07:getState(true) then
+			radiobutton_wp08:setState(true)
+		elseif radiobutton_wp08:getState(true) then
+			radiobutton_wp09:setState(true)
+		elseif radiobutton_wp09:getState(true) then
+			radiobutton_wp10:setState(true)
+		elseif radiobutton_wp10:getState(true) then
+		--radiobutton_wp01:setState(true) -- the option to cycle to the beginning
+		end
+   
+	end
+
+	-- TODO: Change this to be more general
+    local function insertCoordinates()
         local pos = Export.LoGetCameraPosition().p
         local alt = Terrain.GetSurfaceHeightWithSeabed(pos.x, pos.z)
         local lat, lon = Terrain.convertMetersToLatLon(pos.x, pos.z)
@@ -1074,67 +1114,68 @@ local function loadDMPS()
 		
 		
 		-- Logic for the radio button part of the coordinate entry
-		if radiobutton_waypoint01:getState(true) then
+		if radiobutton_wp01:getState(true) then
 			editBox_wp01_column03:setText(lat_formated)
 			editBox_wp01_column04:setText(lon_formated)
 			editBox_wp01_column05:setText(alt_formated)
 			log("Waypoint 01 info populated")
-			radiobutton_waypoint02:setState(true)
-		elseif radiobutton_waypoint02:getState(true) then
+			--radiobutton_wp02:setState(true)
+		elseif radiobutton_wp02:getState(true) then
             editBox_wp02_column03:setText(lat_formated)
 			editBox_wp02_column04:setText(lon_formated)
 			editBox_wp02_column05:setText(alt_formated)
 			log("Waypoint 02 info populated")
-			radiobutton_waypoint03:setState(true)
-        elseif radiobutton_waypoint03:getState(true) then
+			--radiobutton_wp03:setState(true)
+        elseif radiobutton_wp03:getState(true) then
             editBox_wp03_column03:setText(lat_formated)
 			editBox_wp03_column04:setText(lon_formated)
 			editBox_wp03_column05:setText(alt_formated)
 			log("Waypoint 03 info populated")
-			radiobutton_waypoint04:setState(true)
-        elseif radiobutton_waypoint04:getState(true) then
+			--radiobutton_wp04:setState(true)
+        elseif radiobutton_wp04:getState(true) then
             editBox_wp04_column03:setText(lat_formated)
 			editBox_wp04_column04:setText(lon_formated)
 			editBox_wp04_column05:setText(alt_formated)
 			log("Waypoint 04 info populated")
-			radiobutton_waypoint05:setState(true)
-        elseif radiobutton_waypoint05:getState(true) then
+			--radiobutton_wp05:setState(true)
+        elseif radiobutton_wp05:getState(true) then
             editBox_wp05_column03:setText(lat_formated)
 			editBox_wp05_column04:setText(lon_formated)
 			editBox_wp05_column05:setText(alt_formated)
 			log("Waypoint 05 info populated")
-			radiobutton_waypoint06:setState(true)
-        elseif radiobutton_waypoint06:getState(true) then
+			--radiobutton_wp06:setState(true)
+        elseif radiobutton_wp06:getState(true) then
             editBox_wp06_column03:setText(lat_formated)
 			editBox_wp06_column04:setText(lon_formated)
 			editBox_wp06_column05:setText(alt_formated)
 			log("Waypoint 06 info populated")
-			radiobutton_waypoint07:setState(true)
-        elseif radiobutton_waypoint07:getState(true) then
+			--radiobutton_wp07:setState(true)
+        elseif radiobutton_wp07:getState(true) then
             editBox_wp07_column03:setText(lat_formated)
 			editBox_wp07_column04:setText(lon_formated)
 			editBox_wp07_column05:setText(alt_formated)
 			log("Waypoint 07 info populated")
-			radiobutton_waypoint08:setState(true)
-        elseif radiobutton_waypoint08:getState(true) then
+			--radiobutton_wp08:setState(true)
+        elseif radiobutton_wp08:getState(true) then
             editBox_wp08_column03:setText(lat_formated)
 			editBox_wp08_column04:setText(lon_formated)
 			editBox_wp08_column05:setText(alt_formated)
 			log("Waypoint 08 info populated")
-			radiobutton_waypoint09:setState(true)
-        elseif radiobutton_waypoint09:getState(true) then
+			--radiobutton_wp09:setState(true)
+        elseif radiobutton_wp09:getState(true) then
             editBox_wp09_column03:setText(lat_formated)
 			editBox_wp09_column04:setText(lon_formated)
 			editBox_wp09_column05:setText(alt_formated)
 			log("Waypoint 09 info populated")
-			radiobutton_waypoint10:setState(true)
-        elseif radiobutton_waypoint10:getState(true) then
+			--radiobutton_wp10:setState(true)
+        elseif radiobutton_wp10:getState(true) then
             editBox_wp10_column03:setText(lat_formated)
 			editBox_wp10_column04:setText(lon_formated)
 			editBox_wp10_column05:setText(alt_formated)
 			log("Waypoint 10 info populated")
-			--radiobutton_waypoint01:setState(true) -- the option to cycle to the beginning
+			--radiobutton_wp01:setState(true) -- the option to cycle to the beginning
 		end
+		nextRadioButton()
 	end
 
     local function setVisible(b)
@@ -1356,7 +1397,7 @@ local function loadDMPS()
 			editBox_wp10_column13:setText("")
 			--end
 			--]]
-			radiobutton_waypoint01:setState(true)
+			radiobutton_wp01:setState(true)
 			
 			checkbox_clearAllData:setState(false)
 		else -- the user didnt have the checkbox checked
@@ -3326,6 +3367,217 @@ end
     end
 	
 	
+	function butToBad() 
+	-- this only works with DD.dddd, TODO: do regex to make that true
+	-- consider moving the radio selection to the next one after calculation is complete
+		local pos = Export.LoGetCameraPosition().p
+		local lat2, lon2 = Terrain.convertMetersToLatLon(pos.x, pos.z)
+		local lat2 = string.format("%.4f", lat2)
+		local lon2 = string.format("%.4f", lon2)
+		
+		if radiobutton_wp01:getState() == true then -- if the radio button is selected
+			if isempty(editBox_wp01_column03:getText()) == false then -- if the lat field is populated
+				if isempty(editBox_wp01_column04:getText()) == false then -- if the long field is populated
+					lat1 = editBox_wp01_column03:getText()
+					lon1 = editBox_wp01_column04:getText()
+					local distance_bad = string.format("%.1f", getdistance(lat1,lat2,lon1,lon2))
+					local bearing_bad = string.format("%.1f", getBearing(lat1,lat2,lon1,lon2))
+					--log(distance_bad .. ' miles')
+					--log(bearing_bad .. ' degrees')
+					-- roh should be in meters for input, nm on the display
+					-- TODO: represent this visually and in the code
+					editBox_wp01_column09:setText(distance_bad * 1852) -- 1852 is for to meters
+					editBox_wp01_column10:setText(bearing_bad) -- theta
+				end
+			end
+		elseif radiobutton_wp02:getState() == true then -- if the radio button is selected
+			if isempty(editBox_wp02_column03:getText()) == false then -- if the lat field is populated
+				if isempty(editBox_wp02_column04:getText()) == false then -- if the long field is populated
+					lat1 = editBox_wp02_column03:getText()
+					lon1 = editBox_wp02_column04:getText()
+					local distance_bad = string.format("%.1f", getdistance(lat1,lat2,lon1,lon2))
+					local bearing_bad = string.format("%.1f", getBearing(lat1,lat2,lon1,lon2))
+					editBox_wp02_column09:setText(distance_bad * 1852)
+					editBox_wp02_column10:setText(bearing_bad)
+				end
+			end
+		elseif radiobutton_wp03:getState() == true then -- if the radio button is selected
+			if isempty(editBox_wp03_column03:getText()) == false then -- if the lat field is populated
+				if isempty(editBox_wp03_column04:getText()) == false then -- if the long field is populated
+					lat1 = editBox_wp03_column03:getText()
+					lon1 = editBox_wp03_column04:getText()
+					local distance_bad = string.format("%.1f", getdistance(lat1,lat2,lon1,lon2))
+					local bearing_bad = string.format("%.1f", getBearing(lat1,lat2,lon1,lon2))
+					editBox_wp03_column09:setText(distance_bad * 1852)
+					editBox_wp03_column10:setText(bearing_bad)
+				end
+			end
+		elseif radiobutton_wp04:getState() == true then -- if the radio button is selected
+			if isempty(editBox_wp04_column03:getText()) == false then -- if the lat field is populated
+				if isempty(editBox_wp04_column04:getText()) == false then -- if the long field is populated
+					lat1 = editBox_wp04_column03:getText()
+					lon1 = editBox_wp04_column04:getText()
+					local distance_bad = string.format("%.1f", getdistance(lat1,lat2,lon1,lon2))
+					local bearing_bad = string.format("%.1f", getBearing(lat1,lat2,lon1,lon2))
+					editBox_wp04_column09:setText(distance_bad * 1852)
+					editBox_wp04_column10:setText(bearing_bad)
+				end
+			end
+		elseif radiobutton_wp05:getState() == true then -- if the radio button is selected
+			if isempty(editBox_wp05_column03:getText()) == false then -- if the lat field is populated
+				if isempty(editBox_wp05_column04:getText()) == false then -- if the long field is populated
+					lat1 = editBox_wp05_column03:getText()
+					lon1 = editBox_wp05_column04:getText()
+					local distance_bad = string.format("%.1f", getdistance(lat1,lat2,lon1,lon2))
+					local bearing_bad = string.format("%.1f", getBearing(lat1,lat2,lon1,lon2))
+					editBox_wp05_column09:setText(distance_bad * 1852)
+					editBox_wp05_column10:setText(bearing_bad)
+				end
+			end
+		elseif radiobutton_wp06:getState() == true then -- if the radio button is selected
+			if isempty(editBox_wp06_column03:getText()) == false then -- if the lat field is populated
+				if isempty(editBox_wp06_column04:getText()) == false then -- if the long field is populated
+					lat1 = editBox_wp06_column03:getText()
+					lon1 = editBox_wp06_column04:getText()
+					local distance_bad = string.format("%.1f", getdistance(lat1,lat2,lon1,lon2))
+					local bearing_bad = string.format("%.1f", getBearing(lat1,lat2,lon1,lon2))
+					editBox_wp06_column09:setText(distance_bad * 1852)
+					editBox_wp06_column10:setText(bearing_bad)
+				end
+			end
+		elseif radiobutton_wp07:getState() == true then -- if the radio button is selected
+			if isempty(editBox_wp07_column03:getText()) == false then -- if the lat field is populated
+				if isempty(editBox_wp07_column04:getText()) == false then -- if the long field is populated
+					lat1 = editBox_wp07_column03:getText()
+					lon1 = editBox_wp07_column04:getText()
+					local distance_bad = string.format("%.1f", getdistance(lat1,lat2,lon1,lon2))
+					local bearing_bad = string.format("%.1f", getBearing(lat1,lat2,lon1,lon2))
+					editBox_wp07_column09:setText(distance_bad * 1852)
+					editBox_wp07_column10:setText(bearing_bad)
+				end
+			end
+		elseif radiobutton_wp08:getState() == true then -- if the radio button is selected
+			if isempty(editBox_wp08_column03:getText()) == false then -- if the lat field is populated
+				if isempty(editBox_wp08_column04:getText()) == false then -- if the long field is populated
+					lat1 = editBox_wp08_column03:getText()
+					lon1 = editBox_wp08_column04:getText()
+					local distance_bad = string.format("%.1f", getdistance(lat1,lat2,lon1,lon2))
+					local bearing_bad = string.format("%.1f", getBearing(lat1,lat2,lon1,lon2))
+					editBox_wp08_column09:setText(distance_bad * 1852)
+					editBox_wp08_column10:setText(bearing_bad)
+				end
+			end
+		elseif radiobutton_wp09:getState() == true then -- if the radio button is selected
+			if isempty(editBox_wp09_column03:getText()) == false then -- if the lat field is populated
+				if isempty(editBox_wp09_column04:getText()) == false then -- if the long field is populated
+					lat1 = editBox_wp09_column03:getText()
+					lon1 = editBox_wp09_column04:getText()
+					local distance_bad = string.format("%.1f", getdistance(lat1,lat2,lon1,lon2))
+					local bearing_bad = string.format("%.1f", getBearing(lat1,lat2,lon1,lon2))
+					editBox_wp09_column09:setText(distance_bad * 1852)
+					editBox_wp09_column10:setText(bearing_bad)
+				end
+			end
+		elseif radiobutton_wp10:getState() == true then -- if the radio button is selected
+			if isempty(editBox_wp10_column03:getText()) == false then -- if the lat field is populated
+				if isempty(editBox_wp10_column04:getText()) == false then -- if the long field is populated
+					lat1 = editBox_wp10_column03:getText()
+					lon1 = editBox_wp10_column04:getText()
+					local distance_bad = string.format("%.1f", getdistance(lat1,lat2,lon1,lon2))
+					local bearing_bad = string.format("%.1f", getBearing(lat1,lat2,lon1,lon2))
+					editBox_wp10_column09:setText(distance_bad * 1852)
+					editBox_wp10_column10:setText(bearing_bad)
+				end
+			end
+		end -- radiobutton_waypointXX:getState()
+		--nextRadioButtonWithFocus()
+		nextRadioButton() -- TODO: Fix: this will move to the next waypoint even if there was nothing to convert
+	end -- function() end
+	
+	function nextRadioButtonWithFocus()
+		-- Logic for the radio button part of the coordinate entry
+		if radiobutton_wp01:getState(true) and editBox_wp01_column02:getFocused(true) then
+			radiobutton_wp02:setState(true)
+		elseif radiobutton_wp02:getState(true) and editBox_wp02_column02:getFocused(true) then
+			radiobutton_wp03:setState(true)
+		elseif radiobutton_wp03:getState(true) and editBox_wp03_column02:getFocused(true) then
+			radiobutton_wp04:setState(true)
+		elseif radiobutton_wp04:getState(true) and editBox_wp04_column02:getFocused(true) then
+			radiobutton_wp05:setState(true)
+		elseif radiobutton_wp05:getState(true) and editBox_wp05_column02:getFocused(true) then
+			radiobutton_wp06:setState(true)
+		elseif radiobutton_wp06:getState(true) and editBox_wp06_column02:getFocused(true) then
+			radiobutton_wp07:setState(true)
+		elseif radiobutton_wp07:getState(true) and editBox_wp07_column02:getFocused(true) then
+			radiobutton_wp08:setState(true)
+		elseif radiobutton_wp08:getState(true) and editBox_wp08_column02:getFocused(true) then
+			radiobutton_wp09:setState(true)
+		elseif radiobutton_wp09:getState(true) and editBox_wp09_column02:getFocused(true) then
+			radiobutton_wp10:setState(true)
+		elseif radiobutton_wp10:getState(true) and editBox_wp10_column02:getFocused(true) then
+			--radiobutton_wp01:setState(true) -- the option to cycle to the beginning
+		end
+	end
+	
+	function getdistance(lat1,lat2,lon1,lon2) -- https://www.geeksforgeeks.org/program-distance-two-points-earth/
+		--Example Locations
+		 --lat1 = 42.1578 -- POTI
+         --lat2 = 42.3269 -- HONI
+         --lon1 = 41.6777
+         --lon2 = 42.4122
+		
+		local lon1 = toRadians(lon1)
+		local lon2 = toRadians(lon2)
+		local lat1 = toRadians(lat1)
+		local lat2 = toRadians(lat2)
+		
+		-- Haversine formula
+		local dlon = lon2 - lon1
+		local dlat = lat2 - lat1
+		local a = math.pow(math.sin(dlat / 2), 2) +
+				math.cos(lat1) * math.cos(lat2) *
+				math.pow(math.sin(dlon / 2),2)
+			
+		local c = 2 * math.asin(math.sqrt(a))
+	
+		-- Radius of earth in X.
+		-- Use 6371 for kilometers
+		-- Use 3956 for miles
+		-- Use 3444 for nautical miles(?)
+		local r = 6371 / 1.852; -- times 1.852 because I could not find a good NM source
+	
+		-- calculate the result
+		return (c * r) -- distance in kilometers
+	end
+	
+	function getBearing(lat1,lat2,lon1,lon2)
+		local bearing_rad = math.atan2(lon2 - lon1, lat2 - lat1)
+		if bearing_rad < 0 then
+			bearing_rad = bearing_rad + (2 * math.pi) 
+		end
+			
+		bearing = math.deg(bearing_rad)
+		
+		
+		-- bearing will be different per map and date. 
+		-- can make adjustments based on in-game observations
+		-- caucasus is about -12.6 deg
+		if comboList_terrain:getText() == 'Caucasus' then
+			bearing = bearing - 12.6
+		end
+		
+		-- correction for bearings less than 0 due to the calculation above
+		if bearing < 0 then
+			bearing = bearing + 360
+		end
+		
+		return bearing
+	end
+	
+	-- TODO: One of the commented functions above do not work
+	function toRadians(angleIn10thofaDegree)
+		return (angleIn10thofaDegree * math.pi) / 180
+	end
 	
 	function editBox_wp01_column02_changed()
 		if comboList_terrain:getText() == "Caucasus" then
@@ -4552,8 +4804,10 @@ end
 		checkbox_clearAllData = panel.checkbox_clearAllData
         insertCoordsBtn = panel.button_getDcsCoords
 		button_clearAllData = panel.button_clearAllData
+		button_bad = panel.button_bad
 		button_export = panel.button_export
 		button_import = panel.button_import
+		button_hide = panel.button_hide
 		
         --prevButton = panel.DMPSPrevButton
         --nextButton = panel.DMPSNextButton
@@ -4580,16 +4834,16 @@ end
 		label_area2_column13_title = panel.label_area2_column13_title
 		
 		-- Radio button panels
-		radiobutton_waypoint01 = panel.radiobutton_waypoint01
-		radiobutton_waypoint02 = panel.radiobutton_waypoint02
-		radiobutton_waypoint03 = panel.radiobutton_waypoint03
-		radiobutton_waypoint04 = panel.radiobutton_waypoint04
-		radiobutton_waypoint05 = panel.radiobutton_waypoint05
-		radiobutton_waypoint06 = panel.radiobutton_waypoint06
-		radiobutton_waypoint07 = panel.radiobutton_waypoint07
-		radiobutton_waypoint08 = panel.radiobutton_waypoint08
-		radiobutton_waypoint09 = panel.radiobutton_waypoint09
-		radiobutton_waypoint10 = panel.radiobutton_waypoint10
+		radiobutton_wp01 = panel.radiobutton_wp01
+		radiobutton_wp02 = panel.radiobutton_wp02
+		radiobutton_wp03 = panel.radiobutton_wp03
+		radiobutton_wp04 = panel.radiobutton_wp04
+		radiobutton_wp05 = panel.radiobutton_wp05
+		radiobutton_wp06 = panel.radiobutton_wp06
+		radiobutton_wp07 = panel.radiobutton_wp07
+		radiobutton_wp08 = panel.radiobutton_wp08
+		radiobutton_wp09 = panel.radiobutton_wp09
+		radiobutton_wp10 = panel.radiobutton_wp10
 		
 		-- combolist panels
 		comboList_aircraft = panel.comboList_aircraft
@@ -4862,6 +5116,10 @@ end
 		
 		button_clearAllData:addMouseDownCallback(clearAllData)
 		
+	
+		button_bad:addMouseDownCallback(butToBad)
+
+		
 	--[[
 		button_clearAllData:addMouseDownCallback(
             function(self)
@@ -4872,6 +5130,8 @@ end
 		button_import:addMouseDownCallback(import)
 		
 		button_export:addMouseDownCallback(export)
+		
+		button_hide:addMouseDownCallback(hide)
 				
         -- setup window
         window:setBounds(
