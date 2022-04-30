@@ -1,6 +1,7 @@
 --[[Summary:
 TODO:
 fix the lables like label_telemetry_coordinatesLong
+make a BAD/BUT button
 
 Ideas:
 Consider making a legend of acceptable coord formats
@@ -821,7 +822,7 @@ dialog = {
 				-------------------------------------------
 				-- Start of area 2 (Waypoint Entry Area) --
 				-------------------------------------------
-				["radiobutton_waypoint01"] = {
+				["radiobutton_wp01"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = radioButtonHeight,
@@ -843,9 +844,8 @@ dialog = {
 						},
 					},
 					["type"] = "RadioButton",
-				},
-				
-				["radiobutton_waypoint02"] = {
+				},				
+				["radiobutton_wp02"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = radioButtonHeight,
@@ -868,7 +868,7 @@ dialog = {
 					},
 					["type"] = "RadioButton",
 				},
-				["radiobutton_waypoint03"] = {
+				["radiobutton_wp03"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = radioButtonHeight,
@@ -891,7 +891,7 @@ dialog = {
 					},
 					["type"] = "RadioButton",
 				},
-				["radiobutton_waypoint04"] = {
+				["radiobutton_wp04"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = radioButtonHeight,
@@ -914,7 +914,7 @@ dialog = {
 					},
 					["type"] = "RadioButton",
 				},
-				["radiobutton_waypoint05"] = {
+				["radiobutton_wp05"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = radioButtonHeight,
@@ -937,7 +937,7 @@ dialog = {
 					},
 					["type"] = "RadioButton",
 				},
-				["radiobutton_waypoint06"] = {
+				["radiobutton_wp06"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = radioButtonHeight,
@@ -960,7 +960,7 @@ dialog = {
 					},
 					["type"] = "RadioButton",
 				},
-				["radiobutton_waypoint07"] = {
+				["radiobutton_wp07"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = radioButtonHeight,
@@ -983,7 +983,7 @@ dialog = {
 					},
 					["type"] = "RadioButton",
 				},
-				["radiobutton_waypoint08"] = {
+				["radiobutton_wp08"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = radioButtonHeight,
@@ -1006,7 +1006,7 @@ dialog = {
 					},
 					["type"] = "RadioButton",
 				},
-				["radiobutton_waypoint09"] = {
+				["radiobutton_wp09"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = radioButtonHeight,
@@ -1029,7 +1029,7 @@ dialog = {
 					},
 					["type"] = "RadioButton",
 				},
-				["radiobutton_waypoint10"] = {
+				["radiobutton_wp10"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = radioButtonHeight,
@@ -1056,14 +1056,34 @@ dialog = {
 				-----------------------------------------
 				-- End of area 2 (Waypoint Entry Area) --
 				-----------------------------------------
-				
+				["label_extras"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = labelHeight,
+							["w"] = labelWidth + 5,
+							["x"] = area2_column01_anchor + 20,
+							["y"] = area2_row_offset + (area2_rowDistance * 10),
+						},
+						["enabled"] = true,
+						["text"] = "Extras:",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "staticOptionsCaptionSkin",
+						},
+					},
+					["type"] = "Static",
+				},
 				["checkBox_enhancedDatabase"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = 30,
 							["w"] = 60,
-							["x"] = area2_column01_anchor + 10,
-							["y"] = area2_row_offset - 30, -- put the last number in there as a place holder for now
+							["x"] = area2_column02_anchor + 10,
+							["y"] = area2_row_offset + (area2_rowDistance * 10),
 						},
 						["enabled"] = true,
 						["state"] = false,
@@ -1259,6 +1279,27 @@ dialog = {
 					},
 					["type"] = "CheckBox",
 				},
+				["label_enhancedDatabase"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = labelHeight,
+							["w"] = labelWidth + 5,
+							["x"] = area2_column02_anchor + 10,
+							["y"] = area2_row_offset + (area2_rowDistance * 10) + 25,
+						},
+						["enabled"] = true,
+						["text"] = "Nav Data+",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "staticOptionsCaptionSkin",
+						},
+					},
+					["type"] = "Static",
+				},
 				-----------------------------
 				-- Start of area 2 Headers --
 				-----------------------------
@@ -1418,7 +1459,7 @@ dialog = {
 							["y"] = area2_row_offset - 30, -- put the last number in there as a place holder for now
 						},
 						["enabled"] = true,
-						["text"] = "Rho",
+						["text"] = "Rho (m)",
 						["tooltip"] = "",
 						["visible"] = true,
 						["zindex"] = 0,
@@ -8006,211 +8047,13 @@ dialog = {
 				-------------------------
 				-- Column 07 Combolists --
 				-------------------------
-["comboList_wp01_column07"] = {
-    ["params"] = {
-        ["bounds"] = {
-            ["h"] = editBoxHeight,
-            ["w"] = editBoxWidthArea2Apache,
-            ["x"] = area2_column07_anchor,
-            ["y"] = area2_row_offset,
-        },
-        ["enabled"] = true,
-        ["tabOrder"] = 0,
-        ["text"] = "",
-        ["tooltip"] = "",
-        ["visible"] = false,
-        ["zindex"] = 0,
-    },
-    ["skin"] = {
-        ["params"] = {
-            ["name"] = "comboListSkin_options",
-        },
-    },
-    ["type"] = "ComboList",
-},
-["comboList_wp02_column07"] = {
-    ["params"] = {
-        ["bounds"] = {
-            ["h"] = editBoxHeight,
-            ["w"] = editBoxWidthArea2Apache,
-            ["x"] = area2_column07_anchor,
-            ["y"] = area2_row_offset  + (area2_rowDistance * 1),
-        },
-        ["enabled"] = true,
-        ["tabOrder"] = 0,
-        ["text"] = "",
-        ["tooltip"] = "",
-        ["visible"] = false,
-        ["zindex"] = 0,
-    },
-    ["skin"] = {
-        ["params"] = {
-            ["name"] = "comboListSkin_options",
-        },
-    },
-    ["type"] = "ComboList",
-},
-["comboList_wp03_column07"] = {
-    ["params"] = {
-        ["bounds"] = {
-            ["h"] = editBoxHeight,
-            ["w"] = editBoxWidthArea2Apache,
-            ["x"] = area2_column07_anchor,
-            ["y"] = area2_row_offset  + (area2_rowDistance * 2),
-        },
-        ["enabled"] = true,
-        ["tabOrder"] = 0,
-        ["text"] = "",
-        ["tooltip"] = "",
-        ["visible"] = false,
-        ["zindex"] = 0,
-    },
-    ["skin"] = {
-        ["params"] = {
-            ["name"] = "comboListSkin_options",
-        },
-    },
-    ["type"] = "ComboList",
-},
-["comboList_wp04_column07"] = {
-    ["params"] = {
-        ["bounds"] = {
-            ["h"] = editBoxHeight,
-            ["w"] = editBoxWidthArea2Apache,
-            ["x"] = area2_column07_anchor,
-            ["y"] = area2_row_offset  + (area2_rowDistance * 3),
-        },
-        ["enabled"] = true,
-        ["tabOrder"] = 0,
-        ["text"] = "",
-        ["tooltip"] = "",
-        ["visible"] = false,
-        ["zindex"] = 0,
-    },
-    ["skin"] = {
-        ["params"] = {
-            ["name"] = "comboListSkin_options",
-        },
-    },
-    ["type"] = "ComboList",
-},
-["comboList_wp05_column07"] = {
-    ["params"] = {
-        ["bounds"] = {
-            ["h"] = editBoxHeight,
-            ["w"] = editBoxWidthArea2Apache,
-            ["x"] = area2_column07_anchor,
-            ["y"] = area2_row_offset  + (area2_rowDistance * 4),
-        },
-        ["enabled"] = true,
-        ["tabOrder"] = 0,
-        ["text"] = "",
-        ["tooltip"] = "",
-        ["visible"] = false,
-        ["zindex"] = 0,
-    },
-    ["skin"] = {
-        ["params"] = {
-            ["name"] = "comboListSkin_options",
-        },
-    },
-    ["type"] = "ComboList",
-},
-["comboList_wp06_column07"] = {
-    ["params"] = {
-        ["bounds"] = {
-            ["h"] = editBoxHeight,
-            ["w"] = editBoxWidthArea2Apache,
-            ["x"] = area2_column07_anchor,
-            ["y"] = area2_row_offset  + (area2_rowDistance * 5),
-        },
-        ["enabled"] = true,
-        ["tabOrder"] = 0,
-        ["text"] = "",
-        ["tooltip"] = "",
-        ["visible"] = false,
-        ["zindex"] = 0,
-    },
-    ["skin"] = {
-        ["params"] = {
-            ["name"] = "comboListSkin_options",
-        },
-    },
-    ["type"] = "ComboList",
-},
-["comboList_wp07_column07"] = {
-    ["params"] = {
-        ["bounds"] = {
-            ["h"] = editBoxHeight,
-            ["w"] = editBoxWidthArea2Apache,
-            ["x"] = area2_column07_anchor,
-            ["y"] = area2_row_offset  + (area2_rowDistance * 6),
-        },
-        ["enabled"] = true,
-        ["tabOrder"] = 0,
-        ["text"] = "",
-        ["tooltip"] = "",
-        ["visible"] = false,
-        ["zindex"] = 0,
-    },
-    ["skin"] = {
-        ["params"] = {
-            ["name"] = "comboListSkin_options",
-        },
-    },
-    ["type"] = "ComboList",
-},
-["comboList_wp08_column07"] = {
-    ["params"] = {
-        ["bounds"] = {
-            ["h"] = editBoxHeight,
-            ["w"] = editBoxWidthArea2Apache,
-            ["x"] = area2_column07_anchor,
-            ["y"] = area2_row_offset  + (area2_rowDistance * 7),
-        },
-        ["enabled"] = true,
-        ["tabOrder"] = 0,
-        ["text"] = "",
-        ["tooltip"] = "",
-        ["visible"] = false,
-        ["zindex"] = 0,
-    },
-    ["skin"] = {
-        ["params"] = {
-            ["name"] = "comboListSkin_options",
-        },
-    },
-    ["type"] = "ComboList",
-},
-["comboList_wp09_column07"] = {
-    ["params"] = {
-        ["bounds"] = {
-            ["h"] = editBoxHeight,
-            ["w"] = editBoxWidthArea2Apache,
-            ["x"] = area2_column07_anchor,
-            ["y"] = area2_row_offset  + (area2_rowDistance * 8),
-        },
-        ["enabled"] = true,
-        ["tabOrder"] = 0,
-        ["text"] = "",
-        ["tooltip"] = "",
-        ["visible"] = false,
-        ["zindex"] = 0,
-    },
-    ["skin"] = {
-        ["params"] = {
-            ["name"] = "comboListSkin_options",
-        },
-    },
-    ["type"] = "ComboList",
-},
-["comboList_wp10_column07"] = {
+				["comboList_wp01_column07"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = editBoxHeight,
-                            ["w"] = editBoxWidthArea2Apache,
-                            ["x"] = area2_column07_anchor,
-                            ["y"] = area2_row_offset  + (area2_rowDistance * 9),
+							["w"] = editBoxWidthArea2Apache,
+							["x"] = area2_column07_anchor,
+							["y"] = area2_row_offset,
 						},
 						["enabled"] = true,
 						["tabOrder"] = 0,
@@ -8226,205 +8069,403 @@ dialog = {
 					},
 					["type"] = "ComboList",
 				},
-				                ["comboList_wp01_column06"] = {
-    ["params"] = {
-        ["bounds"] = {
-            ["h"] = editBoxHeight,
-            ["w"] = editBoxWidthArea2mini,
-            ["x"] = area2_column06_anchor,
-            ["y"] = area2_row_offset,
-        },
-        ["enabled"] = true,
-        ["tabOrder"] = 0,
-        ["text"] = "",
-        ["tooltip"] = "",
-        ["visible"] = false,
-        ["zindex"] = 0,
-    },
-    ["skin"] = {
-        ["params"] = {
-            ["name"] = "comboListSkin_options",
-        },
-    },
-    ["type"] = "ComboList",
-},
-["comboList_wp02_column06"] = {
-    ["params"] = {
-        ["bounds"] = {
-            ["h"] = editBoxHeight,
-            ["w"] = editBoxWidthArea2mini,
-            ["x"] = area2_column06_anchor,
-            ["y"] = area2_row_offset  + (area2_rowDistance * 1),
-        },
-        ["enabled"] = true,
-        ["tabOrder"] = 0,
-        ["text"] = "",
-        ["tooltip"] = "",
-        ["visible"] = false,
-        ["zindex"] = 0,
-    },
-    ["skin"] = {
-        ["params"] = {
-            ["name"] = "comboListSkin_options",
-        },
-    },
-    ["type"] = "ComboList",
-},
-["comboList_wp03_column06"] = {
-    ["params"] = {
-        ["bounds"] = {
-            ["h"] = editBoxHeight,
-            ["w"] = editBoxWidthArea2mini,
-            ["x"] = area2_column06_anchor,
-            ["y"] = area2_row_offset  + (area2_rowDistance * 2),
-        },
-        ["enabled"] = true,
-        ["tabOrder"] = 0,
-        ["text"] = "",
-        ["tooltip"] = "",
-        ["visible"] = false,
-        ["zindex"] = 0,
-    },
-    ["skin"] = {
-        ["params"] = {
-            ["name"] = "comboListSkin_options",
-        },
-    },
-    ["type"] = "ComboList",
-},
-["comboList_wp04_column06"] = {
-    ["params"] = {
-        ["bounds"] = {
-            ["h"] = editBoxHeight,
-            ["w"] = editBoxWidthArea2mini,
-            ["x"] = area2_column06_anchor,
-            ["y"] = area2_row_offset  + (area2_rowDistance * 3),
-        },
-        ["enabled"] = true,
-        ["tabOrder"] = 0,
-        ["text"] = "",
-        ["tooltip"] = "",
-        ["visible"] = false,
-        ["zindex"] = 0,
-    },
-    ["skin"] = {
-        ["params"] = {
-            ["name"] = "comboListSkin_options",
-        },
-    },
-    ["type"] = "ComboList",
-},
-["comboList_wp05_column06"] = {
-    ["params"] = {
-        ["bounds"] = {
-            ["h"] = editBoxHeight,
-            ["w"] = editBoxWidthArea2mini,
-            ["x"] = area2_column06_anchor,
-            ["y"] = area2_row_offset  + (area2_rowDistance * 4),
-        },
-        ["enabled"] = true,
-        ["tabOrder"] = 0,
-        ["text"] = "",
-        ["tooltip"] = "",
-        ["visible"] = false,
-        ["zindex"] = 0,
-    },
-    ["skin"] = {
-        ["params"] = {
-            ["name"] = "comboListSkin_options",
-        },
-    },
-    ["type"] = "ComboList",
-},
-["comboList_wp06_column06"] = {
-    ["params"] = {
-        ["bounds"] = {
-            ["h"] = editBoxHeight,
-            ["w"] = editBoxWidthArea2mini,
-            ["x"] = area2_column06_anchor,
-            ["y"] = area2_row_offset  + (area2_rowDistance * 5),
-        },
-        ["enabled"] = true,
-        ["tabOrder"] = 0,
-        ["text"] = "",
-        ["tooltip"] = "",
-        ["visible"] = false,
-        ["zindex"] = 0,
-    },
-    ["skin"] = {
-        ["params"] = {
-            ["name"] = "comboListSkin_options",
-        },
-    },
-    ["type"] = "ComboList",
-},
-["comboList_wp07_column06"] = {
-    ["params"] = {
-        ["bounds"] = {
-            ["h"] = editBoxHeight,
-            ["w"] = editBoxWidthArea2mini,
-            ["x"] = area2_column06_anchor,
-            ["y"] = area2_row_offset  + (area2_rowDistance * 6),
-        },
-        ["enabled"] = true,
-        ["tabOrder"] = 0,
-        ["text"] = "",
-        ["tooltip"] = "",
-        ["visible"] = false,
-        ["zindex"] = 0,
-    },
-    ["skin"] = {
-        ["params"] = {
-            ["name"] = "comboListSkin_options",
-        },
-    },
-    ["type"] = "ComboList",
-},
-["comboList_wp08_column06"] = {
-    ["params"] = {
-        ["bounds"] = {
-            ["h"] = editBoxHeight,
-            ["w"] = editBoxWidthArea2mini,
-            ["x"] = area2_column06_anchor,
-            ["y"] = area2_row_offset  + (area2_rowDistance * 7),
-        },
-        ["enabled"] = true,
-        ["tabOrder"] = 0,
-        ["text"] = "",
-        ["tooltip"] = "",
-        ["visible"] = false,
-        ["zindex"] = 0,
-    },
-    ["skin"] = {
-        ["params"] = {
-            ["name"] = "comboListSkin_options",
-        },
-    },
-    ["type"] = "ComboList",
-},
-["comboList_wp09_column06"] = {
-    ["params"] = {
-        ["bounds"] = {
-            ["h"] = editBoxHeight,
-            ["w"] = editBoxWidthArea2mini,
-            ["x"] = area2_column06_anchor,
-            ["y"] = area2_row_offset  + (area2_rowDistance * 8),
-        },
-        ["enabled"] = true,
-        ["tabOrder"] = 0,
-        ["text"] = "",
-        ["tooltip"] = "",
-        ["visible"] = false,
-        ["zindex"] = 0,
-    },
-    ["skin"] = {
-        ["params"] = {
-            ["name"] = "comboListSkin_options",
-        },
-    },
-    ["type"] = "ComboList",
-},
-["comboList_wp10_column06"] = {
+				["comboList_wp02_column07"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = editBoxHeight,
+							["w"] = editBoxWidthArea2Apache,
+							["x"] = area2_column07_anchor,
+							["y"] = area2_row_offset  + (area2_rowDistance * 1),
+						},
+						["enabled"] = true,
+						["tabOrder"] = 0,
+						["text"] = "",
+						["tooltip"] = "",
+						["visible"] = false,
+						["zindex"] = 0,
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "comboListSkin_options",
+						},
+					},
+					["type"] = "ComboList",
+				},
+				["comboList_wp03_column07"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = editBoxHeight,
+							["w"] = editBoxWidthArea2Apache,
+							["x"] = area2_column07_anchor,
+							["y"] = area2_row_offset  + (area2_rowDistance * 2),
+						},
+						["enabled"] = true,
+						["tabOrder"] = 0,
+						["text"] = "",
+						["tooltip"] = "",
+						["visible"] = false,
+						["zindex"] = 0,
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "comboListSkin_options",
+						},
+					},
+					["type"] = "ComboList",
+				},
+				["comboList_wp04_column07"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = editBoxHeight,
+							["w"] = editBoxWidthArea2Apache,
+							["x"] = area2_column07_anchor,
+							["y"] = area2_row_offset  + (area2_rowDistance * 3),
+						},
+						["enabled"] = true,
+						["tabOrder"] = 0,
+						["text"] = "",
+						["tooltip"] = "",
+						["visible"] = false,
+						["zindex"] = 0,
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "comboListSkin_options",
+						},
+					},
+					["type"] = "ComboList",
+				},
+				["comboList_wp05_column07"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = editBoxHeight,
+							["w"] = editBoxWidthArea2Apache,
+							["x"] = area2_column07_anchor,
+							["y"] = area2_row_offset  + (area2_rowDistance * 4),
+						},
+						["enabled"] = true,
+						["tabOrder"] = 0,
+						["text"] = "",
+						["tooltip"] = "",
+						["visible"] = false,
+						["zindex"] = 0,
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "comboListSkin_options",
+						},
+					},
+					["type"] = "ComboList",
+				},
+				["comboList_wp06_column07"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = editBoxHeight,
+							["w"] = editBoxWidthArea2Apache,
+							["x"] = area2_column07_anchor,
+							["y"] = area2_row_offset  + (area2_rowDistance * 5),
+						},
+						["enabled"] = true,
+						["tabOrder"] = 0,
+						["text"] = "",
+						["tooltip"] = "",
+						["visible"] = false,
+						["zindex"] = 0,
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "comboListSkin_options",
+						},
+					},
+					["type"] = "ComboList",
+				},
+				["comboList_wp07_column07"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = editBoxHeight,
+							["w"] = editBoxWidthArea2Apache,
+							["x"] = area2_column07_anchor,
+							["y"] = area2_row_offset  + (area2_rowDistance * 6),
+						},
+						["enabled"] = true,
+						["tabOrder"] = 0,
+						["text"] = "",
+						["tooltip"] = "",
+						["visible"] = false,
+						["zindex"] = 0,
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "comboListSkin_options",
+						},
+					},
+					["type"] = "ComboList",
+				},
+				["comboList_wp08_column07"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = editBoxHeight,
+							["w"] = editBoxWidthArea2Apache,
+							["x"] = area2_column07_anchor,
+							["y"] = area2_row_offset  + (area2_rowDistance * 7),
+						},
+						["enabled"] = true,
+						["tabOrder"] = 0,
+						["text"] = "",
+						["tooltip"] = "",
+						["visible"] = false,
+						["zindex"] = 0,
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "comboListSkin_options",
+						},
+					},
+					["type"] = "ComboList",
+				},
+				["comboList_wp09_column07"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = editBoxHeight,
+							["w"] = editBoxWidthArea2Apache,
+							["x"] = area2_column07_anchor,
+							["y"] = area2_row_offset  + (area2_rowDistance * 8),
+						},
+						["enabled"] = true,
+						["tabOrder"] = 0,
+						["text"] = "",
+						["tooltip"] = "",
+						["visible"] = false,
+						["zindex"] = 0,
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "comboListSkin_options",
+						},
+					},
+					["type"] = "ComboList",
+				},
+				["comboList_wp10_column07"] = {
+									["params"] = {
+										["bounds"] = {
+											["h"] = editBoxHeight,
+											["w"] = editBoxWidthArea2Apache,
+											["x"] = area2_column07_anchor,
+											["y"] = area2_row_offset  + (area2_rowDistance * 9),
+										},
+										["enabled"] = true,
+										["tabOrder"] = 0,
+										["text"] = "",
+										["tooltip"] = "",
+										["visible"] = false,
+										["zindex"] = 0,
+									},
+									["skin"] = {
+										["params"] = {
+											["name"] = "comboListSkin_options",
+										},
+									},
+									["type"] = "ComboList",
+								},
+				["comboList_wp01_column06"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = editBoxHeight,
+							["w"] = editBoxWidthArea2mini,
+							["x"] = area2_column06_anchor,
+							["y"] = area2_row_offset,
+						},
+						["enabled"] = true,
+						["tabOrder"] = 0,
+						["text"] = "",
+						["tooltip"] = "",
+						["visible"] = false,
+						["zindex"] = 0,
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "comboListSkin_options",
+						},
+					},
+					["type"] = "ComboList",
+				},
+				["comboList_wp02_column06"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = editBoxHeight,
+							["w"] = editBoxWidthArea2mini,
+							["x"] = area2_column06_anchor,
+							["y"] = area2_row_offset  + (area2_rowDistance * 1),
+						},
+						["enabled"] = true,
+						["tabOrder"] = 0,
+						["text"] = "",
+						["tooltip"] = "",
+						["visible"] = false,
+						["zindex"] = 0,
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "comboListSkin_options",
+						},
+					},
+					["type"] = "ComboList",
+				},
+				["comboList_wp03_column06"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = editBoxHeight,
+							["w"] = editBoxWidthArea2mini,
+							["x"] = area2_column06_anchor,
+							["y"] = area2_row_offset  + (area2_rowDistance * 2),
+						},
+						["enabled"] = true,
+						["tabOrder"] = 0,
+						["text"] = "",
+						["tooltip"] = "",
+						["visible"] = false,
+						["zindex"] = 0,
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "comboListSkin_options",
+						},
+					},
+					["type"] = "ComboList",
+				},
+				["comboList_wp04_column06"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = editBoxHeight,
+							["w"] = editBoxWidthArea2mini,
+							["x"] = area2_column06_anchor,
+							["y"] = area2_row_offset  + (area2_rowDistance * 3),
+						},
+						["enabled"] = true,
+						["tabOrder"] = 0,
+						["text"] = "",
+						["tooltip"] = "",
+						["visible"] = false,
+						["zindex"] = 0,
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "comboListSkin_options",
+						},
+					},
+					["type"] = "ComboList",
+				},
+				["comboList_wp05_column06"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = editBoxHeight,
+							["w"] = editBoxWidthArea2mini,
+							["x"] = area2_column06_anchor,
+							["y"] = area2_row_offset  + (area2_rowDistance * 4),
+						},
+						["enabled"] = true,
+						["tabOrder"] = 0,
+						["text"] = "",
+						["tooltip"] = "",
+						["visible"] = false,
+						["zindex"] = 0,
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "comboListSkin_options",
+						},
+					},
+					["type"] = "ComboList",
+				},
+				["comboList_wp06_column06"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = editBoxHeight,
+							["w"] = editBoxWidthArea2mini,
+							["x"] = area2_column06_anchor,
+							["y"] = area2_row_offset  + (area2_rowDistance * 5),
+						},
+						["enabled"] = true,
+						["tabOrder"] = 0,
+						["text"] = "",
+						["tooltip"] = "",
+						["visible"] = false,
+						["zindex"] = 0,
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "comboListSkin_options",
+						},
+					},
+					["type"] = "ComboList",
+				},
+				["comboList_wp07_column06"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = editBoxHeight,
+							["w"] = editBoxWidthArea2mini,
+							["x"] = area2_column06_anchor,
+							["y"] = area2_row_offset  + (area2_rowDistance * 6),
+						},
+						["enabled"] = true,
+						["tabOrder"] = 0,
+						["text"] = "",
+						["tooltip"] = "",
+						["visible"] = false,
+						["zindex"] = 0,
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "comboListSkin_options",
+						},
+					},
+					["type"] = "ComboList",
+				},
+				["comboList_wp08_column06"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = editBoxHeight,
+							["w"] = editBoxWidthArea2mini,
+							["x"] = area2_column06_anchor,
+							["y"] = area2_row_offset  + (area2_rowDistance * 7),
+						},
+						["enabled"] = true,
+						["tabOrder"] = 0,
+						["text"] = "",
+						["tooltip"] = "",
+						["visible"] = false,
+						["zindex"] = 0,
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "comboListSkin_options",
+						},
+					},
+					["type"] = "ComboList",
+				},
+				["comboList_wp09_column06"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = editBoxHeight,
+							["w"] = editBoxWidthArea2mini,
+							["x"] = area2_column06_anchor,
+							["y"] = area2_row_offset  + (area2_rowDistance * 8),
+						},
+						["enabled"] = true,
+						["tabOrder"] = 0,
+						["text"] = "",
+						["tooltip"] = "",
+						["visible"] = false,
+						["zindex"] = 0,
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "comboListSkin_options",
+						},
+					},
+					["type"] = "ComboList",
+				},
+				["comboList_wp10_column06"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = editBoxHeight,
@@ -8447,6 +8488,50 @@ dialog = {
 					["type"] = "ComboList",
 				},
 				
+				["button_bad"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = buttonHeight,
+							["w"] = buttonWidth,
+							["x"] = area2_column04_anchor,
+							["y"] = area2_row_offset  + (area2_rowDistance * 10),
+						},
+						["enabled"] = true,
+						["tabOrder"] = 0,
+						["text"] = "Convert to BAD",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "buttonSkinRedNew",
+						},
+					},
+					["type"] = "Button",
+				},
+				["button_hide"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = buttonHeight,
+							["w"] = buttonWidth - 10,
+							["x"] = area2_column12_anchor,
+							["y"] = area2_row_offset  + (area2_rowDistance * 10),
+						},
+						["enabled"] = true,
+						["tabOrder"] = 0,
+						["text"] = "Hide DMPS",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "buttonSkinRedNew",
+						},
+					},
+					["type"] = "Button",
+				},
 				
 				-----------------------
 				-- Original Children --
@@ -8495,19 +8580,13 @@ dialog = {
                     },
                     ["type"] = "Button"
                 },--]]
-                ["DMPSCrosshairCheckBox"] = {
+                --[[["DMPSCrosshairCheckBox"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = 20,
 							["w"] = 20,
-							["x"] = area1_column03_anchor,
-							["y"] = (topMargin + area1_anchorDistance * 2) + buttonCenteringOffset + 8, -- made up the last number to fit
-							--[[ Original values
-							["h"] = 20,
-							["w"] = 20,
-							["x"] = 110,
-							["y"] = 181,
-							--]]
+							["x"] = area2_column03_anchor, -- area1_column03_anchor,
+							["y"] = area2_row_offset  + (area2_rowDistance * 10), --(topMargin + area1_anchorDistance * 2) + buttonCenteringOffset + 8, -- made up the last number to fit
 						},
 						["enabled"] = true,
 						["state"] = false,
@@ -8523,14 +8602,216 @@ dialog = {
 						},
 					},
 					["type"] = "CheckBox",
+				},--]]
+				["DMPSCrosshairCheckBox"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = 30,
+							["w"] = 60,
+							["x"] = area2_column03_anchor + 12,
+							["y"] = area2_row_offset  + (area2_rowDistance * 10), 
+						},
+						["enabled"] = true,
+						["state"] = false,
+						["tabOrder"] = 0,
+						["text"] = "",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 6,
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "checkBoxSkin_options",
+						},
+						["states"] = {
+							["hover"] = {
+								[1] = {
+									["check"] = {
+										["color"] = "$nil$",
+										["file"] = "$nil$",
+									},
+									["picture"] = {
+										["color"] = "0xffffffff",
+										["file"] = "dxgui\\skins\\skinme\\images\\buttons\\buttons(new)\\slide\\slideoffhover.png",
+									},
+									["text"] = {
+										["blur"] = "$nil$",
+										["color"] = "$nil$",
+										["font"] = "$nil$",
+										["fontSize"] = "$nil$",
+										["horzAlign"] = {
+											["offset"] = "$nil$",
+										},
+									},
+								},
+								[2] = {
+									["check"] = {
+										["color"] = "$nil$",
+										["file"] = "$nil$",
+									},
+									["picture"] = {
+										["color"] = "0xffffffff",
+										["file"] = "dxgui\\skins\\skinme\\images\\buttons\\buttons(new)\\slide\\slideonhover.png",
+									},
+									["text"] = {
+										["blur"] = "$nil$",
+										["color"] = "$nil$",
+										["font"] = "$nil$",
+										["fontSize"] = "$nil$",
+										["horzAlign"] = {
+											["offset"] = "$nil$",
+										},
+									},
+								},
+							},
+							["pressed"] = {
+								[1] = {
+									["text"] = {
+										["blur"] = "$nil$",
+										["color"] = "$nil$",
+										["font"] = "$nil$",
+										["fontSize"] = "$nil$",
+										["horzAlign"] = {
+											["offset"] = "$nil$",
+										},
+										["shadowOffset"] = {
+											["horz"] = "$nil$",
+											["vert"] = "$nil$",
+										},
+										["vertAlign"] = {
+											["offset"] = "$nil$",
+										},
+									},
+								},
+								[2] = {
+									["text"] = {
+										["blur"] = "$nil$",
+										["color"] = "$nil$",
+										["font"] = "$nil$",
+										["fontSize"] = "$nil$",
+										["horzAlign"] = {
+											["offset"] = "$nil$",
+										},
+										["shadowOffset"] = {
+											["horz"] = "$nil$",
+											["vert"] = "$nil$",
+										},
+										["vertAlign"] = {
+											["offset"] = "$nil$",
+										},
+									},
+								},
+							},
+							["released"] = {
+								[1] = {
+									["bkg"] = {
+										["center_bottom"] = "$nil$",
+										["center_center"] = "$nil$",
+										["center_top"] = "$nil$",
+										["file"] = "$nil$",
+										["insets"] = "$nil$",
+										["left_bottom"] = "$nil$",
+										["left_center"] = "$nil$",
+										["left_top"] = "$nil$",
+										["right_bottom"] = "$nil$",
+										["right_center"] = "$nil$",
+										["right_top"] = "$nil$",
+									},
+									["check"] = {
+										["color"] = "$nil$",
+										["file"] = "$nil$",
+										["horzAlign"] = {
+											["offset"] = "$nil$",
+										},
+										["rect"] = {
+											["x1"] = "$nil$",
+											["x2"] = "$nil$",
+											["y1"] = "$nil$",
+											["y2"] = "$nil$",
+										},
+										["size"] = {
+											["horz"] = "$nil$",
+											["vert"] = "$nil$",
+										},
+										["userTexSampler"] = "$nil$",
+										["vertAlign"] = {
+											["offset"] = "$nil$",
+										},
+									},
+									["picture"] = {
+										["file"] = "dxgui\\skins\\skinme\\images\\buttons\\buttons(new)\\slide\\slideoffrl.png",
+									},
+									["text"] = {
+										["blur"] = "$nil$",
+										["color"] = "$nil$",
+										["font"] = "$nil$",
+										["fontSize"] = "$nil$",
+										["horzAlign"] = {
+											["offset"] = "$nil$",
+										},
+										["shadowOffset"] = {
+											["horz"] = "$nil$",
+											["vert"] = "$nil$",
+										},
+										["vertAlign"] = {
+											["offset"] = "$nil$",
+										},
+									},
+								},
+								[2] = {
+									["check"] = {
+										["color"] = "$nil$",
+										["file"] = "$nil$",
+										["horzAlign"] = {
+											["offset"] = "$nil$",
+										},
+										["rect"] = {
+											["x1"] = "$nil$",
+											["x2"] = "$nil$",
+											["y1"] = "$nil$",
+											["y2"] = "$nil$",
+										},
+										["size"] = {
+											["horz"] = "$nil$",
+											["vert"] = "$nil$",
+										},
+										["userTexSampler"] = "$nil$",
+										["vertAlign"] = {
+											["offset"] = "$nil$",
+										},
+									},
+									["picture"] = {
+										["file"] = "dxgui\\skins\\skinme\\images\\buttons\\buttons(new)\\slide\\slideonrl.png",
+									},
+									["text"] = {
+										["blur"] = "$nil$",
+										["color"] = "$nil$",
+										["font"] = "$nil$",
+										["fontSize"] = "$nil$",
+										["horzAlign"] = {
+											["offset"] = "$nil$",
+										},
+										["shadowOffset"] = {
+											["horz"] = "$nil$",
+											["vert"] = "$nil$",
+										},
+										["vertAlign"] = {
+											["offset"] = "$nil$",
+										},
+									},
+								},
+							},
+						},
+					},
+					["type"] = "CheckBox",
 				},
 				["label_crosshairCheckbox"] = {
 					["params"] = {
 						["bounds"] = {
 							["h"] = labelHeight,
 							["w"] = labelTelemetryWidth,
-							["x"] = area1_column03_anchor + 25, -- I made up the number to fit
-							["y"] = topMargin + area1_anchorDistance * 2,
+							["x"] = area2_column03_anchor + 4 + 12,
+							["y"] = area2_row_offset + (area2_rowDistance * 10) + 25,
 						},
 						["enabled"] = true,
 						["text"] = "Crosshair",
